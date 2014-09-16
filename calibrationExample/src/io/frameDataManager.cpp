@@ -20,14 +20,18 @@ void frameDataManager::setup( string rootDir ){
 
 void frameDataManager::listDirs(){
 
-//    bgImages.listDir(rootDirectory + "Footage_360p_Proxy");
-//    objs.listDir(rootDirectory + "SH002_Craig_003_trim_OBM/head");
-//    maskImages.listDir(rootDirectory + "SH002_mask_360p");
-//    
+    videoImages.listDir(rootDirectory + "Footage_360p_Proxy");
+    objs.listDir(rootDirectory + "SH002_Craig_003_trim_OBM/head");
+    maskImages.listDir(rootDirectory + "SH002_mask_360p");
 
 }
 
 
-void frameDataManager::getFrameData( int frameNum, frameData & fd){
-    
+void frameDataManager::loadFrame( int frameNum, frameData & fd){
+    if (frameNum < videoImages.size()){
+        fd.img.loadImage(videoImages[frameNum]);
+    }
+    if (frameNum < objs.size()){
+        ofxBinaryMesh::load(objs.getPath(frameNum), fd.mesh);
+    }
 }

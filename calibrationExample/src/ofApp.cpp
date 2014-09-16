@@ -24,7 +24,8 @@ void ofApp::setup() {
     
     bSaving = false;
     
-    listDirs();
+    FDM.setup("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/");
+    FDM.loadFrame(0, frame);            // load frame 0
     
 	ofSetVerticalSync(true);
 	
@@ -68,81 +69,17 @@ void ofApp::setup() {
     
 }
 
-void ofApp::listDirs() {
-    
-    string testSequenceFolder = dataPath + "jackie_002/";
-    
-    bgImages.listDir("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/Footage_360p_Proxy");
-    objs.listDir("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/SH002_Craig_003_trim_OBM/head");
-    maskImages.listDir("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/SH002_mask_360p");
-    
-    currentFrame = 1;
-    lastFrame = 1;
 
-    loadFrame(currentFrame);
-}
-
-
-void ofApp::loadFrame(int frame){
-    
-    
-    ofImage maskImage;
-   
-    
-    if (frame < bgImages.size()){
-        currBg.loadImage(bgImages.getPath(frame));
-    }
-    
-    if (frame < objs.size()){
-        ofxBinaryMesh::load(objs.getPath(frame), currMesh);
-        // currMesh = ////.loadImage(objs.getPath(frame));
-    }
-    
-    ofImage currBg;
-    ofMesh currMesh;
-    ofImage currFsImg;
-}
 
 
 
 void ofApp::update() {
-    
 
-    
     currentFrame = mouseX;
-    
     if (lastFrame != currentFrame){
-        loadFrame(currentFrame);
+        FDM.loadFrame(currentFrame, frame);
     }
     lastFrame = currentFrame;
-    
-    
-    
-	vector<ofVec3f> from;
-	vector<ofVec3f> to;
-    
-    if (prevFrame.getIndices().size() > 0){
-    
-		for (int i = 0; i < currMesh.getIndices().size(); i+= 100){
-			to.push_back(currMesh.getVertices()[currMesh.getIndices()[i]]);
-			from.push_back(prevFrame.getVertices()[prevFrame.getIndices()[i]]);
-		}
-	
-		ofMatrix4x4 rigidEstimate = ofxCv::estimateAffine3D(from, to);
-
-	
-		rigidEstimate.decompose(decompTranslation, decompRotation, decompScale, decompSo);
-		cout << "trans as: " << decompTranslation << endl;
-		cout << "rotate as: " << endl << decompRotation << endl;
-    }
-
-
-    ofxBinaryMesh::load(objs.getPath(0), prevFrame);
-    // = currMesh;
-    
-
-	//OBJ SEQUENCE MESH
-	//curMesh = ofClamp( (millis/1000.0) * 24.0, 0,meshes.size()-1);
 
 }
 
@@ -173,7 +110,7 @@ void ofApp::draw(){
     glClear(GL_DEPTH);
     
 
-	float videoScale = targetFbo.getWidth() / currBg.getWidth();
+	float videoScale = targetFbo.getWidth() / frame.img.getWidth();
     
 	if(useEasyCam){
 		cam.begin();
@@ -238,13 +175,9 @@ void ofApp::draw(){
     cout << baseCamera.getAspectRatio() << endl;
     cout << baseCamera.getNearClip()<< endl;
     cout << baseCamera.getFarClip() << endl;
-    
     cout << baseCamera.getPosition() << endl;
     
-    
-	
-    
-    
+
     // let's do something with height
 
     ofPoint a,b,c,d, e;
@@ -269,19 +202,19 @@ void ofApp::draw(){
     
     
     // figure out a Z distance.
-    currBg.bind();
+    frame.img.bind();
     ofMesh mesh;
     mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
     mesh.addVertex( a) ;
-    mesh.addTexCoord(   ofPoint(0,currBg.getHeight()));
+    mesh.addTexCoord(   ofPoint(0,frame.img.getHeight()));
     mesh.addVertex(  b) ;
-    mesh.addTexCoord(   ofPoint(currBg.getWidth(),currBg.getHeight()));
+    mesh.addTexCoord(   ofPoint(frame.img.getWidth(),frame.img.getHeight()));
     mesh.addVertex(  c) ;
     mesh.addTexCoord(   ofPoint(0,0));
     mesh.addVertex(  d ) ;
-    mesh.addTexCoord(   ofPoint(currBg.getWidth(), 0));
+    mesh.addTexCoord(   ofPoint(frame.img.getWidth(), 0));
     mesh.draw();
-    currBg.unbind();
+    frame.img.unbind();
     
 
 	
@@ -294,7 +227,7 @@ void ofApp::draw(){
     ofPushMatrix();
     ofScale(-scaleFac,scaleFac,scaleFac);
 	ofTranslate(ofVec3f(-adjustments.x,adjustments.y,adjustments.z));
-    drawMesh(currMesh, ofColor::darkGoldenRod);
+    drawMesh(frame.mesh, ofColor::darkGoldenRod);
 	ofPopMatrix();
     
     
@@ -333,7 +266,7 @@ void ofApp::draw(){
     ofEnableDepthTest();
     ofPoint midPt (0,0,0);
     
-    ofMesh m = currMesh;
+    ofMesh m = frame.mesh;
     for (int i = 0; i < m.getNumIndices(); i++){
         midPt += m.getVertices()[m.getIndices()[i]];
     }
@@ -408,7 +341,6 @@ void ofApp::drawMesh(ofMesh& m, ofFloatColor color){
 		ofEnableLighting();
 		m.draw();
 	}
-
 	if(showWireframe){
 		ofDisableLighting();
 		ofSetColor(0);
@@ -416,12 +348,7 @@ void ofApp::drawMesh(ofMesh& m, ofFloatColor color){
 		m.drawWireframe();
 	}
 	glDepthFunc(GL_LESS);
-    
     ofDisableLighting();
-
-    
-    
-
 }
 
 void ofApp::exit(){
@@ -433,13 +360,8 @@ void ofApp::keyPressed(ofKeyEventArgs& args){
 		useEasyCam = !useEasyCam;
 	}
 
-	
-    
     if (args.key == 's'){
         adjustGui->saveSettings("adjustments.xml");
     }
-    
-
-    
     
 }

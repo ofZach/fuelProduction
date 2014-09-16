@@ -28,9 +28,12 @@ public:
     string rootDirectory;
     int numFrames;
     
+    ofDirectory objs;
+    ofDirectory videoImages;
+    ofDirectory maskImages;
+
     int getNumFrames();
-    
-    void getFrameData( int frameNum, frameData & fd);
+    void loadFrame( int frameNum, frameData & fd);
     
 };
 
