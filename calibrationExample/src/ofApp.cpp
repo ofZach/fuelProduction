@@ -5,7 +5,7 @@
 static string dataPath = "../../../sharedData/";
 
 
-void listDirs();
+//void listDirs();
 
 float scaleFac;
 #ifndef NO_ALEMBIC
@@ -23,14 +23,20 @@ void ofApp::setup() {
     
     
     bSaving = false;
-    
+   
+#ifdef TARGET_WIN32
+    FDM.setup("../../../sharedData/SH002_Craig_test/");
+#else
     FDM.setup("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/");
-    FDM.loadFrame(0, frame);            // load frame 0
+#endif
+
+	FDM.loadFrame(0, frame);            // load frame 0
     
 	ofSetVerticalSync(true);
 	
-	useEasyCam = false;
-	
+	useSideCamera = false;
+	currentCamera = &easyCam;
+
 	light.enable();
 	light.setPosition(+500, +500, +500);
 
@@ -49,8 +55,6 @@ void ofApp::setup() {
     targetFbo.allocate(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().width,
                        CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height,GL_RGBA32F);
    
-
-	
     adjustGui = new ofxUISuperCanvas("ADJUST", 0,0, 300,500);
 	adjustGui->addMinimalSlider("ADJUST X", -50, 50, &adjustments.x);
 	adjustGui->addMinimalSlider("ADJUST Y", -50, 50, &adjustments.y);
@@ -64,16 +68,29 @@ void ofApp::setup() {
 	adjustGui->addToggle("DRAW WIREFRAME", &showWireframe);
 	adjustGui->addToggle("DRAW FILLED", &showFilled);
 	adjustGui->addMinimalSlider("ONION SKIN ALPHA", 0, 1.0, &videoAlpha);
-	adjustGui->loadSettings("adjustments.xml");
-
-    
+	adjustGui->loadSettings("adjustments.xml");   
 }
 
 
-
-
-
 void ofApp::update() {
+
+	if(!useSideCamera){
+		currentCamera = &baseCamera;
+	}
+	else{
+		//update camera positions;
+		ofVec3f center = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth()/2,targetFbo.getHeight()) / 2 );
+		ofVec3f camP = baseCamera.getPosition();
+		//camP.z *= .5;
+		center = camP + (center - camP).normalize() * 351*2;
+
+		sideCam.setPosition(center + ofVec3f(targetFbo.getWidth(),0,0));
+		sideCam.lookAt(center,ofVec3f(0,1,0));
+
+		topCamera.setPosition(center + ofVec3f(0,targetFbo.getHeight(), 0));
+		topCamera.lookAt(center,ofVec3f(1,0,0));
+
+	}
 
     currentFrame = mouseX;
     if (lastFrame != currentFrame){
@@ -112,8 +129,8 @@ void ofApp::draw(){
 
 	float videoScale = targetFbo.getWidth() / frame.img.getWidth();
     
-	if(useEasyCam){
-		cam.begin();
+	if(useSideCamera){
+		currentCamera->begin();
 		ofPushStyle();
 		ofPushMatrix();
 		ofNoFill();
@@ -164,7 +181,7 @@ void ofApp::draw(){
     side.normalize();
     
     ofVec3f out(0,0,1);
-    out =baseCamera.getLocalTransformMatrix() * out;
+    out = baseCamera.getLocalTransformMatrix() * out;
 
     //cout << side << endl;
     
@@ -182,7 +199,7 @@ void ofApp::draw(){
 
     ofPoint a,b,c,d, e;
     
-    a =baseCamera.screenToWorld( ofPoint(0,targetFbo.getHeight()));
+    a = baseCamera.screenToWorld( ofPoint(0,targetFbo.getHeight()));
     b = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth(),targetFbo.getHeight()));
     c = baseCamera.screenToWorld( ofPoint(0,0));
     d = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth(),0));
@@ -312,8 +329,8 @@ void ofApp::draw(){
 
 	ofDisableDepthTest();
 
-	if(useEasyCam){
-		cam.end();
+	if(useSideCamera){
+		currentCamera->end();
 	}
 	else{
 		baseCamera.end();
@@ -357,7 +374,32 @@ void ofApp::exit(){
 
 void ofApp::keyPressed(ofKeyEventArgs& args){
 	if(args.key == ' '){
-		useEasyCam = !useEasyCam;
+		useSideCamera = !useSideCamera;
+	}
+
+	if(useSideCamera){
+		if(args.key == OF_KEY_LEFT){
+			if(currentCamera == &easyCam){
+				currentCamera = &sideCam;
+			}
+			else if(currentCamera == &sideCam){
+				currentCamera = &topCamera;
+			}
+			else {
+				currentCamera = &easyCam;
+			}
+		}
+		else if(args.key == OF_KEY_RIGHT){
+			if(currentCamera == &easyCam){
+				currentCamera = &topCamera;
+			}
+			else if(currentCamera == &topCamera){
+				currentCamera = &sideCam;
+			}
+			else {
+				currentCamera = &easyCam;
+			}		
+		}
 	}
 
     if (args.key == 's'){

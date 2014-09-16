@@ -29,11 +29,8 @@ public:
     int lastFrame;
     
 
-	ofEasyCam cam;
-	ofCamera baseCamera;
 	ofLight light;
 	
-	bool useEasyCam;
 	ofFbo targetFbo;
 
 	void drawMesh(ofMesh& m, ofFloatColor color);
@@ -47,8 +44,16 @@ public:
 	bool showBlendShape;
 	float videoAlpha;
 
-    ofCamera cam3d;
-    
+	bool useSideCamera;
+
+	ofCamera* currentCamera;
+    ofCamera sideCam;
+	ofCamera topCamera;
+	ofCamera baseCamera;
+
+	ofEasyCam easyCam;
+
+
     cameraCalibrationManager CCM;
     
     

@@ -7,9 +7,6 @@
     <ClCompile Include="..\..\..\addons\ofxFTGL\src\ofxFTGLSimpleLayout.cpp">
       <Filter>addons\ofxFTGL\src</Filter>
     </ClCompile>
-    <ClCompile Include="src\cameraCalibrationManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxBinaryMesh\src\ofxBinaryMesh.cpp">
       <Filter>addons\ofxBinaryMesh\src</Filter>
     </ClCompile>
@@ -18,6 +15,18 @@
     </ClCompile>
     <ClCompile Include="src\ofApp.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\processing\transformEstimationManager.cpp">
+      <Filter>src\processing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\cameraCalibrationManager.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\depthExporterManager.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\frameDataManager.cpp">
+      <Filter>src\io</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -42,6 +51,12 @@
     <Filter Include="addons\ofxBinaryMesh\src">
       <UniqueIdentifier>{6ac85942-1b7b-4ecf-8a64-5dd301823c57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\io">
+      <UniqueIdentifier>{b6ff72b1-b359-46e6-a360-31ebb32a9424}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\processing">
+      <UniqueIdentifier>{5b49c1d4-b37f-44b9-9646-cc8ac24c8e7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\addons\ofxFTGL\src\ofxFTGL.h">
@@ -53,14 +68,23 @@
     <ClInclude Include="..\..\..\addons\ofxFTGL\src\ofxFTGLSimpleLayout.h">
       <Filter>addons\ofxFTGL\src</Filter>
     </ClInclude>
-    <ClInclude Include="src\cameraCalibrationManager.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxBinaryMesh\src\ofxBinaryMesh.h">
       <Filter>addons\ofxBinaryMesh\src</Filter>
     </ClInclude>
     <ClInclude Include="src\ofApp.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\processing\transformEstimationManager.h">
+      <Filter>src\processing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\cameraCalibrationManager.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\depthExporterManager.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\frameDataManager.h">
+      <Filter>src\io</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
