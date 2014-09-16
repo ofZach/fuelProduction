@@ -10,7 +10,9 @@
 typedef struct {
     
     ofImage     img;        // person
-    ofMesh      mesh;       // mesh
+    ofMesh      head;       // mesh
+	ofMesh		leftEye;	// leftEye
+	ofMesh		rightEye;	// rightEye
     ofImage     mask;       // mask image
     
 } frameData;
@@ -28,7 +30,10 @@ public:
     string rootDirectory;
     int numFrames;
     
-    ofDirectory objs;
+    ofDirectory heads;
+	ofDirectory leftEyes;
+	ofDirectory rightEyes;
+
     ofDirectory videoImages;
     ofDirectory maskImages;
 

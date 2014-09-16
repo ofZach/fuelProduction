@@ -81,7 +81,7 @@ void ofApp::update() {
 		//update camera positions;
 		ofVec3f center = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth()/2,targetFbo.getHeight()) / 2 );
 		ofVec3f camP = baseCamera.getPosition();
-		//camP.z *= .5;
+
 		center = camP + (center - camP).normalize() * 351*2;
 
 		sideCam.setPosition(center + ofVec3f(targetFbo.getWidth(),0,0));
@@ -187,13 +187,13 @@ void ofApp::draw(){
     
     ofSetColor(255,255,255);
     
-    
+    /*
     cout << baseCamera.getFov() << endl;
     cout << baseCamera.getAspectRatio() << endl;
     cout << baseCamera.getNearClip()<< endl;
     cout << baseCamera.getFarClip() << endl;
     cout << baseCamera.getPosition() << endl;
-    
+    */
 
     // let's do something with height
 
@@ -244,11 +244,10 @@ void ofApp::draw(){
     ofPushMatrix();
     ofScale(-scaleFac,scaleFac,scaleFac);
 	ofTranslate(ofVec3f(-adjustments.x,adjustments.y,adjustments.z));
-    drawMesh(frame.mesh, ofColor::darkGoldenRod);
+	//drawMesh(frame.head, ofColor::darkGoldenRod);
+	drawMesh(frame.rightEye, ofColor::red);
+	drawMesh(frame.leftEye, ofColor::blue);
 	ofPopMatrix();
-    
-    
-    
 
 #ifndef NO_ALEMBIC
     vector<ofPolyline> curvesMe;
@@ -283,7 +282,7 @@ void ofApp::draw(){
     ofEnableDepthTest();
     ofPoint midPt (0,0,0);
     
-    ofMesh m = frame.mesh;
+    ofMesh& m = frame.head;
     for (int i = 0; i < m.getNumIndices(); i++){
         midPt += m.getVertices()[m.getIndices()[i]];
     }
