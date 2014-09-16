@@ -37,7 +37,6 @@ public:
 	ofLight light;
 	
 	bool useEasyCam;
-	ofVideoPlayer backdrop;
 	ofFbo targetFbo;
 
 	ofImage testOverlay;
