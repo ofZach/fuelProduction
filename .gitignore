@@ -1,3 +1,7 @@
+#project specific stuff
+sharedData/SH*/
+
+
 # Some general ignore patterns
 build/
 obj/
