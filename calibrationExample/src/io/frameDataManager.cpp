@@ -14,8 +14,9 @@
     
 void frameDataManager::setup( string rootDir ){
     rootDirectory = rootDir;
+     numFrames = 0;
     listDirs();
-    numFrames = 0;
+   
 }
 
 void frameDataManager::listDirs(){
@@ -23,6 +24,9 @@ void frameDataManager::listDirs(){
     videoImages.listDir(rootDirectory + "Footage_360p_Proxy");
     objs.listDir(rootDirectory + "SH002_Craig_003_trim_OBM/head");
     maskImages.listDir(rootDirectory + "SH002_mask_360p");
+    
+    numFrames = videoImages.size();
+    
 
 }
 

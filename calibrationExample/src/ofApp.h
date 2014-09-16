@@ -7,28 +7,25 @@
 #include "frameDataManager.h"
 
 
-
 class ofApp : public ofBaseApp{
 public:
+    
 	void setup();
 	void update();
 	void draw();
 	void exit();
-
 	void keyPressed(ofKeyEventArgs& args);
-
- 
     void listDirs();
     
-  
     frameDataManager FDM;
     frameData frame;
+    frameData firstFrame;
     
-
+    
     int currentFrame;
     int lastFrame;
     
-
+    
 	ofEasyCam cam;
 	ofCamera baseCamera;
 	ofLight light;

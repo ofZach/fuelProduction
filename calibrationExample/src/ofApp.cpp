@@ -1,6 +1,10 @@
 #include "ofApp.h"
 #include "ofxBinaryMesh.h"
+#include <Alembic/AbcGeom/All.h>
+#include <Alembic/AbcCoreHDF5/All.h>
+#include "ofxAlembic.h"
 
+using namespace Alembic::AbcGeom;
 
 static string dataPath = "../../../sharedData/";
 
@@ -19,13 +23,16 @@ void ofApp::setup() {
 #ifndef NO_ALEMBIC
     abc.open("craig_02_test_fromEmmett_0912a.abc");
     abc.dumpNames();
-#endif    
+#endif
     
     
     bSaving = false;
     
     FDM.setup("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/");
     FDM.loadFrame(0, frame);            // load frame 0
+    FDM.loadFrame(0, firstFrame);
+    
+    
     
 	ofSetVerticalSync(true);
 	
@@ -33,23 +40,23 @@ void ofApp::setup() {
 	
 	light.enable();
 	light.setPosition(+500, +500, +500);
-
+    
 	string testSequenceFolder = dataPath + "aCam/";
-
+    
 	CCM.loadCalibration(
-			testSequenceFolder + "matrices/rgbCalib.yml", 
-			testSequenceFolder + "matrices/depthCalib.yml", 
-			testSequenceFolder + "matrices/rotationDepthToRGB.yml", 
-			testSequenceFolder + "matrices/translationDepthToRGB.yml");
+                        testSequenceFolder + "matrices/rgbCalib.yml",
+                        testSequenceFolder + "matrices/depthCalib.yml",
+                        testSequenceFolder + "matrices/rotationDepthToRGB.yml",
+                        testSequenceFolder + "matrices/translationDepthToRGB.yml");
 	
     int ppWidth = ofNextPow2(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().width);
     int ppHeight = ofNextPow2(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height);
     
-
+    
     targetFbo.allocate(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().width,
                        CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height,GL_RGBA32F);
-   
-
+    
+    
 	
     adjustGui = new ofxUISuperCanvas("ADJUST", 0,0, 300,500);
 	adjustGui->addMinimalSlider("ADJUST X", -50, 50, &adjustments.x);
@@ -65,26 +72,145 @@ void ofApp::setup() {
 	adjustGui->addToggle("DRAW FILLED", &showFilled);
 	adjustGui->addMinimalSlider("ONION SKIN ALPHA", 0, 1.0, &videoAlpha);
 	adjustGui->loadSettings("adjustments.xml");
+    
+    
+    
+    //
+    //
+    //
+    
+    
+    
+    std::string name = "someOpsXform.abc";
+    OArchive archive( Alembic::AbcCoreHDF5::WriteArchive(), name );
+    TimeSampling Ts(1.0 / 24.0, 0);
+    Alembic::Util::uint32_t tsidx = archive.addTimeSampling(Ts);
+    OXform a( OObject( archive, kTop ), "a");
+    a.getSchema().setTimeSampling(tsidx);
 
+    for (int j = 0; j < FDM.numFrames; j++){
+
+        FDM.loadFrame(j, frame);            // load frame 0
+
+        vector<ofVec3f> from;
+        vector<ofVec3f> to;
+        for (int i = 0; i < frame.mesh.getIndices().size(); i+= 10){
+            to.push_back(frame.mesh.getVertices()[frame.mesh.getIndices()[i]]);
+            from.push_back(firstFrame.mesh.getVertices()[firstFrame.mesh.getIndices()[i]]);
+        }
+
+        ofMatrix4x4 rigidEstimate = ofxCv::estimateAffine3D(from, to);
+
+        XformSample samp;
+        XformOp matop( kMatrixOperation, kMatrixHint );
+
+        
+        ofPoint midPt (0,0,0);
+        ofMesh m = frame.mesh;
+        for (int i = 0; i < m.getNumIndices(); i++){
+            midPt += m.getVertices()[m.getIndices()[i]];
+        }
+        midPt /= (int)m.getNumIndices();
+        midPt = midPt;
+
+
+        
+        rigidEstimate.decompose(decompTranslation, decompRotation, decompScale, decompSo);
+
+        float angle;
+        float x, y,z;
+        decompRotation.getRotate(angle, x, y, z);
+
+        XformOp transop( kTranslateOperation, kTranslateHint );
+        XformOp rotatop( kRotateOperation, kRotateHint );
+        XformOp scaleop( kScaleOperation, kScaleHint );
+        const float *p = rigidEstimate.getPtr();
+        Imath::M44d md = Imath::M44d(p[0], p[1], p[2], p[3],
+                                     p[4], p[5], p[6], p[7],
+                                     p[8], p[9], p[10], p[11],
+                                     p[12], p[13], p[14], p[15]);
+
+        //samp.addOp( XformOp( kMatrixOperation, kMatrixHint ), md );
+
+//        mm.glTranslate(ofVec3f(-adjustments.x,adjustments.y,adjustments.z));
+//        mm.glTranslate( ofPoint(-midPt.x, midPt.y, midPt.z) + ofPoint(100,100,-100));
+//        mm.glScale(-scaleFac,scaleFac,scaleFac);
+        // mm.glScale(1,1,1);
+        //
+        //mm.glRotate(mouseY, 1,0,0);
+        //
+        
+        ofMatrix4x4 rot;
+        rot.glRotate(angle, x,y,z);
+        
+        
+        samp.addOp( transop, V3d(-adjustments.x,adjustments.y,adjustments.z));
+        samp.addOp( transop, V3d(-midPt.x, midPt.y, midPt.z) );
+        //samp.addOp( scaleop, V3d(1.0, 1.0, 1.0) );
+        samp.addOp( rotatop, V3d(x,y,z), angle);
+
+
+        a.getSchema().set(samp);
+    }
+    
+    
+//    ofxAlembic::Writer writer;
+//    
+//    
+//    string path = ofGetTimestampString() + ".abc";
+//    writer.open(path, 24);
+//    
+//    for (int j = 0; j < FDM.numFrames; j++){
+//        
+//        FDM.loadFrame(j, frame);            // load frame 0
+//        ofMatrix4x4 mm;
+//        mm.glScale(-scaleFac,scaleFac,scaleFac);
+//        
+//        ofMesh temp = frame.mesh;
+//        ofxAlembic::transform(temp, mm);
+//        writer.addPolyMesh("head", temp);
+//        
+//    }
+//    
+//    writer.close();
+//    
+    
+    
+    
+    
     
 }
 
 
 
-
-
 void ofApp::update() {
-
+    
     currentFrame = mouseX;
     if (lastFrame != currentFrame){
         FDM.loadFrame(currentFrame, frame);
+        
+        
+        // do the transform estimation:
+        vector<ofVec3f> from;
+        vector<ofVec3f> to;
+        for (int i = 0; i < frame.mesh.getIndices().size(); i+= 10){
+            to.push_back(frame.mesh.getVertices()[frame.mesh.getIndices()[i]]);
+            from.push_back(firstFrame.mesh.getVertices()[firstFrame.mesh.getIndices()[i]]);
+        }
+        ofMatrix4x4 rigidEstimate = ofxCv::estimateAffine3D(from, to);
+        XformSample samp;
+        XformOp matop( kMatrixOperation, kMatrixHint );
+        
+        rigidEstimate.decompose(decompTranslation, decompRotation, decompScale, decompSo);
+        //cout << " ? ? " << decompScale << endl;
+        
+        
+        
+        
     }
     lastFrame = currentFrame;
-
+    
 }
-
-
-
 
 
 void ofApp::draw(){
@@ -97,7 +223,7 @@ void ofApp::draw(){
     if (t > abc.getMaxTime()){
         t = abc.getMaxTime();
     }
-
+    
 	// update alemblic reader with time in sec
 	abc.setTime(t);
 #endif
@@ -109,7 +235,7 @@ void ofApp::draw(){
 	ofClear(0,0,0,0);
     glClear(GL_DEPTH);
     
-
+    
 	float videoScale = targetFbo.getWidth() / frame.img.getWidth();
     
 	if(useEasyCam){
@@ -118,7 +244,7 @@ void ofApp::draw(){
 		ofPushMatrix();
 		ofNoFill();
 		ofColor(255,0,0);
-//		ofDrawSphere(depthToRGBTranslation, 10);
+        //		ofDrawSphere(depthToRGBTranslation, 10);
 		ofNode n;
 		n.setPosition(CCM.depthToRGBTranslation);
 		n.draw();
@@ -165,7 +291,7 @@ void ofApp::draw(){
     
     ofVec3f out(0,0,1);
     out =baseCamera.getLocalTransformMatrix() * out;
-
+    
     //cout << side << endl;
     
     ofSetColor(255,255,255);
@@ -177,19 +303,19 @@ void ofApp::draw(){
     cout << baseCamera.getFarClip() << endl;
     cout << baseCamera.getPosition() << endl;
     
-
+    
     // let's do something with height
-
+    
     ofPoint a,b,c,d, e;
     
     a =baseCamera.screenToWorld( ofPoint(0,targetFbo.getHeight()));
     b = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth(),targetFbo.getHeight()));
     c = baseCamera.screenToWorld( ofPoint(0,0));
     d = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth(),0));
-    e = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth()/2,targetFbo.getHeight()) / 2 );
+    e = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth(),targetFbo.getHeight()) / 2.0  + ofPoint(50,-50));
     
-    cout << baseCamera.getPosition() - (e - baseCamera.getPosition())  << endl;
-
+    //cout << baseCamera.getPosition() - (e - baseCamera.getPosition())  << endl;
+    
     
     ofPoint camP = baseCamera.getPosition();
     
@@ -197,9 +323,7 @@ void ofApp::draw(){
     b = camP + (b - camP).normalize() * 351*5;
     c = camP + (c - camP).normalize() * 351*5;
     d = camP + (d - camP).normalize() * 351*5;
-    e = camP + (e - camP).normalize() * 351*5;
-
-    
+    e = camP + (e - camP).normalize() * 351*4;
     
     // figure out a Z distance.
     frame.img.bind();
@@ -217,101 +341,100 @@ void ofApp::draw(){
     frame.img.unbind();
     
 
-	
     ofLine( baseCamera.getPosition(), a);
     ofLine( baseCamera.getPosition(), b);
     ofLine( baseCamera.getPosition(), c);
     ofLine( baseCamera.getPosition(), d);
- 
-
+    
+    
     ofPushMatrix();
     ofScale(-scaleFac,scaleFac,scaleFac);
 	ofTranslate(ofVec3f(-adjustments.x,adjustments.y,adjustments.z));
-    drawMesh(frame.mesh, ofColor::darkGoldenRod);
+    //drawMesh(frame.mesh, ofColor::darkGoldenRod);
 	ofPopMatrix();
     
     
+    //ofCircle(e, 50);
     
-
-#ifndef NO_ALEMBIC
-    vector<ofPolyline> curvesMe;
-    abc.get("SplineSpline", curvesMe);
     
-    ofEnableDepthTest();
-    ofSetLineWidth(5);
-    ofSetColor(255,255, 255);
-    for (int i = 0; i < curvesMe.size(); i++)
-        curvesMe[i].draw();
-    ofSetLineWidth(1);
+    ofPoint pta (0,0,-300);
+    ofPoint ptb (0,-300, 0);
+    ofPoint ptc (300, 0, 0);
+    ofPoint temp(0,0,0);
     
-    abc.get("line10_PLASpline", curvesMe);
-
-    ofSetColor(0, 0, 255);
-    for (int i = 0; i < curvesMe.size(); i++)
-        curvesMe[i].draw();
-#endif
-
-    
-    ofSetColor(255,255,255);
+//    pta =decompRotation * pta;
+//    ptb =decompRotation * ptb;
+//    ptc =decompRotation * ptc;
     
     
     ofPushMatrix();
-
     ofMatrix4x4 mm;
     
-    mm.glScale(-scaleFac,scaleFac,scaleFac);
-	mm.glTranslate(ofVec3f(-adjustments.x,adjustments.y,adjustments.z));
+    float angle;
+    float x, y,z;
+    decompRotation.getRotate(angle, x, y, z);
     
     
-    ofEnableDepthTest();
     ofPoint midPt (0,0,0);
-    
     ofMesh m = frame.mesh;
     for (int i = 0; i < m.getNumIndices(); i++){
         midPt += m.getVertices()[m.getIndices()[i]];
     }
-    
     midPt /= (int)m.getNumIndices();
-    
     midPt = midPt * mm;
     
-    vector<ofPolyline> curves;
-    int count = 0;
-    for (int i = 0; i < ofGetWidth(); i+= 3){
-        int midNose = i;
-        int who = ofMap(midNose, 0, ofGetWidth(), 0, m.getNumIndices()-1, true);
-        //cout << mouseX << endl;
-        //int who = midNose;
-        ofVec3f pt = m.getVertices()[m.getIndices()[who]];
-        
-        pt = pt * mm;
-        //cout << pt << endl;
-        ofSetColor(255);
-        
-        
-        ofPoint diff = ofPoint(pt.x, pt.y, pt.z) - midPt;
-        
-        float dist = 5 + 5 * sin(ofGetElapsedTimef());
-        if (dist  < 1.5) dist = 1.5;
-        //ofLine( (midPt + diff * (dist*0.8)), ( midPt + diff * dist));
-
-        
-        count++;
-        
-        
-        //ofCircle( midPt + diff * dist, 2 + dist);
-    }
     
+	mm.glTranslate(ofVec3f(-adjustments.x,adjustments.y,adjustments.z));
+    mm.glTranslate( ofPoint(-midPt.x, midPt.y, midPt.z) + ofPoint(100,100,-100));
+    mm.glScale(-scaleFac,scaleFac,scaleFac);
+   // mm.glScale(1,1,1);
+    //
+    //mm.glRotate(mouseY, 1,0,0);
+    //
+    
+    ofMatrix4x4 rot;
+    rot.glRotate(angle, x,y,z);
+    
+    pta = pta * rot * mm;
+    ptb = ptb * rot * mm;
+    ptc =  ptc * rot * mm;
+    temp = temp * rot * mm;
+    
+    ofSetColor(255);
+    
+    ofLine(temp, pta);
+    ofLine(temp, ptb);
+    ofLine(temp, ptc);
     
     ofPopMatrix();
+    
+    
+    //#ifndef NO_ALEMBIC
+    //    vector<ofPolyline> curvesMe;
+    //    abc.get("SplineSpline", curvesMe);
+    //
+    //    ofEnableDepthTest();
+    //    ofSetLineWidth(5);
+    //    ofSetColor(255,255, 255);
+    //    for (int i = 0; i < curvesMe.size(); i++)
+    //        curvesMe[i].draw();
+    //    ofSetLineWidth(1);
+    //
+    //    abc.get("line10_PLASpline", curvesMe);
+    //
+    //    ofSetColor(0, 0, 255);
+    //    for (int i = 0; i < curvesMe.size(); i++)
+    //        curvesMe[i].draw();
+    //#endif
+    
     
     
     
     
 	////////////////
-
+    
 	ofDisableDepthTest();
-
+    
 	if(useEasyCam){
 		cam.end();
 	}
@@ -320,17 +443,12 @@ void ofApp::draw(){
 	}
     
     ofEnableAlphaBlending();
-
+    
 	targetFbo.end();
     
     targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
     
-
-    
 }
-
-
-
 
 
 
@@ -359,7 +477,7 @@ void ofApp::keyPressed(ofKeyEventArgs& args){
 	if(args.key == ' '){
 		useEasyCam = !useEasyCam;
 	}
-
+    
     if (args.key == 's'){
         adjustGui->saveSettings("adjustments.xml");
     }
