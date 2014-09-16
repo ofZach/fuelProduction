@@ -1,0 +1,527 @@
+#include "ofApp.h"
+#include "ofxBinaryMesh.h"
+#include "ofxAlembic.h"
+
+
+#define GLSL(version, shader)  "#version " #version "\n" #shader
+
+
+vector < string > lines ;
+
+static string dataPath = "../../../sharedData/";
+
+
+void listDirs();
+
+float scaleFac;
+ofxAlembic::Reader abc;
+
+void ofApp::setup() {
+	
+    
+    
+    abc.open("craig_02_test_fromEmmett_0912a.abc");
+    abc.dumpNames();
+    
+    
+    
+    bSaving = false;
+    
+    listDirs();
+    
+	ofSetVerticalSync(true);
+	
+	useEasyCam = false;
+	
+	light.enable();
+	light.setPosition(+500, +500, +500);
+
+	string testSequenceFolder = dataPath + "aCam/";
+
+	CCM.loadCalibration(
+			testSequenceFolder + "matrices/rgbCalib.yml", 
+			testSequenceFolder + "matrices/depthCalib.yml", 
+			testSequenceFolder + "matrices/rotationDepthToRGB.yml", 
+			testSequenceFolder + "matrices/translationDepthToRGB.yml");
+	
+    int ppWidth = ofNextPow2(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().width);
+    int ppHeight = ofNextPow2(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height);
+    
+
+//    ofFbo::Settings settings;
+//    settings.width = ppWidth;
+//    settings.height = ppHeight;
+//    settings.textureTarget = GL_RGBA32F;
+//    settings.textureTarget = GL_TEXTURE_2D;
+//    settings.depthStencilAsTexture = true;
+//    settings.depthStencilInternalFormat = GL_DEPTH_COMPONENT24;
+//    settings.useDepth = true;
+    targetFbo.allocate(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().width,
+                       CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height,GL_RGBA32F);
+	
+//    output.allocate(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().width,
+//                    CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height,GL_RGBA32F);
+//
+//    
+
+	
+    adjustGui = new ofxUISuperCanvas("ADJUST", 0,0, 300,500);
+	adjustGui->addMinimalSlider("ADJUST X", -50, 50, &adjustments.x);
+	adjustGui->addMinimalSlider("ADJUST Y", -50, 50, &adjustments.y);
+	adjustGui->addMinimalSlider("ADJUST Z", -50, 50, &adjustments.z);
+    scaleFac = 1.0;
+    adjustGui->addMinimalSlider("SCALE", 0.7, 1.3, &scaleFac);
+	adjustGui->addIntSlider("TIME OFFSET", -700, 700, &offsetShiftMillis);
+	adjustGui->addToggle("SHOW OBJ SEQ", &showObjSequence);
+	adjustGui->addToggle("SHOW BLEND SHAPE", &showBlendShape);
+	adjustGui->addSpacer();
+	adjustGui->addToggle("DRAW WIREFRAME", &showWireframe);
+	adjustGui->addToggle("DRAW FILLED", &showFilled);
+	adjustGui->addMinimalSlider("ONION SKIN ALPHA", 0, 1.0, &videoAlpha);
+	adjustGui->loadSettings("adjustments.xml");
+
+    
+    string shaderSource = GLSL(120,
+    
+    float LinearizeDepth(float zoverw)
+    {
+        float n = 18.016; // camera z near
+        float f = 18016.0; // camera z far
+        return (2.0 * n) / (f + n - zoverw * (f - n));
+    }
+    
+    
+    uniform sampler2D depthImg;
+    uniform float depthValModifier;
+    
+    void main()
+    {
+        float depth = texture2D(depthImg, gl_TexCoord[0].xy).r;
+        depth = LinearizeDepth(depth) * depthValModifier;
+        
+        
+        gl_FragColor = vec4(depth, depth, depth, 1.0);
+    }
+                         );
+
+    shader.setupShaderFromSource(GL_FRAGMENT_SHADER, shaderSource);
+    shader.linkProgram();
+    
+}
+
+void ofApp::listDirs() {
+    
+    string testSequenceFolder = dataPath + "jackie_002/";
+    
+    bgImages.listDir("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/Footage_360p_Proxy");
+    objs.listDir("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/SH002_Craig_003_trim_OBM/head");
+    maskImages.listDir("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/SH002_mask_360p");
+    
+    currentFrame = 1;
+    lastFrame = 1;
+
+    loadFrame(currentFrame);
+}
+
+
+void ofApp::loadFrame(int frame){
+    
+    
+    ofImage maskImage;
+   
+    
+    if (frame < bgImages.size()){
+        currBg.loadImage(bgImages.getPath(frame));
+    }
+    
+    if (frame < objs.size()){
+        ofxBinaryMesh::load(objs.getPath(frame), currMesh);
+        // currMesh = ////.loadImage(objs.getPath(frame));
+    }
+    
+    ofImage currBg;
+    ofMesh currMesh;
+    ofImage currFsImg;
+}
+
+
+
+void ofApp::update() {
+    
+
+    
+    currentFrame = mouseX;
+    
+    if (lastFrame != currentFrame){
+        loadFrame(currentFrame);
+    }
+    lastFrame = currentFrame;
+    
+    
+    
+	vector<ofVec3f> from;
+	vector<ofVec3f> to;
+    
+    if (prevFrame.getIndices().size() > 0){
+    
+    for (int i = 0; i < currMesh.getIndices().size(); i+= 100){
+        to.push_back(currMesh.getVertices()[currMesh.getIndices()[i]]);
+        from.push_back(prevFrame.getVertices()[prevFrame.getIndices()[i]]);
+    }
+	
+	ofMatrix4x4 rigidEstimate = ofxCv::estimateAffine3D(from, to);
+
+	
+	rigidEstimate.decompose(decompTranslation, decompRotation, decompScale, decompSo);
+	cout << "trans as: " << decompTranslation << endl;
+	cout << "rotate as: " << endl << decompRotation << endl;
+    }
+
+
+    ofxBinaryMesh::load(objs.getPath(0), prevFrame);
+    // = currMesh;
+    
+
+	//OBJ SEQUENCE MESH
+	//curMesh = ofClamp( (millis/1000.0) * 24.0, 0,meshes.size()-1);
+
+}
+
+
+
+
+
+void ofApp::draw(){
+    
+    
+    //void setupScreenPerspective(float width = -1, float height = -1, float fov = 60, float nearDist = 0, float farDist = 0);
+	//ofSetupScreen();
+    
+    float t = currentFrame / 24.0;
+    if (t > abc.getMaxTime()){
+        t = abc.getMaxTime();
+    }
+	// update alemblic reader with time in sec
+	abc.setTime(t);
+   
+    
+	targetFbo.begin();
+    ofViewport(ofRectangle(0,0,1920, 1080));
+    
+    
+	ofClear(0,0,0,0);
+    glClear(GL_DEPTH);
+    
+
+	float videoScale = targetFbo.getWidth() / currBg.getWidth();
+    
+	if(useEasyCam){
+		cam.begin();
+		ofPushStyle();
+		ofPushMatrix();
+		ofNoFill();
+		ofColor(255,0,0);
+//		ofDrawSphere(depthToRGBTranslation, 10);
+		ofNode n;
+		n.setPosition(CCM.depthToRGBTranslation);
+		n.draw();
+		ofColor(0,250,0);
+		ofSphere(0,0,0,10);
+		ofFill();
+		ofSetColor(255,0,0);
+		if(ofGetKeyPressed('m')){
+			ofMultMatrix(CCM.extrinsics);
+		}
+		ofSetLineWidth(5);
+		ofLine(ofVec3f(0,0,0), ofVec3f(0,0,-100));
+		ofPopMatrix();
+		ofPopStyle();
+        ofEnableDepthTest();
+	}
+	else{
+		ofVec3f camPos(0,0,0);
+		camPos = CCM.extrinsics * camPos;
+		if(ofGetKeyPressed('m')){
+			baseCamera.setPosition( ofVec3f(0,0,0) );
+			baseCamera.lookAt(ofVec3f(0,0,-1));
+		}
+		else{
+			baseCamera.setTransformMatrix(CCM.extrinsics);
+		}
+		baseCamera.setFov( CCM.rgbCalibration.getDistortedIntrinsics().getFov().y );
+		baseCamera.begin(ofRectangle(0,0,1920, 1080));
+	}
+    
+    //cout << baseCamera.getRoll() << " " << baseCamera.getPitch() << endl;
+    
+    
+    //ofSetLineWidth(4);
+    
+    ofVec3f up(0,1,0);
+    ofVec3f side(1,0,0);
+    
+    up = baseCamera.getLocalTransformMatrix() * up;
+    up.normalize();
+    //cout << up << endl;
+    side = baseCamera.getLocalTransformMatrix() * side;
+    side.normalize();
+    
+    ofVec3f out(0,0,1);
+    out =baseCamera.getLocalTransformMatrix() * out;
+
+    //cout << side << endl;
+    
+    ofSetColor(255,255,255);
+    
+    
+    cout << baseCamera.getFov() << endl;
+    cout << baseCamera.getAspectRatio() << endl;
+    cout << baseCamera.getNearClip()<< endl;
+    cout << baseCamera.getFarClip() << endl;
+    
+    cout << baseCamera.getPosition() << endl;
+    
+    
+	
+    
+    
+    // let's do something with height
+
+    ofPoint a,b,c,d, e;
+    
+    a =baseCamera.screenToWorld( ofPoint(0,targetFbo.getHeight()));
+    b = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth(),targetFbo.getHeight()));
+    c = baseCamera.screenToWorld( ofPoint(0,0));
+    d = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth(),0));
+    e = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth()/2,targetFbo.getHeight()) / 2 );
+    
+    cout << baseCamera.getPosition() - (e - baseCamera.getPosition())  << endl;
+
+    
+    ofPoint camP = baseCamera.getPosition();
+    
+    a = camP + (a - camP).normalize() * 351*5;
+    b = camP + (b - camP).normalize() * 351*5;
+    c = camP + (c - camP).normalize() * 351*5;
+    d = camP + (d - camP).normalize() * 351*5;
+    e = camP + (e - camP).normalize() * 351*5;
+
+    
+    
+    // figure out a Z distance.
+    currBg.bind();
+    ofMesh mesh;
+    mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+    mesh.addVertex( a) ;
+    mesh.addTexCoord(   ofPoint(0,currBg.getHeight()));
+    mesh.addVertex(  b) ;
+    mesh.addTexCoord(   ofPoint(currBg.getWidth(),currBg.getHeight()));
+    mesh.addVertex(  c) ;
+    mesh.addTexCoord(   ofPoint(0,0));
+    mesh.addVertex(  d ) ;
+    mesh.addTexCoord(   ofPoint(currBg.getWidth(), 0));
+    mesh.draw();
+    currBg.unbind();
+    
+
+	
+    ofLine( baseCamera.getPosition(), a);
+    ofLine( baseCamera.getPosition(), b);
+    ofLine( baseCamera.getPosition(), c);
+    ofLine( baseCamera.getPosition(), d);
+ 
+
+    ofPushMatrix();
+    ofScale(-scaleFac,scaleFac,scaleFac);
+	ofTranslate(ofVec3f(-adjustments.x,adjustments.y,adjustments.z));
+    drawMesh(currMesh, ofColor::darkGoldenRod);
+	ofPopMatrix();
+    
+    
+    
+
+    
+    vector<ofPolyline> curvesMe;
+    abc.get("SplineSpline", curvesMe);
+    
+    ofEnableDepthTest();
+    ofSetLineWidth(5);
+    ofSetColor(255,255, 255);
+    for (int i = 0; i < curvesMe.size(); i++)
+        curvesMe[i].draw();
+    ofSetLineWidth(1);
+    
+    abc.get("line10_PLASpline", curvesMe);
+    
+    ofSetColor(0, 0, 255);
+    for (int i = 0; i < curvesMe.size(); i++)
+        curvesMe[i].draw();
+
+    
+    ofSetColor(255,255,255);
+    
+    
+    ofPushMatrix();
+
+    ofMatrix4x4 mm;
+    
+    mm.glScale(-scaleFac,scaleFac,scaleFac);
+	mm.glTranslate(ofVec3f(-adjustments.x,adjustments.y,adjustments.z));
+    
+    
+    ofEnableDepthTest();
+    ofPoint midPt (0,0,0);
+    
+    ofMesh m = currMesh;
+    for (int i = 0; i < m.getNumIndices(); i++){
+        midPt += m.getVertices()[m.getIndices()[i]];
+    }
+    
+    midPt /= (int)m.getNumIndices();
+    
+    midPt = midPt * mm;
+    
+    vector<ofPolyline> curves;
+    int count = 0;
+    for (int i = 0; i < ofGetWidth(); i+= 3){
+        int midNose = i;
+        int who = ofMap(midNose, 0, ofGetWidth(), 0, m.getNumIndices()-1, true);
+        //cout << mouseX << endl;
+        //int who = midNose;
+        ofVec3f pt = m.getVertices()[m.getIndices()[who]];
+        
+        pt = pt * mm;
+        //cout << pt << endl;
+        ofSetColor(255);
+        
+        
+        ofPoint diff = ofPoint(pt.x, pt.y, pt.z) - midPt;
+        
+        float dist = 5 + 5 * sin(ofGetElapsedTimef());
+        if (dist  < 1.5) dist = 1.5;
+        //ofLine( (midPt + diff * (dist*0.8)), ( midPt + diff * dist));
+
+        
+        count++;
+        
+        
+        //ofCircle( midPt + diff * dist, 2 + dist);
+    }
+    
+    
+    ofPopMatrix();
+    
+    
+    
+    
+	////////////////
+
+	ofDisableDepthTest();
+
+	if(useEasyCam){
+		cam.end();
+	}
+	else{
+		baseCamera.end();
+	}
+    
+    ofEnableAlphaBlending();
+
+	targetFbo.end();
+    
+    targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
+    
+    //cout << "mouse x " << mouseX << endl;
+//    shader.begin();
+//    shader.setUniform1f("depthValModifier", 4);
+//    targetFbo.getDepthTexture().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
+//    shader.end();
+    
+//    if (ofGetMousePressed()){
+//        
+//        string fileName = ofGetTimestampString();
+//        
+//        ofSetColor(255,255,255);
+//        
+//        output.begin();
+//        ofClear(0,0,0,0);
+//        targetFbo.getTextureReference().drawSubsection(0, 0, 1920, 1080, 0, targetFbo.getHeight() - 1080, 1920, 1080);
+//        //targetFbo.draw(0,0);
+//        output.end();
+//        ofImage temp;
+//        temp.allocate(output.getWidth(), output.getHeight(), OF_IMAGE_COLOR_ALPHA);
+//        ofFloatPixels tempPix;
+//        output.readToPixels(tempPix);
+//        
+//        ofSaveImage(tempPix, (fileName + "color" + ".png"));
+//        //temp.setFromPixels(tempPix);
+//        //temp.saveImage(fileName + "color" + ".png");
+//        
+//        output.begin();
+//        ofClear(0,0,0,0);
+//        shader.begin();
+//        shader.setUniform1f("depthValModifier", 4);
+//        targetFbo.getDepthTexture().drawSubsection(0, 0, 1920, 1080, 0, targetFbo.getHeight() - 1080, 1920, 1080);
+//        
+//        shader.end();
+//        output.end();
+//        output.readToPixels(tempPix);
+//        
+//        ofSaveImage(tempPix, fileName + "depth" + ".png");
+//        //temp.setFromPixels(tempPix);
+//        //temp.saveImage(fileName + "depth" + ".png");
+//        
+//        
+//    }
+    
+}
+
+
+
+
+
+
+void ofApp::drawMesh(ofMesh& m, ofFloatColor color){
+	if(showFilled){
+		ofSetColor(color);
+		ofEnableDepthTest();
+		ofEnableLighting();
+		m.draw();
+	}
+
+	if(showWireframe){
+		ofDisableLighting();
+		ofSetColor(0);
+		glDepthFunc(GL_LEQUAL);
+		m.drawWireframe();
+	}
+	glDepthFunc(GL_LESS);
+    
+    ofDisableLighting();
+
+    
+    
+
+}
+
+void ofApp::exit(){
+	//adjustGui->saveSettings("adjustments.xml");
+}
+
+void ofApp::keyPressed(ofKeyEventArgs& args){
+	if(args.key == ' '){
+		useEasyCam = !useEasyCam;
+	}
+
+	if(args.key == '1'){
+		cout << backdrop.getCurrentFrame() << " " << backdrop.getDuration() * backdrop.getPosition()  << endl;
+	}
+    
+    if (args.key == 's'){
+        adjustGui->saveSettings("adjustments.xml");
+    }
+    
+
+    
+    
+}
