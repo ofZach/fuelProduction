@@ -39,7 +39,11 @@ public:
 
     int getNumFrames();
     void loadFrame( int frameNum, frameData & fd);
-    
+    void getOrientation(const frameData& fd, ofNode& n );
+
+	ofVec3f baseEyeCenter;
+	ofVec3f baseEyeForward;
+	ofIndexType eyeForwardIndex;
 };
 
 

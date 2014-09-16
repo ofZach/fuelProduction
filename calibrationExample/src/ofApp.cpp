@@ -205,7 +205,7 @@ void ofApp::draw(){
     d = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth(),0));
     e = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth()/2,targetFbo.getHeight()) / 2 );
     
-    cout << baseCamera.getPosition() - (e - baseCamera.getPosition())  << endl;
+   // cout << baseCamera.getPosition() - (e - baseCamera.getPosition())  << endl;
 
     
     ofPoint camP = baseCamera.getPosition();
@@ -247,6 +247,20 @@ void ofApp::draw(){
 	//drawMesh(frame.head, ofColor::darkGoldenRod);
 	drawMesh(frame.rightEye, ofColor::red);
 	drawMesh(frame.leftEye, ofColor::blue);
+
+	ofPushStyle();
+
+	//ofScale(10,10,10);
+	ofNoFill();
+	ofNode n;
+	FDM.getOrientation(frame, n);
+	n.draw();
+	ofSetColor(255);
+	ofLine(n.getPosition(), n.getPosition() + n.getUpDir()*500);
+	ofLine(n.getPosition(), n.getPosition() + n.getSideDir()*500);
+	ofLine(n.getPosition(), n.getPosition() + n.getLookAtDir()*500);
+
+	ofPopStyle();
 	ofPopMatrix();
 
 #ifndef NO_ALEMBIC
