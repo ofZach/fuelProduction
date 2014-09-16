@@ -20,10 +20,10 @@ void frameDataManager::setup( string rootDir ){
 
 void frameDataManager::listDirs(){
 
-    bgImages.listDir(rootDirectory + "Footage_360p_Proxy");
-    objs.listDir(rootDirectory + "SH002_Craig_003_trim_OBM/head");
-    maskImages.listDir(rootDirectory + "SH002_mask_360p");
-    
+//    bgImages.listDir(rootDirectory + "Footage_360p_Proxy");
+//    objs.listDir(rootDirectory + "SH002_Craig_003_trim_OBM/head");
+//    maskImages.listDir(rootDirectory + "SH002_mask_360p");
+//    
 
 }
 
