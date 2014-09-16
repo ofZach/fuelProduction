@@ -55,7 +55,13 @@ local.properties
 Thumbs.db
 # Folder config file
 Desktop.ini
- 
+*.dll
+*.lib
+*.exe
+*.ilk
+*.pdb
+*.aps
+
 #Android
 .csettings
 /libs/openFrameworksCompiled/project/android/paths.make

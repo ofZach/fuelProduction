@@ -1,9 +1,10 @@
 #include "ofApp.h"
 #include "ofxBinaryMesh.h"
-#include "ofxAlembic.h"
+
+#define GLSL(version, shader)  "#version " #version "\n" #shader
 
 
-
+vector < string > lines ;
 
 static string dataPath = "../../../sharedData/";
 
@@ -11,14 +12,19 @@ static string dataPath = "../../../sharedData/";
 void listDirs();
 
 float scaleFac;
+#ifndef NO_ALEMBIC
+#include "ofxAlembic.h"
 ofxAlembic::Reader abc;
+#endif
 
 void ofApp::setup() {
 	
     
+#ifndef NO_ALEMBIC
     abc.open("craig_02_test_fromEmmett_0912a.abc");
     abc.dumpNames();
-
+#endif    
+    
     
     bSaving = false;
     
@@ -43,9 +49,21 @@ void ofApp::setup() {
     int ppHeight = ofNextPow2(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height);
     
 
+//    ofFbo::Settings settings;
+//    settings.width = ppWidth;
+//    settings.height = ppHeight;
+//    settings.textureTarget = GL_RGBA32F;
+//    settings.textureTarget = GL_TEXTURE_2D;
+//    settings.depthStencilAsTexture = true;
+//    settings.depthStencilInternalFormat = GL_DEPTH_COMPONENT24;
+//    settings.useDepth = true;
     targetFbo.allocate(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().width,
                        CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height,GL_RGBA32F);
 	
+//    output.allocate(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().width,
+//                    CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height,GL_RGBA32F);
+//
+//    
 
 	
     adjustGui = new ofxUISuperCanvas("ADJUST", 0,0, 300,500);
@@ -64,7 +82,31 @@ void ofApp::setup() {
 	adjustGui->loadSettings("adjustments.xml");
 
     
-  
+    string shaderSource = GLSL(120,
+    
+    float LinearizeDepth(float zoverw)
+    {
+        float n = 18.016; // camera z near
+        float f = 18016.0; // camera z far
+        return (2.0 * n) / (f + n - zoverw * (f - n));
+    }
+    
+    
+    uniform sampler2D depthImg;
+    uniform float depthValModifier;
+    
+    void main()
+    {
+        float depth = texture2D(depthImg, gl_TexCoord[0].xy).r;
+        depth = LinearizeDepth(depth) * depthValModifier;
+        
+        
+        gl_FragColor = vec4(depth, depth, depth, 1.0);
+    }
+                         );
+
+    shader.setupShaderFromSource(GL_FRAGMENT_SHADER, shaderSource);
+    shader.linkProgram();
     
 }
 
@@ -85,21 +127,30 @@ void ofApp::listDirs() {
 
 void ofApp::loadFrame(int frame){
     
+    
     ofImage maskImage;
-
+   
+    
     if (frame < bgImages.size()){
         currBg.loadImage(bgImages.getPath(frame));
     }
     
     if (frame < objs.size()){
         ofxBinaryMesh::load(objs.getPath(frame), currMesh);
+        // currMesh = ////.loadImage(objs.getPath(frame));
     }
+    
+    ofImage currBg;
+    ofMesh currMesh;
+    ofImage currFsImg;
 }
 
 
 
 void ofApp::update() {
+    
 
+    
     currentFrame = mouseX;
     
     if (lastFrame != currentFrame){
@@ -114,17 +165,17 @@ void ofApp::update() {
     
     if (prevFrame.getIndices().size() > 0){
     
-    for (int i = 0; i < currMesh.getIndices().size(); i+= 100){
-        to.push_back(currMesh.getVertices()[currMesh.getIndices()[i]]);
-        from.push_back(prevFrame.getVertices()[prevFrame.getIndices()[i]]);
-    }
+		for (int i = 0; i < currMesh.getIndices().size(); i+= 100){
+			to.push_back(currMesh.getVertices()[currMesh.getIndices()[i]]);
+			from.push_back(prevFrame.getVertices()[prevFrame.getIndices()[i]]);
+		}
 	
-	ofMatrix4x4 rigidEstimate = ofxCv::estimateAffine3D(from, to);
+		ofMatrix4x4 rigidEstimate = ofxCv::estimateAffine3D(from, to);
 
 	
-	rigidEstimate.decompose(decompTranslation, decompRotation, decompScale, decompSo);
-	//cout << "trans as: " << decompTranslation << endl;
-	//cout << "rotate as: " << endl << decompRotation << endl;
+		rigidEstimate.decompose(decompTranslation, decompRotation, decompScale, decompSo);
+		cout << "trans as: " << decompTranslation << endl;
+		cout << "rotate as: " << endl << decompRotation << endl;
     }
 
 
@@ -146,14 +197,15 @@ void ofApp::draw(){
     
     //void setupScreenPerspective(float width = -1, float height = -1, float fov = 60, float nearDist = 0, float farDist = 0);
 	//ofSetupScreen();
-    
+#ifndef NO_ALEMBIC
     float t = currentFrame / 24.0;
     if (t > abc.getMaxTime()){
         t = abc.getMaxTime();
     }
+
 	// update alemblic reader with time in sec
 	abc.setTime(t);
-   
+#endif
     
 	targetFbo.begin();
     ofViewport(ofRectangle(0,0,1920, 1080));
@@ -290,7 +342,7 @@ void ofApp::draw(){
     
     
 
-    
+#ifndef NO_ALEMBIC
     vector<ofPolyline> curvesMe;
     abc.get("SplineSpline", curvesMe);
     
@@ -302,10 +354,11 @@ void ofApp::draw(){
     ofSetLineWidth(1);
     
     abc.get("line10_PLASpline", curvesMe);
-    
+
     ofSetColor(0, 0, 255);
     for (int i = 0; i < curvesMe.size(); i++)
         curvesMe[i].draw();
+#endif
 
     
     ofSetColor(255,255,255);
@@ -381,7 +434,48 @@ void ofApp::draw(){
     
     targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
     
-
+    //cout << "mouse x " << mouseX << endl;
+//    shader.begin();
+//    shader.setUniform1f("depthValModifier", 4);
+//    targetFbo.getDepthTexture().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
+//    shader.end();
+    
+//    if (ofGetMousePressed()){
+//        
+//        string fileName = ofGetTimestampString();
+//        
+//        ofSetColor(255,255,255);
+//        
+//        output.begin();
+//        ofClear(0,0,0,0);
+//        targetFbo.getTextureReference().drawSubsection(0, 0, 1920, 1080, 0, targetFbo.getHeight() - 1080, 1920, 1080);
+//        //targetFbo.draw(0,0);
+//        output.end();
+//        ofImage temp;
+//        temp.allocate(output.getWidth(), output.getHeight(), OF_IMAGE_COLOR_ALPHA);
+//        ofFloatPixels tempPix;
+//        output.readToPixels(tempPix);
+//        
+//        ofSaveImage(tempPix, (fileName + "color" + ".png"));
+//        //temp.setFromPixels(tempPix);
+//        //temp.saveImage(fileName + "color" + ".png");
+//        
+//        output.begin();
+//        ofClear(0,0,0,0);
+//        shader.begin();
+//        shader.setUniform1f("depthValModifier", 4);
+//        targetFbo.getDepthTexture().drawSubsection(0, 0, 1920, 1080, 0, targetFbo.getHeight() - 1080, 1920, 1080);
+//        
+//        shader.end();
+//        output.end();
+//        output.readToPixels(tempPix);
+//        
+//        ofSaveImage(tempPix, fileName + "depth" + ".png");
+//        //temp.setFromPixels(tempPix);
+//        //temp.saveImage(fileName + "depth" + ".png");
+//        
+//        
+//    }
     
 }
 
