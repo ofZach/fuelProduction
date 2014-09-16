@@ -4,6 +4,8 @@
 #include "ofxUI.h"
 #include "ofxCv.h"
 #include "cameraCalibrationManager.h"
+#include "frameDataManager.h"
+
 
 
 class ofApp : public ofBaseApp{
@@ -18,18 +20,13 @@ public:
  
     void listDirs();
     
-    ofDirectory bgImages;
-    ofDirectory objs;
-    ofDirectory maskImages;
+  
+    frameDataManager FDM;
+    frameData frame;
     
+
     int currentFrame;
     int lastFrame;
-    
-    ofImage currBg;
-    ofMesh currMesh;
-    //ofImage currFsImg;
-    
-    void loadFrame(int frame);
     
 
 	ofEasyCam cam;
@@ -37,12 +34,8 @@ public:
 	ofLight light;
 	
 	bool useEasyCam;
-	ofVideoPlayer backdrop;
 	ofFbo targetFbo;
 
-	ofImage testOverlay;
-	vector<ofMesh> meshes;
-	int curMesh;
 	void drawMesh(ofMesh& m, ofFloatColor color);
 
 	ofxUISuperCanvas* adjustGui;
@@ -53,7 +46,6 @@ public:
 	bool showObjSequence;
 	bool showBlendShape;
 	float videoAlpha;
-
 
     ofCamera cam3d;
     
@@ -68,13 +60,6 @@ public:
     
     bool bSaving;
     int savingFrame;
-    
-    
-    ofShader shader;
-    
-    
-    ofFbo output;
-    
     
     
     
