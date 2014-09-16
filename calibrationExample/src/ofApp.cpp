@@ -1,7 +1,5 @@
 #include "ofApp.h"
 #include "ofxBinaryMesh.h"
-#include "ofxAlembic.h"
-
 
 #define GLSL(version, shader)  "#version " #version "\n" #shader
 
@@ -14,15 +12,18 @@ static string dataPath = "../../../sharedData/";
 void listDirs();
 
 float scaleFac;
+#ifndef NO_ALEMBIC
+#include "ofxAlembic.h"
 ofxAlembic::Reader abc;
+#endif
 
 void ofApp::setup() {
 	
     
-    
+#ifndef NO_ALEMBIC
     abc.open("craig_02_test_fromEmmett_0912a.abc");
     abc.dumpNames();
-    
+#endif    
     
     
     bSaving = false;
@@ -164,17 +165,17 @@ void ofApp::update() {
     
     if (prevFrame.getIndices().size() > 0){
     
-    for (int i = 0; i < currMesh.getIndices().size(); i+= 100){
-        to.push_back(currMesh.getVertices()[currMesh.getIndices()[i]]);
-        from.push_back(prevFrame.getVertices()[prevFrame.getIndices()[i]]);
-    }
+		for (int i = 0; i < currMesh.getIndices().size(); i+= 100){
+			to.push_back(currMesh.getVertices()[currMesh.getIndices()[i]]);
+			from.push_back(prevFrame.getVertices()[prevFrame.getIndices()[i]]);
+		}
 	
-	ofMatrix4x4 rigidEstimate = ofxCv::estimateAffine3D(from, to);
+		ofMatrix4x4 rigidEstimate = ofxCv::estimateAffine3D(from, to);
 
 	
-	rigidEstimate.decompose(decompTranslation, decompRotation, decompScale, decompSo);
-	cout << "trans as: " << decompTranslation << endl;
-	cout << "rotate as: " << endl << decompRotation << endl;
+		rigidEstimate.decompose(decompTranslation, decompRotation, decompScale, decompSo);
+		cout << "trans as: " << decompTranslation << endl;
+		cout << "rotate as: " << endl << decompRotation << endl;
     }
 
 
@@ -196,14 +197,15 @@ void ofApp::draw(){
     
     //void setupScreenPerspective(float width = -1, float height = -1, float fov = 60, float nearDist = 0, float farDist = 0);
 	//ofSetupScreen();
-    
+#ifndef NO_ALEMBIC
     float t = currentFrame / 24.0;
     if (t > abc.getMaxTime()){
         t = abc.getMaxTime();
     }
+
 	// update alemblic reader with time in sec
 	abc.setTime(t);
-   
+#endif
     
 	targetFbo.begin();
     ofViewport(ofRectangle(0,0,1920, 1080));
@@ -340,7 +342,7 @@ void ofApp::draw(){
     
     
 
-    
+#ifndef NO_ALEMBIC
     vector<ofPolyline> curvesMe;
     abc.get("SplineSpline", curvesMe);
     
@@ -352,10 +354,11 @@ void ofApp::draw(){
     ofSetLineWidth(1);
     
     abc.get("line10_PLASpline", curvesMe);
-    
+
     ofSetColor(0, 0, 255);
     for (int i = 0; i < curvesMe.size(); i++)
         curvesMe[i].draw();
+#endif
 
     
     ofSetColor(255,255,255);
