@@ -97,7 +97,13 @@ void ofApp::setup() {
         
     //}
     
+    
+    
     writer.close();
+    
+    
+    abc.open("SH04_Spline_01c.abc");
+    abc.dumpNames();
     
     
 //    ofxAlembic::Writer writer;
@@ -194,27 +200,19 @@ void ofApp::update() {
 void ofApp::draw(){
     
     
-    //void setupScreenPerspective(float width = -1, float height = -1, float fov = 60, float nearDist = 0, float farDist = 0);
-	//ofSetupScreen();
 #ifndef NO_ALEMBIC
     float t = currentFrame / 24.0;
     if (t > abc.getMaxTime()){
         t = abc.getMaxTime();
     }
-    
-	// update alemblic reader with time in sec
-	abc.setTime(t);
+    abc.setTime(t);
 #endif
     
 	targetFbo.begin();
     ofViewport(ofRectangle(0,0,1920, 1080));
-    
-    
 	ofClear(0,0,0,0);
     glClear(GL_DEPTH);
     
-    
-	float videoScale = targetFbo.getWidth() / frame.img.getWidth();
     
 	if(useSideCamera){
 		currentCamera->begin();
@@ -242,20 +240,8 @@ void ofApp::draw(){
 	else{
 		ofVec3f camPos(0,0,0);
 		camPos = CCM.extrinsics * camPos;
-		if(ofGetKeyPressed('m')){
-			baseCamera.setPosition( ofVec3f(0,0,0) );
-			baseCamera.lookAt(ofVec3f(0,0,-1));
-		}
-		else{
-			baseCamera.setTransformMatrix(CCM.extrinsics);
-            cout << "cam position " << baseCamera.getPosition() << endl;
-            cout << "cam roll " << baseCamera.getRoll() << endl;
-            cout << "cam pitch " << baseCamera.getPitch() << endl;
-            cout << "cam heading " << baseCamera.getHeading() << endl;
-            cout << "cam fov " << baseCamera.getFov() << endl;
-            
-		}
-		baseCamera.setFov( CCM.rgbCalibration.getDistortedIntrinsics().getFov().y );
+		baseCamera.setTransformMatrix(CCM.extrinsics);
+        baseCamera.setFov( CCM.rgbCalibration.getDistortedIntrinsics().getFov().y );
 		baseCamera.begin(ofRectangle(0,0,1920, 1080));
         ofEnableDepthTest();
 	}
@@ -299,32 +285,50 @@ void ofApp::draw(){
     ofLine( baseCamera.getPosition(), d);
     
     
-    ofPushMatrix();
-    ofScale(-scaleFac,scaleFac,scaleFac);
-	ofTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
+    ofPoint midPt (0,0,0);
 
-	drawMesh(frame.head, ofColor::darkGoldenRod);
-	drawMesh(frame.rightEye, ofColor::red);
-	drawMesh(frame.leftEye, ofColor::blue);
+    for (int i = 0; i < frame.head.getNumIndices(); i++){
+        midPt += frame.head.getVertices()[frame.head.getIndices()[i]];
+    }
 
-	ofPushStyle();
-
-	//ofScale(10,10,10);
-	ofNoFill();
-	ofNode n;
-	FDM.getOrientation(frame, n);
-	n.draw();
-	ofSetColor(255);
+    midPt /= (int)frame.head.getNumIndices();
     
-ofPopStyle();
-
-    ofPopMatrix();
-
 #ifndef NO_ALEMBIC
     vector<ofPolyline> curvesMe;
     abc.get("SplineSpline", curvesMe);
+    ofPushMatrix();
+    //ofTranslate(ofPoint(0,0,-1095.244));
+    for (int i = 0; i< curvesMe.size(); i++){
+        curvesMe[i].draw();
+    }
+    ofPopMatrix();
 #endif
     
+    
+    ofPushMatrix();
+        ofScale(-scaleFac,scaleFac,scaleFac);
+        ofTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
+
+        drawMesh(frame.head, ofColor::darkGoldenRod);
+        drawMesh(frame.rightEye, ofColor::red);
+        drawMesh(frame.leftEye, ofColor::blue);
+
+        ofPushStyle();
+
+        //ofScale(10,10,10);
+        ofNoFill();
+        ofNode n;
+        FDM.getOrientation(frame, n);
+        n.draw();
+        ofSetColor(255);
+    //    ofMatrix4x4 mat = n.getGlobalTransformMatrix();
+    //    ofMultMatrix(mat);
+    //    ofBoxPrimitive(100, 100, 100).draw();
+    //    ofPopMatrix();
+        ofPopStyle();
+	ofPopMatrix();
+
+
     
     ofSetColor(ofColor::white);
 
@@ -380,7 +384,7 @@ void ofApp::keyPressed(ofKeyEventArgs& args){
 	if(args.key == ' '){
 		useSideCamera = !useSideCamera;
         if (useSideCamera){
-            currentCamera == &easyCam;
+            //currentCamera = &easyCam;
         }
 	}
 
