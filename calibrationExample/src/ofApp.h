@@ -1,10 +1,10 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxUI.h"
 #include "ofxCv.h"
 #include "cameraCalibrationManager.h"
 #include "frameDataManager.h"
+#include "ofxGui.h"
 
 
 class ofApp : public ofBaseApp{
@@ -25,27 +25,37 @@ public:
     int currentFrame;
     int lastFrame;
     
-    
-	ofEasyCam cam;
-	ofCamera baseCamera;
+
 	ofLight light;
 	
-	bool useEasyCam;
 	ofFbo targetFbo;
 
 	void drawMesh(ofMesh& m, ofFloatColor color);
 
-	ofxUISuperCanvas* adjustGui;
-	ofVec3f adjustments;
-	int offsetShiftMillis;
-	bool showWireframe;
-	bool showFilled;
-	bool showObjSequence;
-	bool showBlendShape;
-	float videoAlpha;
-
-    ofCamera cam3d;
     
+    
+    
+    
+	//ofxUISuperCanvas* adjustGui;
+	ofParameter <ofVec3f> adjustments;
+	ofParameter <bool> showWireframe;
+	ofParameter <bool> showFilled;
+    ofParameter <float> scaleFac;
+    ofxPanel gui;
+
+	bool useSideCamera;
+
+	ofCamera* currentCamera;
+    ofCamera sideCam;
+	ofCamera topCamera;
+	ofCamera baseCamera;
+    vector < ofCamera * > cameraPtrs;
+    int cameraCounter;
+//    
+
+	ofEasyCam easyCam;
+
+
     cameraCalibrationManager CCM;
     
     
