@@ -76,126 +76,46 @@ void ofApp::setup() {
                        CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height,GL_RGBA32F);
 
    
+
+    // save head and tranform
     
-    
-    
-    //
-    //
-    //
-    
-    
-    
-//    std::string name = "someOpsXform.abc";
-//    OArchive archive( Alembic::AbcCoreHDF5::WriteArchive(), name );
-//    TimeSampling Ts(1.0 / 24.0, 0);
-//    Alembic::Util::uint32_t tsidx = archive.addTimeSampling(Ts);
-//    OXform a( OObject( archive, kTop ), "a");
-//    a.getSchema().setTimeSampling(tsidx);
-//
-//
+//    ofxAlembic::Writer writer;
+//    
+//    
+//    string path = ofGetTimestampString() + ".abc";
+//    writer.open(path, 24);
+//    
 //    for (int j = 0; j < FDM.numFrames; j++){
-//
+//        
 //        FDM.loadFrame(j, frame);            // load frame 0
+//        ofMatrix4x4 mm;
+//        mm.glScale(-scaleFac,scaleFac,scaleFac);
+//        mm.glTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
 //
-//        vector<ofVec3f> from;
-//        vector<ofVec3f> to;
-//        for (int i = 0; i < frame.head.getIndices().size(); i+= 10){
-//            to.push_back(frame.head.getVertices()[frame.head.getIndices()[i]]);
-//            from.push_back(firstFrame.head.getVertices()[firstFrame.head.getIndices()[i]]);
+//        ofMesh temp = frame.head;
+//        cout << temp.getNumVertices() << endl;
+//        ofxAlembic::transform(temp, mm);
+//        writer.addPolyMesh("/head", temp);
+//
+//        ofNode n;
+//        FDM.getOrientation(frame, n);
+//
+//        ofMatrix4x4 mat = n.getGlobalTransformMatrix();
+//        ofMatrix4x4 newMat =  mat * mm;
+//        newMat.glScale(-1, 1,1);
+//        writer.addXform("/box", newMat);
+//        if (j == 0){
+//            ofBoxPrimitive box;
+//            box.set(40);
+//            writer.addPolyMesh("/box/boxShape", box.getMesh());
 //        }
-//
-//        ofMatrix4x4 rigidEstimate = ofxCv::estimateAffine3D(from, to);
-//
-//        XformSample samp;
-//        XformOp matop( kMatrixOperation, kMatrixHint );
-//
 //        
-//        ofPoint midPt (0,0,0);
-//        ofMesh m = frame.head;
-//        for (int i = 0; i < m.getNumIndices(); i++){
-//            midPt += m.getVertices()[m.getIndices()[i]];
-//        }
-//        midPt /= (int)m.getNumIndices();
-//        midPt = midPt;
-//
-//
-//        
-//        rigidEstimate.decompose(decompTranslation, decompRotation, decompScale, decompSo);
-//
-//        float angle;
-//        float x, y,z;
-//        decompRotation.getRotate(angle, x, y, z);
-//
-//        XformOp transop( kTranslateOperation, kTranslateHint );
-//        XformOp rotatop( kRotateOperation, kRotateHint );
-//        XformOp scaleop( kScaleOperation, kScaleHint );
-//        const float *p = rigidEstimate.getPtr();
-//        Imath::M44d md = Imath::M44d(p[0], p[1], p[2], p[3],
-//                                     p[4], p[5], p[6], p[7],
-//                                     p[8], p[9], p[10], p[11],
-//                                     p[12], p[13], p[14], p[15]);
-//
-//        //samp.addOp( XformOp( kMatrixOperation, kMatrixHint ), md );
-//
-////        mm.glTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
-////        mm.glTranslate( ofPoint(-midPt.x, midPt.y, midPt.z) + ofPoint(100,100,-100));
-////        mm.glScale(-scaleFac,scaleFac,scaleFac);
-//        // mm.glScale(1,1,1);
-//        //
-//        //mm.glRotate(mouseY, 1,0,0);
-//        //
-//        
-//        ofMatrix4x4 rot;
-//        rot.glRotate(angle, x,y,z);
+//        // draw the box of orientation using new alexmbic style
 //        
 //        
-//        samp.addOp( transop, V3d(-adjustments->x,adjustments->y,adjustments->z));
-//        samp.addOp( transop, V3d(-midPt.x, midPt.y, midPt.z) );
-//        //samp.addOp( scaleop, V3d(1.0, 1.0, 1.0) );
-//        samp.addOp( rotatop, V3d(x,y,z), angle);
-//
-//
-//        a.getSchema().set(samp);
 //    }
-    
-    
-    ofxAlembic::Writer writer;
-    
-    
-    string path = ofGetTimestampString() + ".abc";
-    writer.open(path, 24);
-    
-    for (int j = 0; j < FDM.numFrames; j++){
-        
-        FDM.loadFrame(j, frame);            // load frame 0
-        ofMatrix4x4 mm;
-        mm.glScale(-scaleFac,scaleFac,scaleFac);
-        mm.glTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
-
-        ofMesh temp = frame.head;
-        cout << temp.getNumVertices() << endl;
-        ofxAlembic::transform(temp, mm);
-        writer.addPolyMesh("/head", temp);
-
-        ofNode n;
-        FDM.getOrientation(frame, n);
-
-        ofMatrix4x4 mat = n.getGlobalTransformMatrix();
-        ofMatrix4x4 newMat =  mat * mm;
-        newMat.glScale(-1, 1,1);
-        writer.addXform("/box", newMat);
-        if (j == 0){
-            ofBoxPrimitive box;
-            box.set(40);
-            writer.addPolyMesh("/box/boxShape", box.getMesh());
-        }
-        
-        // draw the box of orientation using new alexmbic style
-        
-        
-    }
-    
-    writer.close();
+//    
+//    writer.close();
 //
     
     
@@ -321,7 +241,6 @@ void ofApp::draw(){
     c = baseCamera.screenToWorld( ofPoint(0,0));
     d = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth(),0));
     e = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth(),targetFbo.getHeight()) / 2.0  + ofPoint(50,-50));
-    
     
     ofPoint camP = baseCamera.getPosition();
     
