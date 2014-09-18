@@ -5,7 +5,7 @@
 #include "cameraCalibrationManager.h"
 #include "frameDataManager.h"
 #include "ofxGui.h"
-
+#include "cameraManager.h"
 
 class ofApp : public ofBaseApp{
 public:
@@ -20,6 +20,7 @@ public:
     frameDataManager FDM;
     frameData frame;
     frameData firstFrame;
+    
     
     
     int currentFrame;
@@ -37,20 +38,18 @@ public:
 	ofParameter <bool> showWireframe;
 	ofParameter <bool> showFilled;
     ofParameter <float> scaleFac;
+    ofParameter <bool> playback;
+    ofParameter <bool> playbackAudio;
     ofxPanel gui;
-
-	bool useSideCamera;
-
-	ofCamera* currentCamera;
-    ofCamera sideCam;
-	ofCamera topCamera;
-	ofCamera baseCamera;
-    vector < ofCamera * > cameraPtrs;
-    int cameraCounter;
-//    
-
-	ofEasyCam easyCam;
-
+    
+    ofSoundPlayer sndPlayer;
+    
+   
+    ofImage backgroundPlate;
+    
+	cameraManager CM;
+    
+    
 
     cameraCalibrationManager CCM;
     

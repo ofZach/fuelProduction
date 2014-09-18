@@ -1,7 +1,7 @@
 <panel>
-	<adjustments>-1.53061, 50, -4.08163</adjustments>
-	<showWireframe>1</showWireframe>
+	<adjustments>-1.53061, 53.0612, 0</adjustments>
+	<showWireframe>0</showWireframe>
 <panel/>
-<showFilled>0</showFilled>
+<showFilled>1</showFilled>
 	<scaleFac>1.1925</scaleFac>
 </panel>

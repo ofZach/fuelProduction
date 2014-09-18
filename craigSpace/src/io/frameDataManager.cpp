@@ -61,6 +61,10 @@ void frameDataManager::loadFrame( int frameNum, frameData & fd){
     if (frameNum < videoImages.size()){
         fd.img.loadImage(videoImages[frameNum]);
     }
+    
+    if (frameNum < maskImages.size()){
+        fd.mask.loadImage(maskImages[frameNum]);
+    }
 
     if (frameNum < heads.size()){
         ofxBinaryMesh::load(heads.getPath(frameNum), fd.head);
@@ -73,4 +77,6 @@ void frameDataManager::loadFrame( int frameNum, frameData & fd){
 	if (frameNum < rightEyes.size()){
 		ofxBinaryMesh::load(rightEyes.getPath(frameNum), fd.rightEye);
     }
+    
+    
 }
