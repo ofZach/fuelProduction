@@ -29,31 +29,41 @@ void frameDataManager::listDirs( string footageDir, vector<string> obmDir){
 	int handleInFrames = 100;
 	
 	for(int i = 0; i < obmDir.size(); i++){
+		
+		//ignore handles except for the end
+		int startOffset = (i == 0) ? 0 : handleInFrames;
+		int endOffset   = (i == obmDir.size()-1) ? 0 : handleInFrames;
+		
+		startOffset = 0;
+		endOffset   = 0;
+		
 		ofDirectory headsDir;
 		headsDir.allowExt("obm");
 		headsDir.listDir(obmDir[i] + "/head");
-		for(int j = 0; j < headsDir.size(); j++){
+		for(int j = startOffset; j < headsDir.size()-endOffset; j++){
 			heads.push_back(headsDir.getPath(j));
 		}
 		
 		ofDirectory leftEyesDir;
 		leftEyesDir.allowExt("obm");
 		leftEyesDir.listDir(obmDir[i] + "/leftEye");
-		for(int j = 0; j < leftEyesDir.size(); j++){
+		for(int j = startOffset; j < leftEyesDir.size()-endOffset; j++){
 			leftEyes.push_back(leftEyesDir.getPath(j));
 		}
 		
 		ofDirectory rightEyesDir;
 		rightEyesDir.listDir(obmDir[i] + "/rightEye");
-		for(int j = 0; j < rightEyesDir.size(); j++){
+		for(int j = startOffset; j < rightEyesDir.size()-endOffset; j++){
 			rightEyes.push_back(rightEyesDir.getPath(j));
 		}
 	}
 	
     maskImages.listDir(footageDir);
     numFrames = videoImages.size();
+	
     cout << "numeFrames " << numFrames << endl;
-    
+    cout << "num objects " << heads.size();
+	
 	calculateBaseEyeInfo();
 	
 }

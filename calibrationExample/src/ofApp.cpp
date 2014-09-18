@@ -45,9 +45,19 @@ void ofApp::setup() {
 	shotManager.footageBasePath = "/Volumes/CHOPPER/_ToyotaXpopTech_/GOLD_Footage/";
 	shotManager.setup();
 
-//	shotManager.loadShot("SH005", FDM);
-//	shotManager.loadShot("SH010", FDM);
-	shotManager.loadShot("SH007", FDM);	
+//	shotManager.loadShot("SH001", FDM); //jackie portrait
+//	shotManager.loadShot("SH002", FDM); //craig portrait
+//	shotManager.loadShot("SH003", FDM); //matt portrait
+	//NOT ALIGNED AFTER CUT -- NO EYES AFTER CUT
+//	shotManager.loadShot("SH004", FDM); //craig scifi
+//	shotManager.loadShot("SH005", FDM); //jackie smog
+	shotManager.loadShot("SH006", FDM); //jackie "made fuel cells important to me"
+//	shotManager.loadShot("SH007", FDM);
+//	shotManager.loadShot("SH008", FDM);
+//	shotManager.loadShot("SH009", FDM);
+//	shotManager.loadShot("SH010", FDM); //
+//	shotManager.loadShot("SH011", FDM); //MATT "Innovative technology"
+	
 	
 	//zach you can uncomment this to switch to your directory
 //	string footagePath = "/Users/zachlieberman/Desktop/"
@@ -269,11 +279,11 @@ void ofApp::draw(){
 		}
 		else{
 			baseCamera.setTransformMatrix(CCM.extrinsics);
-            cout << "cam position " << baseCamera.getPosition() << endl;
-            cout << "cam roll " << baseCamera.getRoll() << endl;
-            cout << "cam pitch " << baseCamera.getPitch() << endl;
-            cout << "cam heading " << baseCamera.getHeading() << endl;
-            cout << "cam fov " << baseCamera.getFov() << endl;
+//            cout << "cam position " << baseCamera.getPosition() << endl;
+//            cout << "cam roll " << baseCamera.getRoll() << endl;
+//            cout << "cam pitch " << baseCamera.getPitch() << endl;
+//            cout << "cam heading " << baseCamera.getHeading() << endl;
+//            cout << "cam fov " << baseCamera.getFov() << endl;
             
 		}
 		baseCamera.setFov( CCM.rgbCalibration.getDistortedIntrinsics().getFov().y );
