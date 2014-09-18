@@ -7,6 +7,7 @@
 #include "shotManager.h"
 #include "ofxGui.h"
 #include "cameraManager.h"
+#include "LineManager.h"
 
 class ofApp : public ofBaseApp{
 public:
@@ -23,6 +24,11 @@ public:
     frameData frame;
     frameData firstFrame;
     
+	LineManager line;
+	cameraManager CM;
+    
+    cameraCalibrationManager CCM;
+
     int currentFrame;
     int lastFrame;
 
@@ -32,7 +38,6 @@ public:
 
 	void drawMesh(ofMesh& m, ofFloatColor color);
 
-	//ofxUISuperCanvas* adjustGui;
 	ofParameter <ofVec3f> adjustments;
 	ofParameter <bool> showWireframe;
 	ofParameter <bool> showFilled;
@@ -40,21 +45,16 @@ public:
     ofParameter <bool> playback;
     ofParameter <bool> playbackAudio;
 	ofParameter <bool> drawFaceBox;
-	
-    ofxPanel gui;
 
+	//line pos
     ofSoundPlayer sndPlayer;
-    
     ofImage backgroundPlate;
     
-	cameraManager CM;
-    
-    cameraCalibrationManager CCM;
     
     // ---------------
-    ofMesh prevFrame;
-    ofVec3f decompTranslation, decompScale;
-    ofQuaternion decompRotation, decompSo;
+//    ofMesh prevFrame;
+//    ofVec3f decompTranslation, decompScale;
+//    ofQuaternion decompRotation, decompSo;
     
     
     bool bSaving;

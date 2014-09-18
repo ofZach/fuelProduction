@@ -26,10 +26,18 @@ void ofApp::setup() {
     gui.add(playback.set("playback", false));
     gui.add(playbackAudio.set("playbackAudio", false));
 	gui.add(drawFaceBox.set("draw face box", false));
+
+	gui.add(line.startPointX.set("start x",  0, -200,  200));
+	gui.add(line.startPointY.set("start y",  0, -200,  200));
+	gui.add(line.startPointZ.set("start z",-900, -700, -1200));
+
+	gui.add(line.extrudeAmount.set("extrude", 200, 0, 400));
+	gui.add(line.arcRadius.set("arc radius", 200, 0, 400));
+	gui.add(line.arcAngle.set("arc angle", 360, 180, 720));
+
 	
     gui.loadFromFile("adjustments.xml");
     
-
     //sndPlayer.loadSound("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/SH002_1-2.aif");
     //sndPlayer.setLoop(true);
     //sndPlayer.setVolume(0);
@@ -71,8 +79,7 @@ void ofApp::setup() {
     
 	string testSequenceFolder = dataPath + "aCam/";
     
-	CCM.loadCalibration(
-                        testSequenceFolder + "matrices/rgbCalib.yml",
+	CCM.loadCalibration(testSequenceFolder + "matrices/rgbCalib.yml",
                         testSequenceFolder + "matrices/depthCalib.yml",
                         testSequenceFolder + "matrices/rotationDepthToRGB.yml",
                         testSequenceFolder + "matrices/translationDepthToRGB.yml");
@@ -187,6 +194,8 @@ void ofApp::draw(){
         
         ofPopStyle();
 	ofPopMatrix();
+	
+	line.drawArc();
     
     
     
@@ -244,6 +253,10 @@ void ofApp::keyPressed(ofKeyEventArgs& args){
     if (args.key == 's'){
         gui.saveToFile("adjustments.xml");
     }
+	
+	if(args.key == 'l'){
+		line.generateArcPoints();
+	}
     
     CM.keyPressed(args.key);
     
