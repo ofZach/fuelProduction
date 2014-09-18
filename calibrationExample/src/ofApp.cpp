@@ -41,7 +41,7 @@ void ofApp::setup() {
 	shotManager.footageBasePath = "/Volumes/CHOPPER/_ToyotaXpopTech_/GOLD_Footage/";
 	shotManager.setup();
 
-//	shotManager.loadShot("SH001", FDM); //jackie portrait
+	shotManager.loadShot("SH001", FDM); //jackie portrait
 //	shotManager.loadShot("SH002", FDM); //craig portrait
 //	shotManager.loadShot("SH003", FDM); //matt portrait
 	//NOT ALIGNED AFTER CUT -- NO EYES AFTER CUT
@@ -52,7 +52,7 @@ void ofApp::setup() {
 //	shotManager.loadShot("SH008", FDM); //JACKiE change the way communities
 //	shotManager.loadShot("SH009", FDM); //JACKIE 'states, nations, the world'
 //	shotManager.loadShot("SH010", FDM); //CRAIG mental models;
-	shotManager.loadShot("SH011", FDM); //CRAIG "we did it"
+//	shotManager.loadShot("SH011", FDM); //CRAIG "we did it"
 	
 	
 	//zach you can uncomment this to switch to your directory
@@ -94,10 +94,8 @@ void ofApp::setup() {
     
     cout << FDM.numFrames << endl;
     
-   
 	ofSetVerticalSync(true);
 	
-
 	light.enable();
 	light.setPosition(+500, +500, +500);
     

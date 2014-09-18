@@ -83,6 +83,7 @@
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E705E73D19CA90640083A103 /* shotManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E705E73B19CA90640083A103 /* shotManager.cpp */; };
+		E705E74019CB2E320083A103 /* cameraManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E705E73E19CB2E320083A103 /* cameraManager.cpp */; };
 		E7E077E515D3B63C0020DFD4 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */; };
 		E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E715D3B6510020DFD4 /* QTKit.framework */; };
 		E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F985F515E0DE99003869B5 /* Accelerate.framework */; };
@@ -594,6 +595,8 @@
 		E68E2DC6B608124861A94FB1 /* OScalarProperty.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OScalarProperty.h; path = ../../../addons/ofxAlembic/libs/alembic/include/Alembic/Abc/OScalarProperty.h; sourceTree = SOURCE_ROOT; };
 		E705E73B19CA90640083A103 /* shotManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shotManager.cpp; sourceTree = "<group>"; };
 		E705E73C19CA90640083A103 /* shotManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shotManager.h; sourceTree = "<group>"; };
+		E705E73E19CB2E320083A103 /* cameraManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cameraManager.cpp; sourceTree = "<group>"; };
+		E705E73F19CB2E320083A103 /* cameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cameraManager.h; sourceTree = "<group>"; };
 		E71733956CD601886837BE2E /* ofxUICanvas.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxUICanvas.cpp; path = ../../../addons/ofxUI/src/ofxUICanvas.cpp; sourceTree = SOURCE_ROOT; };
 		E782680D6694C21F9DAD11E6 /* ricehdf.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ricehdf.h; path = ../../../addons/ofxAlembic/libs/alembic/include/ricehdf.h; sourceTree = SOURCE_ROOT; };
 		E7DDB716B5AE0DEA82DFFEDA /* autotuned_index.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = autotuned_index.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/autotuned_index.h; sourceTree = SOURCE_ROOT; };
@@ -1617,6 +1620,8 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				E705E73E19CB2E320083A103 /* cameraManager.cpp */,
+				E705E73F19CB2E320083A103 /* cameraManager.h */,
 				FD1598E719C8AEC6003A5909 /* io */,
 				FD1598EE19C8AEC6003A5909 /* processing */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
@@ -1893,6 +1898,7 @@
 				2023EF517ED2D8B397511D4B /* Helpers.cpp in Sources */,
 				C602002DE761F9B52DB4400A /* ObjectFinder.cpp in Sources */,
 				7CDAD32BE4FA46701E3552C7 /* RunningBackground.cpp in Sources */,
+				E705E74019CB2E320083A103 /* cameraManager.cpp in Sources */,
 				FD1598F319C8AEC6003A5909 /* frameDataManager.cpp in Sources */,
 				FD0BF7B219C9A4D800E060F7 /* ofxSliderGroup.cpp in Sources */,
 				10B69DE456AED1288FC9316B /* Tracker.cpp in Sources */,

@@ -39,7 +39,8 @@ public:
 	vector<string> leftEyes;
 	vector<string> rightEyes;
 	
-    ofDirectory videoImages;
+	vector<string> videoImages;
+//	vector<string> maskImages;
     ofDirectory maskImages;
 
     int getNumFrames();
