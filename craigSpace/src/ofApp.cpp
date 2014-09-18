@@ -12,6 +12,7 @@ static string dataPath = "../../../sharedData/";
 //void listDirs();
 
 
+
 #ifndef NO_ALEMBIC
 #include "ofxAlembic.h"
 ofxAlembic::Reader abc;
@@ -19,25 +20,21 @@ ofxAlembic::Reader abc;
 
 void ofApp::setup() {
 	
-    
-    
-    // THIS IS SUPER WEIRD FOR ME -- adjustments gets NANs on OSX, and weirdness.
-    
-    // adjustments.set(0,0,0);
-    // adjustGui = new ofxUISuperCanvas("ADJUST", 0,0, 300,500);
-    // adjustGui->addMinimalSlider("ADJUST X", -50, 50, &adjustments->x);
-    // adjustGui->addMinimalSlider("ADJUST Y", -50, 50, &adjustments->y);
-    // adjustGui->addMinimalSlider("ADJUST Z", -50, 50, &adjustments->z);
-    // scaleFac = 1.0;
-    // adjustGui->addMinimalSlider("SCALE", 0.7, 1.3, &scaleFac);
-    // adjustGui->loadSettings("adjustments->xml");
        
     gui.setup("panel"); // most of the time you don't need a name but don't forget to call setup
     gui.add(adjustments.set("adjustments", ofPoint(0, 0, 0), -ofPoint(200,200,200), ofPoint(200,200,200)));
     gui.add(showWireframe.set("showWireframe", false));
     gui.add(showFilled.set("showFilled", false));
     gui.add(scaleFac.set("scaleFac", 1, 0.1, 2.0));
+    gui.add(playback.set("playback", false));
+    gui.add(playbackAudio.set("playbackAudio", false));
     gui.loadFromFile("adjustments.xml");
+    
+    
+    sndPlayer.loadSound("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/SH002_1-2.aif");
+    sndPlayer.setLoop(true);
+    sndPlayer.setVolume(0);
+    sndPlayer.play();
     
 
     bSaving = false;
@@ -54,9 +51,7 @@ void ofApp::setup() {
     
 	ofSetVerticalSync(true);
 	
-	useSideCamera = false;
-	currentCamera = &easyCam;
-
+    
 	light.enable();
 	light.setPosition(+500, +500, +500);
     
@@ -76,42 +71,50 @@ void ofApp::setup() {
                        CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height,GL_RGBA32F);
 
    
+    
+    CM.CCM = CCM;
+	CM.setup();
+    
+    
 
-    // save head and tranform
-    
-    //CCM.extrinsics
-    
-    ofxAlembic::Writer writer;
-    string path = "cam.abc";
-    writer.open(path, 24);
-
-    writer.addXform("/box", CCM.extrinsics);
-    //if (j == 0){
-        ofBoxPrimitive box;
-        box.set(40);
-        writer.addPolyMesh("/box/boxShape", box.getMesh());
-    //}
-
-        // draw the box of orientation using new alexmbic style
-        
-        
-    //}
-    
-    
-    
-    writer.close();
+//    // save head and tranform
+//    
+//    //CCM.extrinsics
+//    
+////    ofxAlembic::Writer writer;
+////    string path = "cam.abc";
+////    writer.open(path, 24);
+////
+////    writer.addXform("/box", CCM.extrinsics);
+////    //if (j == 0){
+////        ofBoxPrimitive box;
+////        box.set(40);
+////        writer.addPolyMesh("/box/boxShape", box.getMesh());
+////    //}
+////
+////        // draw the box of orientation using new alexmbic style
+////        
+////        
+////    //}
+//    
+//    
+//    
+//    writer.close();
     
     
     abc.open("SH04_Spline_01c.abc");
     abc.dumpNames();
     
     
+    backgroundPlate.loadImage("../../../sharedData/Background Plates/A-Cam_BackgroundPlate_360p.png");
+
+    
 //    ofxAlembic::Writer writer;
 //    
 //    
 //    string path = ofGetTimestampString() + ".abc";
 //    writer.open(path, 24);
-//    
+//    /Users/zachlieberman/Desktop/of_v0.8.3_osx_release/apps/fuelProduction/sharedData/Background Plates/A-Cam_BackgroundPlate_360p.png
 //    for (int j = 0; j < FDM.numFrames; j++){
 //        
 //        FDM.loadFrame(j, frame);            // load frame 0
@@ -144,7 +147,7 @@ void ofApp::setup() {
 //    
 //    writer.close();
 //
-    
+ 
     
     
     
@@ -155,7 +158,24 @@ void ofApp::setup() {
 
 void ofApp::update() {
     
-    currentFrame = mouseX;
+    
+    if (!playback){
+        currentFrame = mouseX;
+    } else {
+        
+        float time = sndPlayer.getPositionMS() / 1000.0;
+        if (playbackAudio){
+            sndPlayer.setVolume(1);
+        } else {
+            sndPlayer.setVolume(0);
+        }
+        
+        //float totalTime = FDM.numFrames / 24.0;
+        //float t = ofGetElapsedTimef();
+        //while (t > totalTime) t -= totalTime;
+        currentFrame = (int)(time * 24.0);
+        
+    }
     if (lastFrame != currentFrame){
         FDM.loadFrame(currentFrame, frame);
         
@@ -176,25 +196,217 @@ void ofApp::update() {
     
     
     
-    if(!useSideCamera){
-		currentCamera = &baseCamera;
-	}
-	else{
-		//update camera positions;
-		ofVec3f center = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth()/2,targetFbo.getHeight()) / 2 );
-		ofVec3f camP = baseCamera.getPosition();
-        
-		center = camP + (center - camP).normalize() * 351*2;
-    
-		sideCam.setPosition(center + ofVec3f(targetFbo.getWidth(),0,0));
-		sideCam.lookAt(center,ofVec3f(0,1,0));
-        
-		topCamera.setPosition(center + ofVec3f(0,targetFbo.getHeight(), 0));
-		topCamera.lookAt(center,ofVec3f(1,0,0));
-        
-	}
+    CM.update();
+    //----------------
     
 }
+
+
+vector < vector < ofPoint > > getTangentLines(double x1, double y1, double r1, double x2, double y2, double r2) {
+    
+    
+    vector < vector < ofPoint > > pts;
+    
+    double d_sq = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+    
+    //cout << d_sq << " " << (r1-r2)*(r1-r2) << endl;
+    
+    
+    //if (d_sq <= (r1-r2)*(r1-r2)) return pts;
+    
+    double d = sqrt(d_sq);
+    double vx = (x2 - x1) / d;
+    double vy = (y2 - y1) / d;
+    
+    pts.resize(4);
+    for (int i = 0; i < 4; i++){
+        pts[i].resize(2);
+    }
+    
+    int i = 0;
+    
+    // Let A, B be the centers, and C, D be points at which the tangent
+    // touches first and second circle, and n be the normal vector to it.
+    //
+    // We have the system:
+    //   n * n = 1          (n is a unit vector)
+    //   C = A + r1 * n
+    //   D = B +/- r2 * n
+    //   n * CD = 0         (common orthogonality)
+    //
+    // n * CD = n * (AB +/- r2*n - r1*n) = AB*n - (r1 -/+ r2) = 0,  <=>
+    // AB * n = (r1 -/+ r2), <=>
+    // v * n = (r1 -/+ r2) / d,  where v = AB/|AB| = AB/d
+    // This is a linear equation in unknown vector n.
+    
+    for (int sign1 = +1; sign1 >= -1; sign1 -= 2) {
+        double c = (r1 - sign1 * r2) / d;
+        
+        // Now we're just intersecting a line with a circle: v*n=c, n*n=1
+        
+        if (c*c > 1.0) continue;
+        double h = sqrt(max(0.0, 1.0 - c*c));
+        
+        for (int sign2 = +1; sign2 >= -1; sign2 -= 2) {
+            double nx = vx * c - sign2 * h * vy;
+            double ny = vy * c + sign2 * h * vx;
+            int a = i++;
+            
+            //cout << a << " " << i << endl;
+            //double[] a = res[i++];
+            pts[a][0].x = x1 + r1 * nx;
+            pts[a][0].y = y1 + r1 * ny;
+            pts[a][1].x = x2 + sign1 * r2 * nx;
+            pts[a][1].y = y2 + sign1 * r2 * ny;
+        }
+    }
+    
+    return pts;
+    
+}
+
+
+int clockwiseFromPt( ofPoint a, ofPoint b, ofPoint c){
+    
+    ofPoint dA = a - c;
+    ofPoint dB = b - c;
+    
+    
+    
+    float angle = atan2 (dA.y, dA.x);
+    float angle2 = atan2 (dB.y, dB.x);
+    
+    float angleD = angle2 - angle;
+    while (angleD > PI) angleD -= TWO_PI;
+    while (angleD < -PI) angleD += TWO_PI;
+    //cout << angleD << endl;
+    
+    return angleD < 0 ? -1 : 1;
+    
+    
+}
+
+int sideOfLine( ofPoint A, ofPoint B, ofPoint m){
+    return ( (B.x-A.x)*(m.y-A.y) - (B.y-A.y)*(m.x-A.x) ) > 0 ? 1 : -1;
+}
+
+
+
+class circleInSpace{
+public:
+    ofPoint pt;
+    float size;
+};
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+ofPolyline lineFromCircle( vector < circleInSpace > circlesToTrack ){
+
+    ofPolyline line;
+
+    vector < ofPoint > circles;
+    vector < float > sizes;
+
+    for (int i = 0; i < circlesToTrack.size(); i++){
+        
+        circles.push_back(circlesToTrack[i].pt);
+        sizes.push_back(circlesToTrack[i].size);
+    }
+
+    int clockWise = -1;
+
+    ofPoint lastLineA;
+    ofPoint lastLineB;
+
+    for (int i = 0; i < circles.size()-2; i++){
+    
+
+    vector < vector<ofPoint> > pts = getTangentLines(circles[i].x,circles[i].y,sizes[i],
+                                                     circles[i+1].x,circles[i+1].y,sizes[i+1]);
+    
+    if (pts.size() == 0) continue;
+    
+    int rightOrLeft = sideOfLine(circles[i], circles[i+2], circles[i+1]);
+    
+    
+    ofPoint lineCircle = circles[i+2] - circles[i];
+    
+    lineCircle.normalize();
+    
+    vector < vector<ofPoint> > goodPts;
+    
+    for (int j = 0; j < pts.size(); j++){
+        
+        
+        ofPoint a = circles[i+1] - lineCircle*1000.0;
+        ofPoint b = circles[i+1] + lineCircle*1000.0;
+        ofPoint c = pts[j][1];
+        if ( sideOfLine(a,b,c) == rightOrLeft){
+            
+            // let's compare this clockwise, vs the prev clockwise
+            
+            ofPoint lastLineNormalized = lastLineB - lastLineA;
+            lastLineNormalized.normalize();
+            
+            ofPoint thisLineNormalized = pts[j][1] - pts[j][0];
+            thisLineNormalized.normalize();
+            
+            if (true){
+                
+                
+                int  clock = clockwiseFromPt( lastLineB, lastLineB + lastLineNormalized, circles[i]) ;
+                int clock2 = clockwiseFromPt( pts[j][0], pts[j][0] + thisLineNormalized, circles[i]);
+                
+                
+                if (clock2 == clock){
+                    
+                    if (pts[j][0].distance(ofPoint(0,0,0)) > 1 &&pts[j][1].distance(ofPoint(0,0,0)) > 1){
+                        
+                        goodPts.push_back(pts[j]);
+                    }
+                }
+            }
+        }
+    }
+    
+    
+        
+        if (goodPts.size() > 0){
+            int whichOne = (int)ofRandom(100) % goodPts.size();
+            
+            if (goodPts[whichOne][0].distance(ofPoint(0,0,0)) > 1 &&
+                goodPts[whichOne][1].distance(ofPoint(0,0,0)) > 1){
+                
+                
+                
+                line.addVertex(goodPts[whichOne][0]);
+                line.addVertex(goodPts[whichOne][1]);
+                lastLineA = goodPts[whichOne][0];
+                lastLineB = goodPts[whichOne][1];
+            }
+            
+        } else {
+            if (pts.size() > 0){
+                int whichOne = (int)ofRandom(100) % pts.size();
+                
+                if (pts[whichOne][0].distance(ofPoint(0,0,0)) > 1 &&
+                    pts[whichOne][1].distance(ofPoint(0,0,0)) > 1){
+                    
+                    line.addVertex(pts[whichOne][0]);
+                    line.addVertex(pts[whichOne][1]);
+                    lastLineA = pts[whichOne][0];
+                    lastLineB = pts[whichOne][1];
+                }
+                
+            }
+        }
+    }
+    
+    return line;
+}
+
+//-----------------------------------------------------------------------------
+
 
 
 void ofApp::draw(){
@@ -214,84 +426,16 @@ void ofApp::draw(){
     glClear(GL_DEPTH);
     
     
-	if(useSideCamera){
-		currentCamera->begin();
-		ofPushStyle();
-		ofPushMatrix();
-		ofNoFill();
-		ofColor(255,0,0);
-        //		ofDrawSphere(depthToRGBTranslation, 10);
-		ofNode n;
-		n.setPosition(CCM.depthToRGBTranslation);
-		n.draw();
-		ofColor(0,250,0);
-		ofSphere(0,0,0,10);
-		ofFill();
-		ofSetColor(255,0,0);
-		if(ofGetKeyPressed('m')){
-			ofMultMatrix(CCM.extrinsics);
-		}
-		ofSetLineWidth(5);
-		ofLine(ofVec3f(0,0,0), ofVec3f(0,0,-100));
-		ofPopMatrix();
-		ofPopStyle();
-        ofEnableDepthTest();
-	}
-	else{
-		ofVec3f camPos(0,0,0);
-		camPos = CCM.extrinsics * camPos;
-		baseCamera.setTransformMatrix(CCM.extrinsics);
-        baseCamera.setFov( CCM.rgbCalibration.getDistortedIntrinsics().getFov().y );
-		baseCamera.begin(ofRectangle(0,0,1920, 1080));
-        ofEnableDepthTest();
-	}
+    CM.cameraStart();
     
     
-    ofPoint a,b,c,d, e;
+    CM.drawCameraInternals(frame.img, frame.mask, backgroundPlate);
     
-    a = baseCamera.screenToWorld( ofPoint(0,targetFbo.getHeight()));
-    b = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth(),targetFbo.getHeight()));
-    c = baseCamera.screenToWorld( ofPoint(0,0));
-    d = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth(),0));
-    e = baseCamera.screenToWorld( ofPoint(targetFbo.getWidth(),targetFbo.getHeight()) / 2.0  + ofPoint(50,-50));
-    
-    ofPoint camP = baseCamera.getPosition();
-    
-    a = camP + (a - camP).normalize() * 351*5;
-    b = camP + (b - camP).normalize() * 351*5;
-    c = camP + (c - camP).normalize() * 351*5;
-    d = camP + (d - camP).normalize() * 351*5;
-    e = camP + (e - camP).normalize() * 351*4;
-    
-    // figure out a Z distance.
-    frame.img.bind();
-    ofMesh mesh;
-    mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
-    mesh.addVertex( a) ;
-    mesh.addTexCoord(   ofPoint(0,frame.img.getHeight()));
-    mesh.addVertex(  b) ;
-    mesh.addTexCoord(   ofPoint(frame.img.getWidth(),frame.img.getHeight()));
-    mesh.addVertex(  c) ;
-    mesh.addTexCoord(   ofPoint(0,0));
-    mesh.addVertex(  d ) ;
-    mesh.addTexCoord(   ofPoint(frame.img.getWidth(), 0));
-    mesh.draw();
-    frame.img.unbind();
-    
-
-    ofLine( baseCamera.getPosition(), a);
-    ofLine( baseCamera.getPosition(), b);
-    ofLine( baseCamera.getPosition(), c);
-    ofLine( baseCamera.getPosition(), d);
+   
     
     
-    ofPoint midPt (0,0,0);
-
-    for (int i = 0; i < frame.head.getNumIndices(); i++){
-        midPt += frame.head.getVertices()[frame.head.getIndices()[i]];
-    }
-
-    midPt /= (int)frame.head.getNumIndices();
+    
+    ofPolyline curve;
     
 #ifndef NO_ALEMBIC
     vector<ofPolyline> curvesMe;
@@ -301,9 +445,29 @@ void ofApp::draw(){
     for (int i = 0; i< curvesMe.size(); i++){
         curvesMe[i].draw();
     }
+    curve = curvesMe[0];
     ofPopMatrix();
 #endif
     
+    
+    curve = curve.getSmoothed(11);
+    
+    ofSetColor(ofColor::aquamarine);
+    curve.draw();
+    
+    //-----------------------------------------------------------------
+    
+    ofSeedRandom(mouseY);
+    
+    vector < circleInSpace > circles;
+    int nCircles = ofRandom(30,100);
+    for (int i = 0; i < nCircles; i++){
+        circleInSpace cc;
+        cc.pt.set( ofRandom(-300,300), ofRandom(-300,300));
+        cc.size =  10 + sin(ofGetElapsedTimef() + i/2.0) * 5;
+        circles.push_back(cc);
+    }
+    ofPolyline line = lineFromCircle(circles);
     
     ofPushMatrix();
         ofScale(-scaleFac,scaleFac,scaleFac);
@@ -321,10 +485,20 @@ void ofApp::draw(){
         FDM.getOrientation(frame, n);
         n.draw();
         ofSetColor(255);
-    //    ofMatrix4x4 mat = n.getGlobalTransformMatrix();
-    //    ofMultMatrix(mat);
-    //    ofBoxPrimitive(100, 100, 100).draw();
-    //    ofPopMatrix();
+            ofMatrix4x4 mat = n.getGlobalTransformMatrix();
+            ofMultMatrix(mat);
+            ofBoxPrimitive(100, 100, 100).draw();
+    
+            ofSetLineWidth(4);
+                    line.draw();
+            ofFill();
+            for (int i = 0; i < circles.size(); i++){
+                ofCircle(circles[i].pt, circles[i].size);
+            }
+    
+            ofPopMatrix();
+    
+    
         ofPopStyle();
 	ofPopMatrix();
 
@@ -332,27 +506,12 @@ void ofApp::draw(){
     
     ofSetColor(ofColor::white);
 
-	////////////////
-    
 	ofDisableDepthTest();
-
-    
-     
-	if(useSideCamera){
-		currentCamera->end();
-	}
-	else{
-		baseCamera.end();
-	}
+    CM.cameraEnd();
     
     ofEnableAlphaBlending();
-    
 	targetFbo.end();
-    
     targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
-    
-    
-    
     gui.draw();
     
 }
@@ -381,40 +540,11 @@ void ofApp::exit(){
 }
 
 void ofApp::keyPressed(ofKeyEventArgs& args){
-	if(args.key == ' '){
-		useSideCamera = !useSideCamera;
-        if (useSideCamera){
-            //currentCamera = &easyCam;
-        }
-	}
-
-	if(useSideCamera){
-		if(args.key == OF_KEY_LEFT){
-			if(currentCamera == &easyCam){
-				currentCamera = &sideCam;
-			}
-			else if(currentCamera == &sideCam){
-				currentCamera = &topCamera;
-			}
-			else {
-				currentCamera = &easyCam;
-			}
-		}
-		else if(args.key == OF_KEY_RIGHT){
-			if(currentCamera == &easyCam){
-				currentCamera = &topCamera;
-			}
-			else if(currentCamera == &topCamera){
-				currentCamera = &sideCam;
-			}
-			else {
-				currentCamera = &easyCam;
-			}		
-		}
-	}
     
     if (args.key == 's'){
         gui.saveToFile("adjustments.xml");
     }
+    
+    CM.keyPressed(args.key);
     
 }

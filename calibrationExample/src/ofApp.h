@@ -6,7 +6,7 @@
 #include "frameDataManager.h"
 #include "shotManager.h"
 #include "ofxGui.h"
-
+#include "cameraManager.h"
 
 class ofApp : public ofBaseApp{
 public:
@@ -39,19 +39,17 @@ public:
 	ofParameter <bool> showWireframe;
 	ofParameter <bool> showFilled;
     ofParameter <float> scaleFac;
+    ofParameter <bool> playback;
+    ofParameter <bool> playbackAudio;
     ofxPanel gui;
 
-	bool useSideCamera;
-
-	ofCamera* currentCamera;
-    ofCamera sideCam;
-	ofCamera topCamera;
-	ofCamera baseCamera;
-    vector < ofCamera * > cameraPtrs;
-    int cameraCounter;
-//    
-
-	ofEasyCam easyCam;
+    ofSoundPlayer sndPlayer;
+    
+   
+    ofImage backgroundPlate;
+    
+	cameraManager CM;
+    
 
 
     cameraCalibrationManager CCM;

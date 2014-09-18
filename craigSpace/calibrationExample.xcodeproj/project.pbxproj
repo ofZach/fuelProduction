@@ -109,6 +109,7 @@
 		FD1598F219C8AEC6003A5909 /* depthExporterManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD1598EA19C8AEC6003A5909 /* depthExporterManager.cpp */; };
 		FD1598F319C8AEC6003A5909 /* frameDataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD1598EC19C8AEC6003A5909 /* frameDataManager.cpp */; };
 		FD1598F419C8AEC6003A5909 /* transformEstimationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD1598EF19C8AEC6003A5909 /* transformEstimationManager.cpp */; };
+		FD221DA719CB180C002AA0D6 /* cameraManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD221DA519CB180C002AA0D6 /* cameraManager.cpp */; };
 		FE0F1DB69ACCD163E9DA2A15 /* ofxUIRotarySlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 64F3DE24F191ECED9DBE903C /* ofxUIRotarySlider.cpp */; };
 		FFD1EBFCA24DFB4E4427B4FE /* ofxUILabelButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9A4454B00CCFD7265D3CA85 /* ofxUILabelButton.cpp */; };
 /* End PBXBuildFile section */
@@ -664,6 +665,8 @@
 		FD1598ED19C8AEC6003A5909 /* frameDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = frameDataManager.h; sourceTree = "<group>"; };
 		FD1598EF19C8AEC6003A5909 /* transformEstimationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = transformEstimationManager.cpp; sourceTree = "<group>"; };
 		FD1598F019C8AEC6003A5909 /* transformEstimationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = transformEstimationManager.h; sourceTree = "<group>"; };
+		FD221DA519CB180C002AA0D6 /* cameraManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cameraManager.cpp; sourceTree = "<group>"; };
+		FD221DA619CB180C002AA0D6 /* cameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cameraManager.h; sourceTree = "<group>"; };
 		FD609E2EC17FCE181DFE635F /* dist.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = dist.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/dist.h; sourceTree = SOURCE_ROOT; };
 		FDA2832E78CFA22BEEC74160 /* ofxUIFPS.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIFPS.h; path = ../../../addons/ofxUI/src/ofxUIFPS.h; sourceTree = SOURCE_ROOT; };
 		FE15469185A3A49FEC9D2292 /* myvec.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = myvec.h; path = ../../../addons/ofxCv/libs/CLD/include/CLD/myvec.h; sourceTree = SOURCE_ROOT; };
@@ -1621,6 +1624,8 @@
 				FD1598EE19C8AEC6003A5909 /* processing */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
+				FD221DA519CB180C002AA0D6 /* cameraManager.cpp */,
+				FD221DA619CB180C002AA0D6 /* cameraManager.h */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 			);
 			path = src;
@@ -1891,6 +1896,7 @@
 				2023EF517ED2D8B397511D4B /* Helpers.cpp in Sources */,
 				311DF864378748129984EA1D /* Kalman.cpp in Sources */,
 				C602002DE761F9B52DB4400A /* ObjectFinder.cpp in Sources */,
+				FD221DA719CB180C002AA0D6 /* cameraManager.cpp in Sources */,
 				7CDAD32BE4FA46701E3552C7 /* RunningBackground.cpp in Sources */,
 				FD1598F319C8AEC6003A5909 /* frameDataManager.cpp in Sources */,
 				FD0BF7B219C9A4D800E060F7 /* ofxSliderGroup.cpp in Sources */,
