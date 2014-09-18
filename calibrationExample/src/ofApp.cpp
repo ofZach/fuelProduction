@@ -58,9 +58,10 @@ void ofApp::setup() {
 //	shotManager.loadShot("SH008", FDM); //JACKiE change the way communities
 //	shotManager.loadShot("SH009", FDM); //JACKIE 'states, nations, the world'
 //	shotManager.loadShot("SH010", FDM); //CRAIG mental models;
-	shotManager.loadShot("SH001", FDM); //CRAIG "we did it"
 
-    
+	shotManager.loadShot("SH011", FDM); //CRAIG "we did it"
+	
+
     
     FDM.loadFrame(0, frame);            // load frame 0
     FDM.loadFrame(0, firstFrame);
@@ -239,11 +240,8 @@ void ofApp::draw(){
     CM.cameraStart();
     
     
-    CM.drawCameraInternals(frame.img, frame.mask, backgroundPlate);
-    
-   
-    
-    
+    CM.drawCameraInternals(frame.img, frame.img, backgroundPlate);
+
     
     ofPolyline curve;
 

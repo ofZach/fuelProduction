@@ -121,7 +121,7 @@ void shotManager::setup(){
 	sh010.footageSD = footageWSlash + sh010.name + "/Footage_smallsize_proxy";	//TODO throw in the paths to the 360 proxies here
 	sh010.aCam = false;
 	sh010.faceData.push_back( footageWSlash + sh010.name + "/SH010a_Craig_001_OBM" );
-	sh010.faceData.push_back( footageWSlash + sh010.name + "/SH010a_Craig_001_OBM" );
+	sh010.faceData.push_back( footageWSlash + sh010.name + "/SH010b_Craig_001_OBM" );
 	shots[sh010.name] = sh010;
 
 	//CRAIG "We did it"
