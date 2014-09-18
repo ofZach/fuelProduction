@@ -24,8 +24,9 @@ class frameDataManager {
     
 public:
     
-    void setup( string rootDir );
-    void listDirs();
+    void setup( string footageDir, string obmDir );
+    void listDirs( string footageDir, string obmDir);
+
     
     string rootDirectory;
     int numFrames;
@@ -33,7 +34,6 @@ public:
     ofDirectory heads;
 	ofDirectory leftEyes;
 	ofDirectory rightEyes;
-
     ofDirectory videoImages;
     ofDirectory maskImages;
 

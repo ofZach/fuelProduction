@@ -45,13 +45,32 @@ void ofApp::setup() {
 #ifdef TARGET_WIN32
     FDM.setup("../../../sharedData/SH002_Craig_test/");
 #else
-    FDM.setup("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/");
+    
+    
+//    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH002/Footage_smallsize_proxy",
+//              "/Users/zachlieberman/Desktop/GOLD_Footage/SH002/SH002_Craig_003_OBM");
+
+    // timing is off?
+//    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH001/Footage_360p_proxy",
+//              "/Users/zachlieberman/Desktop/GOLD_Footage/SH001/SH001_Jackie_002_OBM");
+
+   
+//    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH003/Footage_smallsize_proxy",
+//              "/Users/zachlieberman/Desktop/GOLD_Footage/SH003/SH003_Matt_004_OBM");
+
+//    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH008/Footage_360p_proxy",
+//              "/Users/zachlieberman/Desktop/GOLD_Footage/SH008/SH008_Jackie_001_OBM");
+    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH011/Footage_360p_proxy",
+              "/Users/zachlieberman/Desktop/GOLD_Footage/SH011/SH011_Craig_001_OBM");
+    
 #endif
     
     FDM.loadFrame(0, frame);            // load frame 0
     FDM.loadFrame(0, firstFrame);
     
+    cout << FDM.numFrames << endl;
     
+   
 	ofSetVerticalSync(true);
 	
 	useSideCamera = false;
@@ -77,67 +96,50 @@ void ofApp::setup() {
 
    
 
-    // save head and tranform
-    
-    //CCM.extrinsics
-    
+
+    /*
+     
+    this saves out head and transform.
+     
     ofxAlembic::Writer writer;
-    string path = "cam.abc";
+    
+    string path = ofGetTimestampString() + ".abc";
     writer.open(path, 24);
+    
+    cout << FDM.numFrames << endl;
+    
+    for (int j = 0; j < FDM.numFrames; j++){
+        
+        FDM.loadFrame(j, frame);            // load frame 0
+        ofMatrix4x4 mm;
+        mm.glScale(-scaleFac,scaleFac,scaleFac);
+        mm.glTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
 
-    writer.addXform("/box", CCM.extrinsics);
-    //if (j == 0){
-        ofBoxPrimitive box;
-        box.set(40);
-        writer.addPolyMesh("/box/boxShape", box.getMesh());
-    //}
+        ofMesh temp = frame.head;
+        cout << temp.getNumVertices() << endl;
+        ofxAlembic::transform(temp, mm);
+        writer.addPolyMesh("/head", temp);
 
+        ofNode n;
+        FDM.getOrientation(frame, n);
+
+        ofMatrix4x4 mat = n.getGlobalTransformMatrix();
+        ofMatrix4x4 newMat =  mat * mm;
+        newMat.glScale(-1, 1,1);
+        writer.addXform("/box", newMat);
+        if (j == 0){
+            ofBoxPrimitive box;
+            box.set(40);
+            writer.addPolyMesh("/box/boxShape", box.getMesh());
+        }
+        
         // draw the box of orientation using new alexmbic style
         
         
-    //}
+    }
     
     writer.close();
-    
-    
-//    ofxAlembic::Writer writer;
-//    
-//    
-//    string path = ofGetTimestampString() + ".abc";
-//    writer.open(path, 24);
-//    
-//    for (int j = 0; j < FDM.numFrames; j++){
-//        
-//        FDM.loadFrame(j, frame);            // load frame 0
-//        ofMatrix4x4 mm;
-//        mm.glScale(-scaleFac,scaleFac,scaleFac);
-//        mm.glTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
-//
-//        ofMesh temp = frame.head;
-//        cout << temp.getNumVertices() << endl;
-//        ofxAlembic::transform(temp, mm);
-//        writer.addPolyMesh("/head", temp);
-//
-//        ofNode n;
-//        FDM.getOrientation(frame, n);
-//
-//        ofMatrix4x4 mat = n.getGlobalTransformMatrix();
-//        ofMatrix4x4 newMat =  mat * mm;
-//        newMat.glScale(-1, 1,1);
-//        writer.addXform("/box", newMat);
-//        if (j == 0){
-//            ofBoxPrimitive box;
-//            box.set(40);
-//            writer.addPolyMesh("/box/boxShape", box.getMesh());
-//        }
-//        
-//        // draw the box of orientation using new alexmbic style
-//        
-//        
-//    }
-//    
-//    writer.close();
-//
+*/
     
     
     

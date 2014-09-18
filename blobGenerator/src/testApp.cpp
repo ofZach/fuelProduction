@@ -36,8 +36,9 @@ void testApp::setup(){
 		springs.push_back(mySpring);
 	}
 	
-		
-	
+	bSavingLastFrame = false;
+    bSaving = false;;
+    frameNum = 0;
 }
 
 static int saveFrame = 0;
@@ -76,6 +77,14 @@ void testApp::update(){
 	}
     
     
+    if (!bSavingLastFrame && bSaving){
+        string name =ofGetTimestampString() + ".abc";;
+        message = "saving "  + name;
+        writer.open(name);
+    } else if (bSavingLastFrame && !bSaving){
+        writer.close();
+    }
+    
     if (bSaving == true){
         
         vector<ofPolyline> curves;
@@ -97,11 +106,13 @@ void testApp::update(){
         writer.addCurves("/blob", curves);
         
         saveFrame++;
-        
-        //bSaving = false;
-       // writer.close();
+
         
     }
+    
+    
+    bSavingLastFrame = bSaving;
+    
 }
 
 
@@ -146,14 +157,13 @@ void testApp::keyPressed  (int key){
     
     if (key == 's'){
         
-        if (bSaving != true){
-        bSaving = true;
         
-        string name =ofGetTimestampString() + ".abc";;
+        bSaving = !bSaving;
         
-        message = "saving "  + name;
-        cout << writer.open(name, 24) << endl;; // export at 30fps
+        if (bSaving == true){
+            frameNum = 0;
         }
+        
     }
 	
 	
@@ -161,12 +171,7 @@ void testApp::keyPressed  (int key){
 
 //--------------------------------------------------------------
 void testApp::keyReleased  (int key){
-    if (key == 's'){
-        
-        if (bSaving == true){
-        writer.close();
-        }
-    }
+   
 }
 
 //--------------------------------------------------------------

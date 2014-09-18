@@ -28,8 +28,10 @@ class testApp : public ofSimpleApp{
 		vector <particle> particles;
 		vector <spring> springs;
         ofxAlembic::Writer writer;
-        bool bSaving;
-
+        bool        bSaving;
+        int         frameNum;
+        bool        bSavingLastFrame;
+    
 		 
         string message;
 };

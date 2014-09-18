@@ -8,25 +8,25 @@
 
 #include "frameDataManager.h"
     
-void frameDataManager::setup( string rootDir ){
-    rootDirectory = rootDir;
+void frameDataManager::setup( string footageDir, string obmDir ){
+    
+    
      numFrames = 0;
-    listDirs();
+    listDirs( footageDir,  obmDir);
    
+
 }
 
-void frameDataManager::listDirs(){
+void frameDataManager::listDirs( string footageDir, string obmDir){
 
-    videoImages.listDir(rootDirectory + "Footage_360p_Proxy");
-    heads.listDir(rootDirectory + "SH002_Craig_003_trim_OBM/head");
-    leftEyes.listDir(rootDirectory + "SH002_Craig_003_trim_OBM/leftEye");
-	rightEyes.listDir(rootDirectory + "SH002_Craig_003_trim_OBM/rightEye");
-
-    maskImages.listDir(rootDirectory + "SH002_mask_360p");
-    
+    videoImages.listDir(footageDir);
+    heads.listDir(obmDir + "/head");
+    leftEyes.listDir(obmDir + "/leftEye");
+    rightEyes.listDir(obmDir + "/rightEye");
+    maskImages.listDir(footageDir);
     numFrames = videoImages.size();
+    cout << "numeFrames " << numFrames << endl;
     
-
 	//calculate base eye info
 	if(rightEyes.size() > 0 && leftEyes.size() > 0){
 		ofMesh baseLeftEye;
