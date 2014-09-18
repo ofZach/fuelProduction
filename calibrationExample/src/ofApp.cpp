@@ -242,6 +242,34 @@ void ofApp::draw(){
     
     CM.drawCameraInternals(frame.img, frame.img, backgroundPlate);
 
+   
+    ofPushMatrix();
+        ofScale(-scaleFac,scaleFac,scaleFac);
+        ofTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
+        
+        drawMesh(frame.head, ofColor::darkGoldenRod);
+        drawMesh(frame.rightEye, ofColor::red);
+        drawMesh(frame.leftEye, ofColor::blue);
+        
+        ofPushStyle();
+        
+        //ofScale(10,10,10);
+        ofNoFill();
+        ofNode n;
+        FDM.getOrientation(frame, n);
+        n.draw();
+        ofSetColor(255);
+        ofMatrix4x4 mat = n.getGlobalTransformMatrix();
+        ofMultMatrix(mat);
+        ofBoxPrimitive(100, 100, 100).draw();
+        
+        
+        ofPopStyle();
+	ofPopMatrix();
+    
+    
+    
+    
     
     ofPolyline curve;
 
@@ -249,6 +277,9 @@ void ofApp::draw(){
     vector<ofPolyline> curvesMe;
     abc.get("SplineSpline", curvesMe);
 #endif
+    
+    
+    
     
     
     ofSetColor(ofColor::white);
