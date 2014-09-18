@@ -50,13 +50,13 @@ void ofApp::setup() {
 //	shotManager.loadShot("SH003", FDM); //matt portrait
 	//NOT ALIGNED AFTER CUT -- NO EYES AFTER CUT
 //	shotManager.loadShot("SH004", FDM); //craig scifi
-//	shotManager.loadShot("SH005", FDM); //jackie smog
-	shotManager.loadShot("SH006", FDM); //jackie "made fuel cells important to me"
-//	shotManager.loadShot("SH007", FDM);
-//	shotManager.loadShot("SH008", FDM);
-//	shotManager.loadShot("SH009", FDM);
-//	shotManager.loadShot("SH010", FDM); //
-//	shotManager.loadShot("SH011", FDM); //MATT "Innovative technology"
+//	shotManager.loadShot("SH005", FDM); //Jackie SMOG
+//	shotManager.loadShot("SH006", FDM); //jackie "made fuel cells important to me"
+//	shotManager.loadShot("SH007", FDM); //MATT "Innovative technology"
+//	shotManager.loadShot("SH008", FDM); //JACKiE change the way communities
+//	shotManager.loadShot("SH009", FDM); //JACKIE 'states, nations, the world'
+//	shotManager.loadShot("SH010", FDM); //CRAIG mental models;
+	shotManager.loadShot("SH011", FDM); //CRAIG "we did it"
 	
 	
 	//zach you can uncomment this to switch to your directory

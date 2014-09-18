@@ -86,7 +86,7 @@ void shotManager::setup(){
 	sh007.footage2K = footageWSlash + sh007.name + "/Footage_fullsize_proxy";
 	sh007.footageHD = footageWSlash + sh007.name + "/Footage_smallsize_proxy";
 	sh007.footageSD = footageWSlash + sh007.name + "/Footage_smallsize_proxy";			//TODO throw in the paths to the 360 proxies here
-	sh007.aCam = false;
+	sh007.aCam = true;
 	sh007.faceData.push_back( footageWSlash + sh007.name + "/SH007a_Matt_002_OBM" );
 	sh007.faceData.push_back( footageWSlash + sh007.name + "/SH007b_Matt_002_OBM" );
 	shots[sh007.name] = sh007;
@@ -132,7 +132,7 @@ void shotManager::setup(){
 	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
 	curshot->footageSD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";	//TODO throw in the paths to the 360 proxies here
 	curshot->aCam = true;
-	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH011_Craig_001" );
+	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH011_Craig_001_OBM" );
 	shots[sh011.name] = sh011;
 	
 }
