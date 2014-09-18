@@ -64,6 +64,7 @@ void frameDataManager::listDirs( string footageDir, vector<string> obmDir){
 	
 	vector<int> shotSwitches;
 	string curShot = "a";
+	bool checkForCut = videoDirectory.getName(0).find(curShot) != string::npos;
 	for(int i = 0; i < videoDirectory.size(); i++){
 		
 		videoImages.push_back(videoDirectory.getPath(i));
@@ -71,12 +72,11 @@ void frameDataManager::listDirs( string footageDir, vector<string> obmDir){
 		//find the internal handle midpoints when the shots switch
 		string shotFileName = videoDirectory.getName(i);
 
-		if( shotFileName.find(curShot) == string::npos){
+		if(checkForCut && shotFileName.find(curShot) == string::npos){
 			shotSwitches.push_back(i);
 			if(curShot == "a"){
 				curShot = "b";
 			}
-			
 			else if(curShot == "b"){
 				curShot = "c";
 			}
@@ -85,13 +85,17 @@ void frameDataManager::listDirs( string footageDir, vector<string> obmDir){
 	
 	//delete the internal handles
 	int handleframesRemoved = 0;
-	for(int i = shotSwitches.size()-1; i > 0; i--){
-		for(int j = shotSwitches[i] + handleInFrames - 1; j >= shotSwitches[i] - handleInFrames; j-- ){
+	for(int i = shotSwitches.size()-1; i >= 0; i--){
+		int internalHandleStart = shotSwitches[i] - handleInFrames;
+		int internalHandleEnd = shotSwitches[i] + handleInFrames;
+		cout << "HANDLE [" << internalHandleStart << ", " << internalHandleEnd << "] out of " << videoImages.size() << " frames" << endl;
+		for(int j = internalHandleEnd - 1; j >= internalHandleStart; j-- ){
 			handleframesRemoved++;
-//			videoImages.erase(videoImages.begin() + j);
+			videoImages.erase(videoImages.begin() + j);
 		}
 	}
-	cout << "REMOVED " << handleInFrames << " Handle Frames" << endl;
+	
+	cout << "REMOVED " << handleframesRemoved << " Handle Frames" << endl;
     //maskImages.listDir(footageDir);
     numFrames = videoImages.size();
 	
