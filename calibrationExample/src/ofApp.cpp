@@ -65,7 +65,6 @@ void ofApp::setup() {
 //    FDM.setup( footagePath + "SH002/Footage_smallsize_proxy",
 //               footagePath + "SH002/SH002_Craig_003_OBM" );
     
-
     //JACKIE: timing is off?
 //    FDM.setup(footagePath + "SH001/Footage_smallsize_proxy",
 //              footagePath + "SH001/SH001_Jackie_002_OBM");
@@ -74,24 +73,24 @@ void ofApp::setup() {
 //              footagePath + "SH004/SH004a_Craig_003_OBM");
 
 	//JACKIE B CAM
-//    FDM.setup(footagePath + "SH006/Footage_smallsize_proxy",
-//              footagePath + "SH006/SH006_Jackie_001_OBM");
+//	FDM.setup(footagePath + "SH006/Footage_smallsize_proxy",
+//			  footagePath + "SH006/SH006_Jackie_001_OBM");
 
 	//JACKIE B CAM
-//    FDM.setup(footagePath + "SH008/Footage_smallsize_proxy",
+//	FDM.setup(footagePath + "SH008/Footage_smallsize_proxy",
 //              footagePath + "SH008/SH008_Jackie_001_OBM");
 
 //	FDM.setup(footagePath + "SH009/Footage_smallsize_proxy",
 //              footagePath + "SH009/SH009_Jackie_001_OBM");
 
-//    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH003/Footage_smallsize_proxy",
+//	FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH003/Footage_smallsize_proxy",
 //              "/Users/zachlieberman/Desktop/GOLD_Footage/SH003/SH003_Matt_004_OBM");
 
-//    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH008/Footage_360p_proxy",
+//	FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH008/Footage_360p_proxy",
 //              "/Users/zachlieberman/Desktop/GOLD_Footage/SH008/SH008_Jackie_001_OBM");
 
-    //FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH011/Footage_360p_proxy",
-    //          "/Users/zachlieberman/Desktop/GOLD_Footage/SH011/SH011_Craig_001_OBM");
+//	FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH011/Footage_360p_proxy",
+//          "/Users/zachlieberman/Desktop/GOLD_Footage/SH011/SH011_Craig_001_OBM");
     
     
     FDM.loadFrame(0, frame);            // load frame 0
