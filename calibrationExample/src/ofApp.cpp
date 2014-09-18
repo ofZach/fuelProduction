@@ -126,41 +126,41 @@ void ofApp::setup() {
     backgroundPlate.loadImage("../../../sharedData/Background Plates/A-Cam_BackgroundPlate_360p.png");
 
     
-    ofxAlembic::Writer writer;
-    
-    
-    string path = ofGetTimestampString() + ".abc";
-    writer.open(path, 24);
-    for (int j = 0; j < FDM.numFrames; j+=10){
-        
-        FDM.loadFrame(j, frame);            // load frame 0
-        ofMatrix4x4 mm;
-        mm.glScale(scaleFac,scaleFac,scaleFac);
-        mm.glTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
-
-        ofMesh temp = frame.head;
-        ofxAlembic::transform(temp, mm);
-        writer.addPolyMesh("/head", temp);
-
-        ofNode n;
-        FDM.getOrientation(frame, n);
-        
-        mm.preMult(n.getGlobalTransformMatrix());
-        
-        writer.addXform("/box", mm);
-        if (j == 0){
-            ofBoxPrimitive a;
-            a.set(100);
-            writer.addPolyMesh("/box/boxShape", a.getMesh());
-        }
-        
-        // draw the box of orientation using new alexmbic style
-        
-        
-    }
-    
-    writer.close();
+//    ofxAlembic::Writer writer;
+//    
+//    
+//    string path = ofGetTimestampString() + ".abc";
+//    writer.open(path, 24);
+//    for (int j = 0; j < FDM.numFrames; j+=10){
+//        
+//        FDM.loadFrame(j, frame);            // load frame 0
+//        ofMatrix4x4 mm;
+//        mm.glScale(scaleFac,scaleFac,scaleFac);
+//        mm.glTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
 //
+//        ofMesh temp = frame.head;
+//        ofxAlembic::transform(temp, mm);
+//        writer.addPolyMesh("/head", temp);
+//
+//        ofNode n;
+//        FDM.getOrientation(frame, n);
+//        
+//        mm.preMult(n.getGlobalTransformMatrix());
+//        
+//        writer.addXform("/box", mm);
+//        if (j == 0){
+//            ofBoxPrimitive a;
+//            a.set(100);
+//            writer.addPolyMesh("/box/boxShape", a.getMesh());
+//        }
+//        
+//        // draw the box of orientation using new alexmbic style
+//        
+//        
+//    }
+//    
+//    writer.close();
+////
     
     
     
