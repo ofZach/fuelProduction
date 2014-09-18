@@ -6,6 +6,8 @@
 #include "frameDataManager.h"
 #include "ofxGui.h"
 #include "cameraManager.h"
+#include "depthExporterManager.h"
+
 
 class ofApp : public ofBaseApp{
 public:
@@ -40,6 +42,8 @@ public:
     ofParameter <float> scaleFac;
     ofParameter <bool> playback;
     ofParameter <bool> playbackAudio;
+    ofParameter <bool> exporting;
+    
     ofxPanel gui;
     
     ofSoundPlayer sndPlayer;
@@ -48,6 +52,8 @@ public:
     ofImage backgroundPlate;
     
 	cameraManager CM;
+    
+    depthExporterManager DEM;
     
     
 

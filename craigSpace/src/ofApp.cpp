@@ -20,6 +20,9 @@ ofxAlembic::Reader abc;
 
 void ofApp::setup() {
 	
+    
+    DEM.setup();
+    
        
     gui.setup("panel"); // most of the time you don't need a name but don't forget to call setup
     gui.add(adjustments.set("adjustments", ofPoint(0, 0, 0), -ofPoint(200,200,200), ofPoint(200,200,200)));
@@ -28,6 +31,7 @@ void ofApp::setup() {
     gui.add(scaleFac.set("scaleFac", 1, 0.1, 2.0));
     gui.add(playback.set("playback", false));
     gui.add(playbackAudio.set("playbackAudio", false));
+    gui.add(exporting.set("exporting", false));
     gui.loadFromFile("adjustments.xml");
     
     
@@ -155,48 +159,82 @@ void ofApp::setup() {
 }
 
 
+bool bExportingLastFrame = false;
+int exportingFrameCount = 0;
+ofxAlembic::Writer outputWriter;
+
 
 void ofApp::update() {
     
     
-    if (!playback){
-        currentFrame = mouseX;
-    } else {
+    if (exporting){
         
-        float time = sndPlayer.getPositionMS() / 1000.0;
-        if (playbackAudio){
-            sndPlayer.setVolume(1);
+        if (bExportingLastFrame == false){
+            exportingFrameCount = 0;
+            
+            string path = "outputTest.abc";
+            outputWriter.open(path);
+            
+            ////    string path = "cam.abc";
+            ////    writer.open(path, 24);
+            
         } else {
-            sndPlayer.setVolume(0);
+            
+            exportingFrameCount++;
         }
         
-        //float totalTime = FDM.numFrames / 24.0;
-        //float t = ofGetElapsedTimef();
-        //while (t > totalTime) t -= totalTime;
-        currentFrame = (int)(time * 24.0);
+        if (currentFrame > FDM.numFrames){
+            exporting = false;
+        }
         
+        
+        currentFrame = exportingFrameCount;
+        if (lastFrame != currentFrame){
+            FDM.loadFrame(currentFrame, frame);
+            
+        }
     }
-    if (lastFrame != currentFrame){
-        FDM.loadFrame(currentFrame, frame);
+
+    
+    if (!exporting){
         
-        // do the transform estimation:
-        vector<ofVec3f> from;
-        vector<ofVec3f> to;
-        for (int i = 0; i < frame.head.getIndices().size(); i+= 1){
-            to.push_back(frame.head.getVertices()[frame.head.getIndices()[i]]);
-            from.push_back(firstFrame.head.getVertices()[firstFrame.head.getIndices()[i]]);
+        if (bExportingLastFrame){
+            outputWriter.close();
         }
-        ofMatrix4x4 rigidEstimate = ofxCv::estimateAffine3D(from, to);
-        XformSample samp;
-        XformOp matop( kMatrixOperation, kMatrixHint );
-        rigidEstimate.decompose(decompTranslation, decompRotation, decompScale, decompSo);
-        //cout << " ? ? " << decompScale << endl;
+            
+        
+        
+        if (!playback){
+            currentFrame = mouseX;
+        } else {
+            
+            float time = sndPlayer.getPositionMS() / 1000.0;
+            if (playbackAudio){
+                sndPlayer.setVolume(1);
+            } else {
+                sndPlayer.setVolume(0);
+            }
+            
+            //float totalTime = FDM.numFrames / 24.0;
+            //float t = ofGetElapsedTimef();
+            //while (t > totalTime) t -= totalTime;
+            currentFrame = (int)(time * 24.0);
+            
+        }
+        if (lastFrame != currentFrame){
+            FDM.loadFrame(currentFrame, frame);
+            
+        }
     }
     lastFrame = currentFrame;
     
     
     
     CM.update();
+    
+    bExportingLastFrame = exporting;
+    
+    
     //----------------
     
 }
@@ -420,7 +458,7 @@ void ofApp::draw(){
     abc.setTime(t);
 #endif
     
-	targetFbo.begin();
+	DEM.startDraw();
     ofViewport(ofRectangle(0,0,1920, 1080));
 	ofClear(0,0,0,0);
     glClear(GL_DEPTH);
@@ -429,8 +467,9 @@ void ofApp::draw(){
     CM.cameraStart();
     
     
-    CM.drawCameraInternals(frame.img, frame.mask, backgroundPlate);
-    
+    if (!exporting){
+        CM.drawCameraInternals(frame.img, frame.mask, backgroundPlate);
+    }
    
     
     
@@ -443,7 +482,7 @@ void ofApp::draw(){
     ofPushMatrix();
     //ofTranslate(ofPoint(0,0,-1095.244));
     for (int i = 0; i< curvesMe.size(); i++){
-        curvesMe[i].draw();
+    //    curvesMe[i].draw();
     }
     curve = curvesMe[0];
     ofPopMatrix();
@@ -453,12 +492,15 @@ void ofApp::draw(){
     curve = curve.getSmoothed(11);
     
     ofSetColor(ofColor::aquamarine);
-    curve.draw();
+    //curve.draw();
     
     //-----------------------------------------------------------------
     
     //cout << mouseY << endl;
     ofSeedRandom(526);
+    
+    
+    float tf = currentFrame * (1.0 / 24.0);
     
     vector < circleInSpace > circles;
     int nCircles = ofRandom(20,40);
@@ -469,7 +511,7 @@ void ofApp::draw(){
         ofPoint base( -50 + 300 * cos(pct), -50 + 300 * sin(pct));
         
         cc.pt.set( base.x + ofRandom(-100,100), base.y + ofRandom(-100,100));
-        cc.size =  15 + sin(ofGetElapsedTimef() + i/2.0) * 10;
+        cc.size =  15 + sin(tf + i/2.0) * 10;
         if (ofRandom(0,1) > 0.85) cc.size = ofRandom(20,50);
         circles.push_back(cc);
     }
@@ -479,9 +521,9 @@ void ofApp::draw(){
         ofScale(-scaleFac,scaleFac,scaleFac);
         ofTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
 
-        drawMesh(frame.head, ofColor::darkGoldenRod);
-        drawMesh(frame.rightEye, ofColor::red);
-        drawMesh(frame.leftEye, ofColor::blue);
+//        drawMesh(frame.head, ofColor::darkGoldenRod);
+//        drawMesh(frame.rightEye, ofColor::red);
+//        drawMesh(frame.leftEye, ofColor::blue);
 
         ofPushStyle();
 
@@ -493,22 +535,70 @@ void ofApp::draw(){
         ofSetColor(255);
             ofMatrix4x4 mat = n.getGlobalTransformMatrix();
             ofMultMatrix(mat);
-            ofBoxPrimitive(100, 100, 100).draw();
+            //ofBoxPrimitive(100, 100, 100).draw();
     
             ofSetLineWidth(4);
                     line.draw();
             ofFill();
             for (int i = 0; i < circles.size(); i++){
-                ofCircle(circles[i].pt, circles[i].size);
+               // ofCircle(circles[i].pt, circles[i].size);
             }
     
-            ofPopMatrix();
     
+   
+                //transform
+                //outputWriter.addCurves(, );
+    
+    
+            ofPopMatrix();
     
         ofPopStyle();
 	ofPopMatrix();
 
+    
+    
+    
+    if (exporting){
+    
+    ofNode n2;
+    FDM.getOrientation(frame, n2);
+    ofMatrix4x4 matrix;
+    matrix.glScale(-scaleFac,scaleFac,scaleFac);
+    matrix.glTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
+    matrix = n2.getGlobalTransformMatrix() * matrix;
+    
+    ofPolyline newLine;
+    //ofBeginShape();
+    for (int i = 0; i < line.getVertices().size(); i++){
+        ofPoint a = line.getVertices()[i] * matrix ;
+        newLine.addVertex( a.x, a.y, a.z );
+    }
+    
+    vector<ofPolyline> curves;
+    curves.push_back(newLine);
+    //ofEndShape();
+    outputWriter.addCurves("/line", curves);
+    
+    for (int i = 0; i < circles.size(); i++){
+        ofMesh mesh;
+        mesh.setMode(OF_PRIMITIVE_TRIANGLES);
+        
+        for (int j = 0; j < 20; j++){
+            
+            float angle = (j / 20.0) * TWO_PI;
+            float angle2 = ((j+1) / 20.9) * TWO_PI;
+            mesh.addVertex(circles[i].pt * matrix);
+            mesh.addVertex( (circles[i].pt + ofPoint(cos(angle), sin(angle)) * circles[i].size) * matrix);
+            mesh.addVertex( (circles[i].pt + ofPoint(cos(angle2), sin(angle2)) * circles[i].size) * matrix);
+        }
+        //ofxAlembic::transform(mesh, matrix);
+        outputWriter.addPolyMesh("/circle" + ofToString(i), mesh);
 
+    }
+        
+    }
+    
+    
     
     ofSetColor(ofColor::white);
 
@@ -516,8 +606,29 @@ void ofApp::draw(){
     CM.cameraEnd();
     
     ofEnableAlphaBlending();
-	targetFbo.end();
-    targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
+//	targetFbo.end();
+//    targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
+
+    
+    if (exporting){
+        
+        int filenumber;
+        std::ostringstream localOSS;
+        string fileName;
+        
+        filenumber = 2034;
+        
+        localOSS << setw(4) << setfill('0') << currentFrame;
+        
+        fileName = localOSS.str();
+        
+        
+        DEM.endDraw(true, fileName);
+    } else {
+        DEM.endDraw();
+
+    }
+
     gui.draw();
     
 }
