@@ -20,7 +20,6 @@ void frameDataManager::listDirs( string footageDir, string obmDir){
 
 void frameDataManager::listDirs( string footageDir, vector<string> obmDir){
     
-	videoImages.listDir(footageDir);
 	
 	heads.clear();
 	leftEyes.clear();
@@ -33,10 +32,10 @@ void frameDataManager::listDirs( string footageDir, vector<string> obmDir){
 		//ignore handles except for the end
 		int startOffset = (i == 0) ? 0 : handleInFrames;
 		int endOffset   = (i == obmDir.size()-1) ? 0 : handleInFrames;
-		
-		startOffset = 0;
-		endOffset   = 0;
-		
+//TEMP RETAIN HANDLES
+//		startOffset = 0;
+//		endOffset   = 0;
+//
 		ofDirectory headsDir;
 		headsDir.allowExt("obm");
 		headsDir.listDir(obmDir[i] + "/head");
@@ -58,11 +57,50 @@ void frameDataManager::listDirs( string footageDir, vector<string> obmDir){
 		}
 	}
 	
-    maskImages.listDir(footageDir);
+	ofDirectory videoDirectory(footageDir);
+	videoDirectory.allowExt("png");
+	videoDirectory.allowExt("jpg");
+	videoDirectory.listDir();
+	
+	vector<int> shotSwitches;
+	string curShot = "a";
+	bool checkForCut = videoDirectory.getName(0).find(curShot) != string::npos;
+	for(int i = 0; i < videoDirectory.size(); i++){
+		
+		videoImages.push_back(videoDirectory.getPath(i));
+		
+		//find the internal handle midpoints when the shots switch
+		string shotFileName = videoDirectory.getName(i);
+
+		if(checkForCut && shotFileName.find(curShot) == string::npos){
+			shotSwitches.push_back(i);
+			if(curShot == "a"){
+				curShot = "b";
+			}
+			else if(curShot == "b"){
+				curShot = "c";
+			}
+		}
+	}
+	
+	//delete the internal handles
+	int handleframesRemoved = 0;
+	for(int i = shotSwitches.size()-1; i >= 0; i--){
+		int internalHandleStart = shotSwitches[i] - handleInFrames;
+		int internalHandleEnd = shotSwitches[i] + handleInFrames;
+		cout << "HANDLE [" << internalHandleStart << ", " << internalHandleEnd << "] out of " << videoImages.size() << " frames" << endl;
+		for(int j = internalHandleEnd - 1; j >= internalHandleStart; j-- ){
+			handleframesRemoved++;
+			videoImages.erase(videoImages.begin() + j);
+		}
+	}
+	
+	cout << "REMOVED " << handleframesRemoved << " Handle Frames" << endl;
+    //maskImages.listDir(footageDir);
     numFrames = videoImages.size();
 	
     cout << "numeFrames " << numFrames << endl;
-    cout << "num objects " << heads.size();
+    cout << "num objects " << heads.size() << endl;;
 	
 	calculateBaseEyeInfo();
 	

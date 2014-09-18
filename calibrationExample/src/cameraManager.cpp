@@ -18,11 +18,12 @@ void cameraManager::setup(){
                                          vec4 colorA = texture2DRect(tex0, st);
                                          vec4 colorB = texture2DRect(tex1, st);
                                          
-                                         if (colorA.x > 0.01){
-                                             gl_FragColor = vec4(colorB.x, colorB.y, colorB.z, colorA.x);
-                                         } else {
-                                             discard;
-                                         }
+//                                         if (colorA.x > 0.01){
+//                                             gl_FragColor = vec4(colorB.x, colorB.y, colorB.z, colorA.x);
+											   gl_FragColor = vec4(colorB.x, colorB.y, colorB.z, 1.0);
+//                                         } else {
+//                                             discard;
+//                                         }
                                      }
                                      
                                      );

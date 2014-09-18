@@ -9,9 +9,6 @@ using namespace Alembic::AbcGeom;
 static string dataPath = "../../../sharedData/";
 
 
-//void listDirs();
-
-
 #ifndef NO_ALEMBIC
 #include "ofxAlembic.h"
 ofxAlembic::Reader abc;
@@ -19,7 +16,8 @@ ofxAlembic::Reader abc;
 
 void ofApp::setup() {
 	
-    
+    drawFaceBox = false;
+	
     gui.setup("panel"); // most of the time you don't need a name but don't forget to call setup
     gui.add(adjustments.set("adjustments", ofPoint(0, 0, 0), -ofPoint(200,200,200), ofPoint(200,200,200)));
     gui.add(showWireframe.set("showWireframe", false));
@@ -27,6 +25,8 @@ void ofApp::setup() {
     gui.add(scaleFac.set("scaleFac", 1, 0.1, 2.0));
     gui.add(playback.set("playback", false));
     gui.add(playbackAudio.set("playbackAudio", false));
+	gui.add(drawFaceBox.set("draw face box", false));
+	
     gui.loadFromFile("adjustments.xml");
     
 
@@ -47,7 +47,7 @@ void ofApp::setup() {
     
 	shotManager.setup();
 
-//	shotManager.loadShot("SH001", FDM); //jackie portrait
+	shotManager.loadShot("SH001", FDM); //jackie portrait
 //	shotManager.loadShot("SH002", FDM); //craig portrait
     shotManager.loadShot("SH003", FDM); //matt portrait
 	//NOT ALIGNED AFTER CUT -- NO EYES AFTER CUT
@@ -59,18 +59,16 @@ void ofApp::setup() {
 //	shotManager.loadShot("SH009", FDM); //JACKIE 'states, nations, the world'
 //	shotManager.loadShot("SH010", FDM); //CRAIG mental models;
 //shotManager.loadShot("SH011", FDM); //CRAIG "we did it"
-	
+//	shotManager.loadShot("SH011", FDM); //CRAIG "we did it"
 
-    
+
     FDM.loadFrame(0, frame);            // load frame 0
     FDM.loadFrame(0, firstFrame);
     
     cout << FDM.numFrames << endl;
     
-   
 	ofSetVerticalSync(true);
 	
-
 	light.enable();
 	light.setPosition(+500, +500, +500);
     
@@ -257,8 +255,10 @@ void ofApp::draw(){
         ofSetColor(255);
         ofMatrix4x4 mat = n.getGlobalTransformMatrix();
         ofMultMatrix(mat);
-        ofBoxPrimitive(100, 100, 100).draw();
-    
+		if(drawFaceBox){
+			ofBoxPrimitive(100, 100, 100).draw();
+		}
+
         
         ofPopStyle();
 	ofPopMatrix();

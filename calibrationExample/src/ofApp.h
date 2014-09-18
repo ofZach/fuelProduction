@@ -26,7 +26,7 @@ public:
     
     int currentFrame;
     int lastFrame;
-    
+
 
 	ofLight light;
 	
@@ -41,6 +41,8 @@ public:
     ofParameter <float> scaleFac;
     ofParameter <bool> playback;
     ofParameter <bool> playbackAudio;
+	ofParameter <bool> drawFaceBox;
+	
     ofxPanel gui;
 
     ofSoundPlayer sndPlayer;
