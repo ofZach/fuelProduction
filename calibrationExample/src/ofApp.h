@@ -4,6 +4,7 @@
 #include "ofxCv.h"
 #include "cameraCalibrationManager.h"
 #include "frameDataManager.h"
+#include "shotManager.h"
 #include "ofxGui.h"
 
 
@@ -18,9 +19,10 @@ public:
     void listDirs();
     
     frameDataManager FDM;
+    shotManager shotManager;
     frameData frame;
     frameData firstFrame;
-    
+
     
     int currentFrame;
     int lastFrame;

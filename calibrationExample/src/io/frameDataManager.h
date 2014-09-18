@@ -1,11 +1,9 @@
 
 
-
+#pragma once
 
 #include "ofMain.h"
 #include "ofxBinaryMesh.h"
-
-
 
 typedef struct {
     
@@ -25,15 +23,22 @@ class frameDataManager {
 public:
     
     void setup( string footageDir, string obmDir );
+//    void setup( string footageDir, vector<string> obmDir );
     void listDirs( string footageDir, string obmDir);
+    void listDirs( string footageDir, vector<string> obmDir);
 
     
     string rootDirectory;
     int numFrames;
     
-    ofDirectory heads;
-	ofDirectory leftEyes;
-	ofDirectory rightEyes;
+//  ofDirectory heads;
+//	ofDirectory leftEyes;
+//	ofDirectory rightEyes;
+	
+	vector<string> heads;
+	vector<string> leftEyes;
+	vector<string> rightEyes;
+	
     ofDirectory videoImages;
     ofDirectory maskImages;
 
@@ -41,6 +46,8 @@ public:
     void loadFrame( int frameNum, frameData & fd);
     void getOrientation(const frameData& fd, ofNode& n );
 
+	//after loading, compute some things to get a stable mesh
+	void calculateBaseEyeInfo();
 	ofVec3f baseEyeCenter;
 	ofVec3f baseEyeForward;
 	ofIndexType eyeForwardIndex;

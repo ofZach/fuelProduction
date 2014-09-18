@@ -41,29 +41,48 @@ void ofApp::setup() {
     
 
     bSaving = false;
-   
-#ifdef TARGET_WIN32
-    FDM.setup("../../../sharedData/SH002_Craig_test/");
-#else
-    
-    
-//    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH002/Footage_smallsize_proxy",
-//              "/Users/zachlieberman/Desktop/GOLD_Footage/SH002/SH002_Craig_003_OBM");
 
-    // timing is off?
-//    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH001/Footage_360p_proxy",
-//              "/Users/zachlieberman/Desktop/GOLD_Footage/SH001/SH001_Jackie_002_OBM");
+	shotManager.footageBasePath = "/Volumes/CHOPPER/_ToyotaXpopTech_/GOLD_Footage/";
+	shotManager.setup();
 
-   
+//	shotManager.loadShot("SH005", FDM);
+//	shotManager.loadShot("SH010", FDM);
+	shotManager.loadShot("SH007", FDM);	
+	
+	//zach you can uncomment this to switch to your directory
+//	string footagePath = "/Users/zachlieberman/Desktop/"
+	
+//    FDM.setup( footagePath + "SH002/Footage_smallsize_proxy",
+//               footagePath + "SH002/SH002_Craig_003_OBM" );
+    
+
+    //JACKIE: timing is off?
+//    FDM.setup(footagePath + "SH001/Footage_smallsize_proxy",
+//              footagePath + "SH001/SH001_Jackie_002_OBM");
+
+//    FDM.setup(footagePath + "SH004/Footage_smallsize_proxy",
+//              footagePath + "SH004/SH004a_Craig_003_OBM");
+
+	//JACKIE B CAM
+//    FDM.setup(footagePath + "SH006/Footage_smallsize_proxy",
+//              footagePath + "SH006/SH006_Jackie_001_OBM");
+
+	//JACKIE B CAM
+//    FDM.setup(footagePath + "SH008/Footage_smallsize_proxy",
+//              footagePath + "SH008/SH008_Jackie_001_OBM");
+
+//	FDM.setup(footagePath + "SH009/Footage_smallsize_proxy",
+//              footagePath + "SH009/SH009_Jackie_001_OBM");
+
 //    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH003/Footage_smallsize_proxy",
 //              "/Users/zachlieberman/Desktop/GOLD_Footage/SH003/SH003_Matt_004_OBM");
 
 //    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH008/Footage_360p_proxy",
 //              "/Users/zachlieberman/Desktop/GOLD_Footage/SH008/SH008_Jackie_001_OBM");
-    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH011/Footage_360p_proxy",
-              "/Users/zachlieberman/Desktop/GOLD_Footage/SH011/SH011_Craig_001_OBM");
+
+    //FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH011/Footage_360p_proxy",
+    //          "/Users/zachlieberman/Desktop/GOLD_Footage/SH011/SH011_Craig_001_OBM");
     
-#endif
     
     FDM.loadFrame(0, frame);            // load frame 0
     FDM.loadFrame(0, firstFrame);
