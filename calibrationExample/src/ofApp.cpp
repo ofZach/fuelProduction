@@ -41,29 +41,58 @@ void ofApp::setup() {
     
 
     bSaving = false;
-   
-#ifdef TARGET_WIN32
-    FDM.setup("../../../sharedData/SH002_Craig_test/");
-#else
-    
-    
-//    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH002/Footage_smallsize_proxy",
-//              "/Users/zachlieberman/Desktop/GOLD_Footage/SH002/SH002_Craig_003_OBM");
 
-    // timing is off?
-//    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH001/Footage_360p_proxy",
-//              "/Users/zachlieberman/Desktop/GOLD_Footage/SH001/SH001_Jackie_002_OBM");
+	shotManager.footageBasePath = "/Volumes/CHOPPER/_ToyotaXpopTech_/GOLD_Footage/";
+	shotManager.setup();
 
-   
+//	shotManager.loadShot("SH001", FDM); //jackie portrait
+//	shotManager.loadShot("SH002", FDM); //craig portrait
+//	shotManager.loadShot("SH003", FDM); //matt portrait
+	//NOT ALIGNED AFTER CUT -- NO EYES AFTER CUT
+//	shotManager.loadShot("SH004", FDM); //craig scifi
+//	shotManager.loadShot("SH005", FDM); //Jackie SMOG
+//	shotManager.loadShot("SH006", FDM); //jackie "made fuel cells important to me"
+//	shotManager.loadShot("SH007", FDM); //MATT "Innovative technology"
+//	shotManager.loadShot("SH008", FDM); //JACKiE change the way communities
+//	shotManager.loadShot("SH009", FDM); //JACKIE 'states, nations, the world'
+//	shotManager.loadShot("SH010", FDM); //CRAIG mental models;
+	shotManager.loadShot("SH011", FDM); //CRAIG "we did it"
+	
+	
+	//zach you can uncomment this to switch to your directory
+//	string footagePath = "/Users/zachlieberman/Desktop/"
+	
+//    FDM.setup( footagePath + "SH002/Footage_smallsize_proxy",
+//               footagePath + "SH002/SH002_Craig_003_OBM" );
+    
+
+    //JACKIE: timing is off?
+//    FDM.setup(footagePath + "SH001/Footage_smallsize_proxy",
+//              footagePath + "SH001/SH001_Jackie_002_OBM");
+
+//    FDM.setup(footagePath + "SH004/Footage_smallsize_proxy",
+//              footagePath + "SH004/SH004a_Craig_003_OBM");
+
+	//JACKIE B CAM
+//    FDM.setup(footagePath + "SH006/Footage_smallsize_proxy",
+//              footagePath + "SH006/SH006_Jackie_001_OBM");
+
+	//JACKIE B CAM
+//    FDM.setup(footagePath + "SH008/Footage_smallsize_proxy",
+//              footagePath + "SH008/SH008_Jackie_001_OBM");
+
+//	FDM.setup(footagePath + "SH009/Footage_smallsize_proxy",
+//              footagePath + "SH009/SH009_Jackie_001_OBM");
+
 //    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH003/Footage_smallsize_proxy",
 //              "/Users/zachlieberman/Desktop/GOLD_Footage/SH003/SH003_Matt_004_OBM");
 
 //    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH008/Footage_360p_proxy",
 //              "/Users/zachlieberman/Desktop/GOLD_Footage/SH008/SH008_Jackie_001_OBM");
-    FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH011/Footage_360p_proxy",
-              "/Users/zachlieberman/Desktop/GOLD_Footage/SH011/SH011_Craig_001_OBM");
+
+    //FDM.setup("/Users/zachlieberman/Desktop/GOLD_Footage/SH011/Footage_360p_proxy",
+    //          "/Users/zachlieberman/Desktop/GOLD_Footage/SH011/SH011_Craig_001_OBM");
     
-#endif
     
     FDM.loadFrame(0, frame);            // load frame 0
     FDM.loadFrame(0, firstFrame);
@@ -250,11 +279,11 @@ void ofApp::draw(){
 		}
 		else{
 			baseCamera.setTransformMatrix(CCM.extrinsics);
-            cout << "cam position " << baseCamera.getPosition() << endl;
-            cout << "cam roll " << baseCamera.getRoll() << endl;
-            cout << "cam pitch " << baseCamera.getPitch() << endl;
-            cout << "cam heading " << baseCamera.getHeading() << endl;
-            cout << "cam fov " << baseCamera.getFov() << endl;
+//            cout << "cam position " << baseCamera.getPosition() << endl;
+//            cout << "cam roll " << baseCamera.getRoll() << endl;
+//            cout << "cam pitch " << baseCamera.getPitch() << endl;
+//            cout << "cam heading " << baseCamera.getHeading() << endl;
+//            cout << "cam fov " << baseCamera.getFov() << endl;
             
 		}
 		baseCamera.setFov( CCM.rgbCalibration.getDistortedIntrinsics().getFov().y );
