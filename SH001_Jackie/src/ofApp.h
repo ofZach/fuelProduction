@@ -33,6 +33,7 @@ public:
     int lastFrame;
 
 	ofLight light;
+	ofxPanel gui;
 	
 	ofFbo targetFbo;
 
@@ -52,9 +53,9 @@ public:
     
     
     // ---------------
-//    ofMesh prevFrame;
-//    ofVec3f decompTranslation, decompScale;
-//    ofQuaternion decompRotation, decompSo;
+    ofMesh prevFrame;
+    ofVec3f decompTranslation, decompScale;
+    ofQuaternion decompRotation, decompSo;
     
     
     bool bSaving;

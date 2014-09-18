@@ -26,7 +26,7 @@ void LineManager::drawArc(){
 	
 }
 
-void LineManager::paramChanged(ofParameter<float>& param){
+void LineManager::paramChanged(float& param){
 
 }
 

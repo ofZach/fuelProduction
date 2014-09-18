@@ -16,7 +16,7 @@ class LineManager {
 	void drawArc();
 
 	
-	void paramChanged(ofParameter<float>& param);
+	void paramChanged(float& param);
 	
 	//arc params
 	ofParameter <float> startPointX;
