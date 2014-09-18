@@ -130,7 +130,7 @@ void shotManager::setup(){
 	curshot->name = "SH011";
 	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
 	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
-	curshot->footageSD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";	//TODO throw in the paths to the 360 proxies here
+	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";	//TODO throw in the paths to the 360 proxies here
 	curshot->aCam = true;
 	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH011_Craig_001_OBM" );
 	shots[sh011.name] = sh011;
