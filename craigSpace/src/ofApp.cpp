@@ -457,14 +457,20 @@ void ofApp::draw(){
     
     //-----------------------------------------------------------------
     
-    ofSeedRandom(mouseY);
+    //cout << mouseY << endl;
+    ofSeedRandom(526);
     
     vector < circleInSpace > circles;
-    int nCircles = ofRandom(30,100);
+    int nCircles = ofRandom(20,40);
     for (int i = 0; i < nCircles; i++){
         circleInSpace cc;
-        cc.pt.set( ofRandom(-300,300), ofRandom(-300,300));
-        cc.size =  10 + sin(ofGetElapsedTimef() + i/2.0) * 5;
+        
+        float pct = ofMap(i,0, nCircles, 0-PI/4,  PI + PI/4);
+        ofPoint base( -50 + 300 * cos(pct), -50 + 300 * sin(pct));
+        
+        cc.pt.set( base.x + ofRandom(-100,100), base.y + ofRandom(-100,100));
+        cc.size =  15 + sin(ofGetElapsedTimef() + i/2.0) * 10;
+        if (ofRandom(0,1) > 0.85) cc.size = ofRandom(20,50);
         circles.push_back(cc);
     }
     ofPolyline line = lineFromCircle(circles);
