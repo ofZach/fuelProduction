@@ -49,7 +49,7 @@ void ofApp::setup() {
 
 	shotManager.loadShot("SH001", FDM); //jackie portrait
 //	shotManager.loadShot("SH002", FDM); //craig portrait
-//	shotManager.loadShot("SH003", FDM); //matt portrait
+    shotManager.loadShot("SH003", FDM); //matt portrait
 	//NOT ALIGNED AFTER CUT -- NO EYES AFTER CUT
 //	shotManager.loadShot("SH004", FDM); //craig scifi
 //	shotManager.loadShot("SH005", FDM); //Jackie SMOG
@@ -58,7 +58,9 @@ void ofApp::setup() {
 //	shotManager.loadShot("SH008", FDM); //JACKiE change the way communities
 //	shotManager.loadShot("SH009", FDM); //JACKIE 'states, nations, the world'
 //	shotManager.loadShot("SH010", FDM); //CRAIG mental models;
+//shotManager.loadShot("SH011", FDM); //CRAIG "we did it"
 //	shotManager.loadShot("SH011", FDM); //CRAIG "we did it"
+
 
     FDM.loadFrame(0, frame);            // load frame 0
     FDM.loadFrame(0, firstFrame);
@@ -129,30 +131,27 @@ void ofApp::setup() {
 //    
 //    string path = ofGetTimestampString() + ".abc";
 //    writer.open(path, 24);
-//    /Users/zachlieberman/Desktop/of_v0.8.3_osx_release/apps/fuelProduction/sharedData/Background Plates/A-Cam_BackgroundPlate_360p.png
-//    for (int j = 0; j < FDM.numFrames; j++){
+//    for (int j = 0; j < FDM.numFrames; j+=10){
 //        
 //        FDM.loadFrame(j, frame);            // load frame 0
 //        ofMatrix4x4 mm;
-//        mm.glScale(-scaleFac,scaleFac,scaleFac);
+//        mm.glScale(scaleFac,scaleFac,scaleFac);
 //        mm.glTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
 //
 //        ofMesh temp = frame.head;
-//        cout << temp.getNumVertices() << endl;
 //        ofxAlembic::transform(temp, mm);
 //        writer.addPolyMesh("/head", temp);
 //
 //        ofNode n;
 //        FDM.getOrientation(frame, n);
-//
-//        ofMatrix4x4 mat = n.getGlobalTransformMatrix();
-//        ofMatrix4x4 newMat =  mat * mm;
-//        newMat.glScale(-1, 1,1);
-//        writer.addXform("/box", newMat);
+//        
+//        mm.preMult(n.getGlobalTransformMatrix());
+//        
+//        writer.addXform("/box", mm);
 //        if (j == 0){
-//            ofBoxPrimitive box;
-//            box.set(40);
-//            writer.addPolyMesh("/box/boxShape", box.getMesh());
+//            ofBoxPrimitive a;
+//            a.set(100);
+//            writer.addPolyMesh("/box/boxShape", a.getMesh());
 //        }
 //        
 //        // draw the box of orientation using new alexmbic style
@@ -161,7 +160,7 @@ void ofApp::setup() {
 //    }
 //    
 //    writer.close();
-//
+////
     
     
     
@@ -259,14 +258,11 @@ void ofApp::draw(){
 		if(drawFaceBox){
 			ofBoxPrimitive(100, 100, 100).draw();
 		}
-    
+
         
         ofPopStyle();
 	ofPopMatrix();
-    
-    
-    
-    
+
     
     ofPolyline curve;
 
