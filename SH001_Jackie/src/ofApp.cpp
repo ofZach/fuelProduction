@@ -99,13 +99,16 @@ void ofApp::setup() {
 //    abc.open("SH04_Spline_01c.abc");
 //    abc.dumpNames();
     
-    
+    line.setup();
+	line.generateArcPoints();
+	
     backgroundPlate.loadImage(dataPath + "Background Plates/A-Cam_BackgroundPlate_360p.png");
     
 }
 
 void ofApp::update() {
     
+	line.update();
     
     if (!playback){
         currentFrame = mouseX;
@@ -195,8 +198,8 @@ void ofApp::draw(){
         ofPopStyle();
 	ofPopMatrix();
 	
-	line.drawArc();
-    
+	//line.drawArc();
+    line.draw();
     
     
     

@@ -5,6 +5,7 @@
 //draw arc
 
 //sample arc around path
+#include "ofxPtf.h"
 
 class LineManager {
   public:
@@ -26,9 +27,19 @@ class LineManager {
 	ofParameter <float> extrudeAmount;
 	ofParameter <float> arcRadius; //size of the arc
 	ofParameter <float> arcAngle; //total angle
-		
+
+	ofParameter <float> rotationsSpeed; //total angle
+
 	void generateArcPoints();
 	vector<ofVec3f> basePoints;
-    
+	
+	float percentAlongCurve;
+	float currentRotation;
+	
+	ofxPtf ptf;
+	
+	ofNode a;
+	ofNode b;
+    ofNode c;
 };
 
