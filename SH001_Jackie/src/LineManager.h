@@ -39,6 +39,11 @@ class LineManager {
 	ofxPtf ptf;
 	int numFrames;
 	
+	//one per frame;
+	vector<ofMesh> meshes;
+	ofMesh curMesh;
+	vector<ofVec3f> hooks; //distributed as we go;
+	
 	ofNode a;
 	ofNode b;
     ofNode c;

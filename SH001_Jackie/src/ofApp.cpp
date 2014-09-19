@@ -45,11 +45,8 @@ void ofApp::setup() {
     
     bSaving = false;
     
-//#ifdef JAMES
-	shotManager.footageBasePath = "/Volumes/CHOPPER/_ToyotaXpopTech_/GOLD_Footage/";
-//#else 
-//    shotManager.footageBasePath = "/Users/zachlieberman/Desktop/GOLD_Footage/";
-//#endif 
+//	shotManager.footageBasePath = "/Volumes/CHOPPER/_ToyotaXpopTech_/GOLD_Footage/";
+	shotManager.footageBasePath =  "/Volumes/Nebula_helper/_ToyotaXpopTech_/GOLD_Footage/";
     
 	shotManager.setup();
 
@@ -100,7 +97,8 @@ void ofApp::setup() {
 //    abc.dumpNames();
     
     line.setup();
-	line.generateLine(2000);
+	line.generateLine(FDM.numFrames);
+
 	
     backgroundPlate.loadImage(dataPath + "Background Plates/A-Cam_BackgroundPlate_360p.png");
     
@@ -258,8 +256,7 @@ void ofApp::keyPressed(ofKeyEventArgs& args){
     }
 	
 	if(args.key == 'l'){
-		line.generateArcPoints();
-		line.generateLinePoints(2000);
+		line.generateLine(FDM.numFrames);
 	}
     
     CM.keyPressed(args.key);

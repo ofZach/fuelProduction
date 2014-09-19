@@ -22,38 +22,27 @@ void LineManager::setup(){
 
 void LineManager::update(){
 	
-	//percentAlongCurve = MIN(percentAlongCurve+.01, 1.0);
-	
 	percentAlongCurve =  ofClamp(1.0 * ofGetMouseX() / ofGetWidth(), 0, 1.0);
+
+	if(meshes.size() > 0){
+		int meshIndex = percentAlongCurve * meshes.size();
+		curMesh = meshes[meshIndex];
+	}
 
 	int index = percentAlongCurve * (ptf.framesSize()-1);
 	a.setTransformMatrix(ptf.frameAt(index));
-	
 	a.rotate(rotationAmount*percentAlongCurve, a.getUpDir());
-
-	
-	//a.tilt(rotationAmount*percentAlongCurve);
-	
-	//thisNode.setTransformMatrix();
-
-//	ofVec3f pos = basePoints[index];
-//	a.setPosition(pos);
-	
-//	ofVec3f nextPos = basePoints[index+1];
-//	ofVec3f lookDir = nextPos - pos;
-	
-//	currentRotation += rotationsSpeed;
-//	ofQuaternion curRotation;
 }
 
 void LineManager::draw(){
 	
 	b.draw();
-	
-	ofMesh m;
-	m.addVertices( linePoints );
-	m.setMode(OF_PRIMITIVE_LINE_STRIP);
-	m.draw();
+
+	curMesh.draw();
+//	ofMesh m;
+//	m.addVertices( linePoints );
+//	m.setMode(OF_PRIMITIVE_LINE_STRIP);
+//	m.draw();
 	
 }
 
@@ -79,18 +68,19 @@ void LineManager::generateLine(int numF){
 	basePoints.clear();
 	linePoints.clear();
 	ptf.clear();
+	meshes.clear();
 	
-	float angleStep = ;
-	float curAngle = 0;
+//	float angleStep = arcAngle / numF;
+//	float curAngle = 0;
 	
 	ofVec3f startPoint(startPointX,startPointY,startPointZ);
 	for(int i = 0; i < numFrames; i++){
 		
-		float percentDone = 1.0* i / numFrames;
-		float angle = angle * arcRadius;
+		float percentDone = 1.0 * i / numFrames;
+		float angle = percentDone * arcAngle;
 		
 		ofVec3f pos = startPoint + ofVec3f(0,-1,0).getRotated(angle, ofVec3f(0,0,1) ) * arcRadius;
-		pos += ofVec3f(0,0,extrudeAmount * percentDone);
+		pos += ofVec3f(0,0, extrudeAmount * percentDone);
 
 		ptf.addPoint(pos);
 
@@ -98,18 +88,24 @@ void LineManager::generateLine(int numF){
 	}
 	
 	for(int i = 0; i < numFrames; i++){
-		percentAlongCurve =  ofClamp(1.0 * i / numFrames, 0, 1.0);
 		
-		int index = percentAlongCurve * (ptf.framesSize()-1);
+		percentAlongCurve = 1.0 * i / numFrames;
+		
+		int index = percentAlongCurve * (numFrames-1);
 		a.setTransformMatrix(ptf.frameAt(index));
 		
 		a.rotate(rotationAmount*percentAlongCurve, a.getUpDir());
 		ofNode n;
 		n.setTransformMatrix(b.getGlobalTransformMatrix());
 		
+		
 		linePoints.push_back(n.getPosition());
 		
-		//cout << "percent " << percentAlongCurve << " a " << a.getPosition() << " b " << n.getPosition() << endl;
+		ofMesh m;
+		m.setMode(OF_PRIMITIVE_LINE_STRIP);
+		m.addVertices(linePoints);
+		meshes.push_back(m);
+		
 	}
 	
 }
