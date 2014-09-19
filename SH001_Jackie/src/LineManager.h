@@ -13,10 +13,8 @@ class LineManager {
 	void setup();
 	void update();
 	void draw();
-    
 	void drawArc();
 
-	
 	void paramChanged(float& param);
 	
 	//arc params
@@ -28,15 +26,18 @@ class LineManager {
 	ofParameter <float> arcRadius; //size of the arc
 	ofParameter <float> arcAngle; //total angle
 
-	ofParameter <float> rotationsSpeed; //total angle
+	ofParameter <float> rotationAmount; //total angle
 
-	void generateArcPoints();
+	void generateLine(int numFrames);
+	
 	vector<ofVec3f> basePoints;
+	vector<ofVec3f> linePoints;
 	
 	float percentAlongCurve;
 	float currentRotation;
 	
 	ofxPtf ptf;
+	int numFrames;
 	
 	ofNode a;
 	ofNode b;

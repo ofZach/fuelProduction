@@ -10,20 +10,29 @@ void LineManager::setup(){
 	arcRadius.addListener(this, &LineManager::paramChanged);
 	arcAngle.addListener(this, &LineManager::paramChanged);
 
+	rotationAmount.addListener(this, &LineManager::paramChanged);
+	
 	percentAlongCurve = 0.0;
 	
 	currentRotation = 0.0;
 	
 	b.setParent(a);
+	b.setPosition(0, 100, 0);
 }
 
 void LineManager::update(){
 	
 	//percentAlongCurve = MIN(percentAlongCurve+.01, 1.0);
-	percentAlongCurve =  1.0 * ofGetMouseX() / ofGetWidth();
 	
+	percentAlongCurve =  ofClamp(1.0 * ofGetMouseX() / ofGetWidth(), 0, 1.0);
+
 	int index = percentAlongCurve * (ptf.framesSize()-1);
 	a.setTransformMatrix(ptf.frameAt(index));
+	
+	a.rotate(rotationAmount*percentAlongCurve, a.getUpDir());
+
+	
+	//a.tilt(rotationAmount*percentAlongCurve);
 	
 	//thisNode.setTransformMatrix();
 
@@ -32,7 +41,6 @@ void LineManager::update(){
 	
 //	ofVec3f nextPos = basePoints[index+1];
 //	ofVec3f lookDir = nextPos - pos;
-
 	
 //	currentRotation += rotationsSpeed;
 //	ofQuaternion curRotation;
@@ -40,11 +48,17 @@ void LineManager::update(){
 
 void LineManager::draw(){
 	
-	a.draw();
+	b.draw();
+	
+	ofMesh m;
+	m.addVertices( linePoints );
+	m.setMode(OF_PRIMITIVE_LINE_STRIP);
+	m.draw();
 	
 }
 
 void LineManager::drawArc(){
+	
 	ofMesh m;
 	m.addVertices( basePoints );
 	m.setMode(OF_PRIMITIVE_LINE_STRIP);
@@ -55,21 +69,27 @@ void LineManager::drawArc(){
 }
 
 void LineManager::paramChanged(float& param){
-	generateArcPoints();
+	generateLine(numFrames);
 }
 
-void LineManager::generateArcPoints(){
+void LineManager::generateLine(int numF){
+	
+	numFrames = numF;
 	
 	basePoints.clear();
+	linePoints.clear();
 	ptf.clear();
 	
-	float angleStep = 5;
+	float angleStep = ;
 	float curAngle = 0;
 	
 	ofVec3f startPoint(startPointX,startPointY,startPointZ);
-	for(float angle = 0; angle < arcAngle; angle += angleStep){
+	for(int i = 0; i < numFrames; i++){
+		
+		float percentDone = 1.0* i / numFrames;
+		float angle = angle * arcRadius;
+		
 		ofVec3f pos = startPoint + ofVec3f(0,-1,0).getRotated(angle, ofVec3f(0,0,1) ) * arcRadius;
-		float percentDone = angle / arcAngle;
 		pos += ofVec3f(0,0,extrudeAmount * percentDone);
 
 		ptf.addPoint(pos);
@@ -77,6 +97,20 @@ void LineManager::generateArcPoints(){
 		basePoints.push_back( pos );
 	}
 	
+	for(int i = 0; i < numFrames; i++){
+		percentAlongCurve =  ofClamp(1.0 * i / numFrames, 0, 1.0);
+		
+		int index = percentAlongCurve * (ptf.framesSize()-1);
+		a.setTransformMatrix(ptf.frameAt(index));
+		
+		a.rotate(rotationAmount*percentAlongCurve, a.getUpDir());
+		ofNode n;
+		n.setTransformMatrix(b.getGlobalTransformMatrix());
+		
+		linePoints.push_back(n.getPosition());
+		
+		//cout << "percent " << percentAlongCurve << " a " << a.getPosition() << " b " << n.getPosition() << endl;
+	}
 	
 }
 

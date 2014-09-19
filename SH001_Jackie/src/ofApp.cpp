@@ -34,7 +34,7 @@ void ofApp::setup() {
 	gui.add(line.extrudeAmount.set("extrude", 200, 0, 400));
 	gui.add(line.arcRadius.set("arc radius", 200, 0, 400));
 	gui.add(line.arcAngle.set("arc angle", 360, 180, 720));
-
+	gui.add(line.rotationAmount.set("rotation amount", 360, 360, 360*10));
 	
     gui.loadFromFile("adjustments.xml");
     
@@ -100,7 +100,7 @@ void ofApp::setup() {
 //    abc.dumpNames();
     
     line.setup();
-	line.generateArcPoints();
+	line.generateLine(2000);
 	
     backgroundPlate.loadImage(dataPath + "Background Plates/A-Cam_BackgroundPlate_360p.png");
     
@@ -259,6 +259,7 @@ void ofApp::keyPressed(ofKeyEventArgs& args){
 	
 	if(args.key == 'l'){
 		line.generateArcPoints();
+		line.generateLinePoints(2000);
 	}
     
     CM.keyPressed(args.key);
