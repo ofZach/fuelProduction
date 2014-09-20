@@ -82,7 +82,6 @@
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
-		E705E73D19CA90640083A103 /* shotManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E705E73B19CA90640083A103 /* shotManager.cpp */; };
 		E7E077E515D3B63C0020DFD4 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */; };
 		E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E715D3B6510020DFD4 /* QTKit.framework */; };
 		E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F985F515E0DE99003869B5 /* Accelerate.framework */; };
@@ -105,11 +104,12 @@
 		FD0BF7B119C9A4D800E060F7 /* ofxSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD0BF7A619C9A4D800E060F7 /* ofxSlider.cpp */; };
 		FD0BF7B219C9A4D800E060F7 /* ofxSliderGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD0BF7A819C9A4D800E060F7 /* ofxSliderGroup.cpp */; };
 		FD0BF7B319C9A4D800E060F7 /* ofxToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD0BF7AA19C9A4D800E060F7 /* ofxToggle.cpp */; };
-		FD1598F119C8AEC6003A5909 /* cameraCalibrationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD1598E819C8AEC6003A5909 /* cameraCalibrationManager.cpp */; };
-		FD1598F219C8AEC6003A5909 /* depthExporterManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD1598EA19C8AEC6003A5909 /* depthExporterManager.cpp */; };
-		FD1598F319C8AEC6003A5909 /* frameDataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD1598EC19C8AEC6003A5909 /* frameDataManager.cpp */; };
-		FD1598F419C8AEC6003A5909 /* transformEstimationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD1598EF19C8AEC6003A5909 /* transformEstimationManager.cpp */; };
-		FD221DAC19CB28E4002AA0D6 /* cameraManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD221DAA19CB28E4002AA0D6 /* cameraManager.cpp */; };
+		FD203E5F19CD9BC7009010F9 /* cameraManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203E5119CD9BC7009010F9 /* cameraManager.cpp */; };
+		FD203E6019CD9BC7009010F9 /* cameraCalibrationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203E5419CD9BC7009010F9 /* cameraCalibrationManager.cpp */; };
+		FD203E6119CD9BC7009010F9 /* depthExporterManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203E5619CD9BC7009010F9 /* depthExporterManager.cpp */; };
+		FD203E6219CD9BC7009010F9 /* frameDataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203E5819CD9BC7009010F9 /* frameDataManager.cpp */; };
+		FD203E6319CD9BC7009010F9 /* shotManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203E5A19CD9BC7009010F9 /* shotManager.cpp */; };
+		FD203E6419CD9BC7009010F9 /* transformEstimationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203E5D19CD9BC7009010F9 /* transformEstimationManager.cpp */; };
 		FE0F1DB69ACCD163E9DA2A15 /* ofxUIRotarySlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 64F3DE24F191ECED9DBE903C /* ofxUIRotarySlider.cpp */; };
 		FFD1EBFCA24DFB4E4427B4FE /* ofxUILabelButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9A4454B00CCFD7265D3CA85 /* ofxUILabelButton.cpp */; };
 /* End PBXBuildFile section */
@@ -593,8 +593,6 @@
 		E67BC70E17DDA0081C8FD9DD /* ofxUIImageButton.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIImageButton.h; path = ../../../addons/ofxUI/src/ofxUIImageButton.h; sourceTree = SOURCE_ROOT; };
 		E68A00035D2F8150E6BFE01B /* ObjectHeader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ObjectHeader.h; path = ../../../addons/ofxAlembic/libs/alembic/include/Alembic/AbcCoreAbstract/ObjectHeader.h; sourceTree = SOURCE_ROOT; };
 		E68E2DC6B608124861A94FB1 /* OScalarProperty.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OScalarProperty.h; path = ../../../addons/ofxAlembic/libs/alembic/include/Alembic/Abc/OScalarProperty.h; sourceTree = SOURCE_ROOT; };
-		E705E73B19CA90640083A103 /* shotManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shotManager.cpp; sourceTree = "<group>"; };
-		E705E73C19CA90640083A103 /* shotManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shotManager.h; sourceTree = "<group>"; };
 		E71733956CD601886837BE2E /* ofxUICanvas.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxUICanvas.cpp; path = ../../../addons/ofxUI/src/ofxUICanvas.cpp; sourceTree = SOURCE_ROOT; };
 		E782680D6694C21F9DAD11E6 /* ricehdf.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ricehdf.h; path = ../../../addons/ofxAlembic/libs/alembic/include/ricehdf.h; sourceTree = SOURCE_ROOT; };
 		E7DDB716B5AE0DEA82DFFEDA /* autotuned_index.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = autotuned_index.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/autotuned_index.h; sourceTree = SOURCE_ROOT; };
@@ -658,16 +656,18 @@
 		FD0BF7A919C9A4D800E060F7 /* ofxSliderGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSliderGroup.h; sourceTree = "<group>"; };
 		FD0BF7AA19C9A4D800E060F7 /* ofxToggle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxToggle.cpp; sourceTree = "<group>"; };
 		FD0BF7AB19C9A4D800E060F7 /* ofxToggle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxToggle.h; sourceTree = "<group>"; };
-		FD1598E819C8AEC6003A5909 /* cameraCalibrationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cameraCalibrationManager.cpp; sourceTree = "<group>"; };
-		FD1598E919C8AEC6003A5909 /* cameraCalibrationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cameraCalibrationManager.h; sourceTree = "<group>"; };
-		FD1598EA19C8AEC6003A5909 /* depthExporterManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = depthExporterManager.cpp; sourceTree = "<group>"; };
-		FD1598EB19C8AEC6003A5909 /* depthExporterManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = depthExporterManager.h; sourceTree = "<group>"; };
-		FD1598EC19C8AEC6003A5909 /* frameDataManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = frameDataManager.cpp; sourceTree = "<group>"; };
-		FD1598ED19C8AEC6003A5909 /* frameDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = frameDataManager.h; sourceTree = "<group>"; };
-		FD1598EF19C8AEC6003A5909 /* transformEstimationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = transformEstimationManager.cpp; sourceTree = "<group>"; };
-		FD1598F019C8AEC6003A5909 /* transformEstimationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = transformEstimationManager.h; sourceTree = "<group>"; };
-		FD221DAA19CB28E4002AA0D6 /* cameraManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cameraManager.cpp; path = src/cameraManager.cpp; sourceTree = SOURCE_ROOT; };
-		FD221DAB19CB28E4002AA0D6 /* cameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cameraManager.h; path = src/cameraManager.h; sourceTree = SOURCE_ROOT; };
+		FD203E5119CD9BC7009010F9 /* cameraManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cameraManager.cpp; path = ../../sharedCode/cameraManager.cpp; sourceTree = "<group>"; };
+		FD203E5219CD9BC7009010F9 /* cameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cameraManager.h; path = ../../sharedCode/cameraManager.h; sourceTree = "<group>"; };
+		FD203E5419CD9BC7009010F9 /* cameraCalibrationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cameraCalibrationManager.cpp; sourceTree = "<group>"; };
+		FD203E5519CD9BC7009010F9 /* cameraCalibrationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cameraCalibrationManager.h; sourceTree = "<group>"; };
+		FD203E5619CD9BC7009010F9 /* depthExporterManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = depthExporterManager.cpp; sourceTree = "<group>"; };
+		FD203E5719CD9BC7009010F9 /* depthExporterManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = depthExporterManager.h; sourceTree = "<group>"; };
+		FD203E5819CD9BC7009010F9 /* frameDataManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = frameDataManager.cpp; sourceTree = "<group>"; };
+		FD203E5919CD9BC7009010F9 /* frameDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = frameDataManager.h; sourceTree = "<group>"; };
+		FD203E5A19CD9BC7009010F9 /* shotManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shotManager.cpp; sourceTree = "<group>"; };
+		FD203E5B19CD9BC7009010F9 /* shotManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shotManager.h; sourceTree = "<group>"; };
+		FD203E5D19CD9BC7009010F9 /* transformEstimationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = transformEstimationManager.cpp; sourceTree = "<group>"; };
+		FD203E5E19CD9BC7009010F9 /* transformEstimationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = transformEstimationManager.h; sourceTree = "<group>"; };
 		FD609E2EC17FCE181DFE635F /* dist.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = dist.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/dist.h; sourceTree = SOURCE_ROOT; };
 		FDA2832E78CFA22BEEC74160 /* ofxUIFPS.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIFPS.h; path = ../../../addons/ofxUI/src/ofxUIFPS.h; sourceTree = SOURCE_ROOT; };
 		FE15469185A3A49FEC9D2292 /* myvec.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = myvec.h; path = ../../../addons/ofxCv/libs/CLD/include/CLD/myvec.h; sourceTree = SOURCE_ROOT; };
@@ -1620,8 +1620,10 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				FD1598E719C8AEC6003A5909 /* io */,
-				FD1598EE19C8AEC6003A5909 /* processing */,
+				FD203E5119CD9BC7009010F9 /* cameraManager.cpp */,
+				FD203E5219CD9BC7009010F9 /* cameraManager.h */,
+				FD203E5319CD9BC7009010F9 /* io */,
+				FD203E5C19CD9BC7009010F9 /* processing */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
@@ -1744,30 +1746,30 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		FD1598E719C8AEC6003A5909 /* io */ = {
+		FD203E5319CD9BC7009010F9 /* io */ = {
 			isa = PBXGroup;
 			children = (
-				FD1598E819C8AEC6003A5909 /* cameraCalibrationManager.cpp */,
-				FD1598E919C8AEC6003A5909 /* cameraCalibrationManager.h */,
-				FD1598EA19C8AEC6003A5909 /* depthExporterManager.cpp */,
-				FD1598EB19C8AEC6003A5909 /* depthExporterManager.h */,
-				FD1598EC19C8AEC6003A5909 /* frameDataManager.cpp */,
-				FD1598ED19C8AEC6003A5909 /* frameDataManager.h */,
-				E705E73B19CA90640083A103 /* shotManager.cpp */,
-				E705E73C19CA90640083A103 /* shotManager.h */,
+				FD203E5419CD9BC7009010F9 /* cameraCalibrationManager.cpp */,
+				FD203E5519CD9BC7009010F9 /* cameraCalibrationManager.h */,
+				FD203E5619CD9BC7009010F9 /* depthExporterManager.cpp */,
+				FD203E5719CD9BC7009010F9 /* depthExporterManager.h */,
+				FD203E5819CD9BC7009010F9 /* frameDataManager.cpp */,
+				FD203E5919CD9BC7009010F9 /* frameDataManager.h */,
+				FD203E5A19CD9BC7009010F9 /* shotManager.cpp */,
+				FD203E5B19CD9BC7009010F9 /* shotManager.h */,
 			);
-			path = io;
+			name = io;
+			path = ../../sharedCode/io;
 			sourceTree = "<group>";
 		};
-		FD1598EE19C8AEC6003A5909 /* processing */ = {
+		FD203E5C19CD9BC7009010F9 /* processing */ = {
 			isa = PBXGroup;
 			children = (
-				FD1598EF19C8AEC6003A5909 /* transformEstimationManager.cpp */,
-				FD1598F019C8AEC6003A5909 /* transformEstimationManager.h */,
-				FD221DAA19CB28E4002AA0D6 /* cameraManager.cpp */,
-				FD221DAB19CB28E4002AA0D6 /* cameraManager.h */,
+				FD203E5D19CD9BC7009010F9 /* transformEstimationManager.cpp */,
+				FD203E5E19CD9BC7009010F9 /* transformEstimationManager.h */,
 			);
-			path = processing;
+			name = processing;
+			path = ../../sharedCode/processing;
 			sourceTree = "<group>";
 		};
 		FEA273413D5AFD9607F56ABE /* CLD */ = {
@@ -1883,7 +1885,6 @@
 				9D44DC88EF9E7991B4A09951 /* tinyxmlerror.cpp in Sources */,
 				FD0BF7AC19C9A4D800E060F7 /* ofxBaseGui.cpp in Sources */,
 				5A4349E9754D6FA14C0F2A3A /* tinyxmlparser.cpp in Sources */,
-				FD1598F119C8AEC6003A5909 /* cameraCalibrationManager.cpp in Sources */,
 				D17988540C5C1823DDFD48B7 /* ofxAlembicReader.cpp in Sources */,
 				17F86ECD30824BDEBC82D836 /* ofxAlembicType.cpp in Sources */,
 				6F7F2BBDC3266D263C42FB90 /* ofxAlembicUtil.cpp in Sources */,
@@ -1892,23 +1893,24 @@
 				B6840996567E78436F7ECFAB /* ETF.cpp in Sources */,
 				F76B4A79BD8DE4854141CB47 /* fdog.cpp in Sources */,
 				EBCDE831EFAE08274E799C97 /* Calibration.cpp in Sources */,
+				FD203E6119CD9BC7009010F9 /* depthExporterManager.cpp in Sources */,
 				6AABAB39E82AF5CFEA23A205 /* ContourFinder.cpp in Sources */,
 				45CC483A999BF1065A6B926C /* Distance.cpp in Sources */,
 				5CC34D433F5806179935B89D /* Flow.cpp in Sources */,
+				FD203E6419CD9BC7009010F9 /* transformEstimationManager.cpp in Sources */,
 				2023EF517ED2D8B397511D4B /* Helpers.cpp in Sources */,
+				FD203E5F19CD9BC7009010F9 /* cameraManager.cpp in Sources */,
 				C602002DE761F9B52DB4400A /* ObjectFinder.cpp in Sources */,
 				7CDAD32BE4FA46701E3552C7 /* RunningBackground.cpp in Sources */,
-				FD221DAC19CB28E4002AA0D6 /* cameraManager.cpp in Sources */,
-				FD1598F319C8AEC6003A5909 /* frameDataManager.cpp in Sources */,
 				FD0BF7B219C9A4D800E060F7 /* ofxSliderGroup.cpp in Sources */,
 				10B69DE456AED1288FC9316B /* Tracker.cpp in Sources */,
 				A6668C5B1272D7FCD5B5A16F /* Utilities.cpp in Sources */,
 				DBCB84A37F9AECC254870D79 /* Wrappers.cpp in Sources */,
-				FD1598F219C8AEC6003A5909 /* depthExporterManager.cpp in Sources */,
 				9F5C6DD965B4F3A6DB5B88F8 /* ofxUI2DGraph.cpp in Sources */,
 				FD0BF7B319C9A4D800E060F7 /* ofxToggle.cpp in Sources */,
 				4B3ED367CA852D522E2EE996 /* ofxUI2DPad.cpp in Sources */,
 				F1E8DE8734BA6F69A5112FA8 /* ofxUIBaseDraws.cpp in Sources */,
+				FD203E6219CD9BC7009010F9 /* frameDataManager.cpp in Sources */,
 				C381F2B7CFD84C0E540EB4BC /* ofxUIBiLabelSlider.cpp in Sources */,
 				7D393646FB859A930EF58917 /* ofxUIButton.cpp in Sources */,
 				7BE46522B64E24FAEDE1A25D /* ofxUICanvas.cpp in Sources */,
@@ -1921,11 +1923,11 @@
 				22030CBDCC25D815E7ED6757 /* ofxUIFPSSlider.cpp in Sources */,
 				3D4EA8E172D3E4A30FEFA969 /* ofxUIImage.cpp in Sources */,
 				7F2CD93F681F3C1547B3BF2C /* ofxUIImageButton.cpp in Sources */,
-				FD1598F419C8AEC6003A5909 /* transformEstimationManager.cpp in Sources */,
-				E705E73D19CA90640083A103 /* shotManager.cpp in Sources */,
 				FBD0CD0AFE3849C14E829CAF /* ofxUIImageSampler.cpp in Sources */,
+				FD203E6319CD9BC7009010F9 /* shotManager.cpp in Sources */,
 				FD0BF7AE19C9A4D800E060F7 /* ofxGuiGroup.cpp in Sources */,
 				26874B150C8535AEA0F24C8C /* ofxUIImageSlider.cpp in Sources */,
+				FD203E6019CD9BC7009010F9 /* cameraCalibrationManager.cpp in Sources */,
 				FB8AA9FA6535767BE31806BC /* ofxUIImageToggle.cpp in Sources */,
 				7C3DC84C9BFCBD2866DB2B6C /* ofxUILabel.cpp in Sources */,
 				FFD1EBFCA24DFB4E4427B4FE /* ofxUILabelButton.cpp in Sources */,

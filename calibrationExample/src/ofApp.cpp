@@ -47,7 +47,7 @@ void ofApp::setup() {
     
 	shotManager.setup();
 
-	shotManager.loadShot("SH001", FDM); //jackie portrait
+//	shotManager.loadShot("SH001", FDM); //jackie portrait
 //	shotManager.loadShot("SH002", FDM); //craig portrait
     shotManager.loadShot("SH003", FDM); //matt portrait
 	//NOT ALIGNED AFTER CUT -- NO EYES AFTER CUT
