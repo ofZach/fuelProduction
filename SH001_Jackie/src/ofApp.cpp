@@ -34,8 +34,19 @@ void ofApp::setup() {
 	gui.add(line.extrudeAmount.set("extrude", 200, 0, 400));
 	gui.add(line.arcRadius.set("arc radius", 200, 0, 400));
 	gui.add(line.arcAngle.set("arc angle", 360, 180, 720));
-	gui.add(line.rotationAmount.set("rotation amount", 360, 360, 360*10));
+	gui.add(line.rotationAmount.set("rotation amount", 360, 0, 360*25));
+	gui.add(line.resampleAmount.set("resample count", 100, 10, 1000));
 	
+	gui.add(line.chaseDampen.set("chase damp", .01, 0, .3));
+	gui.add(line.maxNewAngle.set("max new", 45, 0, 90));
+	
+	gui.add(line.aRadius.set("a radius", 50, 0, 100));
+	gui.add(line.bRadius.set("b radius", 50, 0, 100));
+
+
+	gui.add(line.numAttachPoints.set("attach points", 5, 0, 50));
+
+
     gui.loadFromFile("adjustments.xml");
     
     //sndPlayer.loadSound("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/SH002_1-2.aif");
@@ -54,7 +65,6 @@ void ofApp::setup() {
 	
 //	shotManager.loadShot("SH002", FDM); //craig portrait
 //	shotManager.loadShot("SH003", FDM); //matt portrait
-	//NOT ALIGNED AFTER CUT -- NO EYES AFTER CUT
 //	shotManager.loadShot("SH004", FDM); //craig scifi
 //	shotManager.loadShot("SH005", FDM); //Jackie SMOG
 //	shotManager.loadShot("SH006", FDM); //jackie "made fuel cells important to me"
@@ -106,7 +116,6 @@ void ofApp::setup() {
 
 void ofApp::update() {
     
-	line.update();
     
     if (!playback){
         currentFrame = mouseX;
@@ -139,8 +148,9 @@ void ofApp::update() {
         //cout << " ? ? " << decompScale << endl;
     }
     lastFrame = currentFrame;
-    
-    // TODO: here
+
+	line.update(currentFrame);
+
     
     CM.update();
     
@@ -198,9 +208,6 @@ void ofApp::draw(){
 	
 	//line.drawArc();
     line.draw();
-    
-    
-    
     
     ofPolyline curve;
 

@@ -620,6 +620,11 @@
 		E7DDB716B5AE0DEA82DFFEDA /* autotuned_index.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = autotuned_index.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/autotuned_index.h; sourceTree = SOURCE_ROOT; };
 		E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		E7E077E715D3B6510020DFD4 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
+		E7F0713619CD0E3D006D8806 /* nanoflann.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = nanoflann.hpp; sourceTree = "<group>"; };
+		E7F0713719CD0E3D006D8806 /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.md; sourceTree = "<group>"; };
+		E7F0713919CD0E3D006D8806 /* NearestNeighbour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NearestNeighbour.h; sourceTree = "<group>"; };
+		E7F0713A19CD0E3D006D8806 /* ofxNearestNeighbour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxNearestNeighbour.h; sourceTree = "<group>"; };
+		E7F0713B19CD0E3D006D8806 /* PointCloud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointCloud.h; sourceTree = "<group>"; };
 		E7F985F515E0DE99003869B5 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		E871F4E93D7E4FC31747606F /* FaceSetExclusivity.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = FaceSetExclusivity.h; path = ../../../addons/ofxAlembic/libs/alembic/include/Alembic/AbcGeom/FaceSetExclusivity.h; sourceTree = SOURCE_ROOT; };
 		E88F5D4D5E360FA5B5C8F99E /* ofxUISortableList.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUISortableList.h; path = ../../../addons/ofxUI/src/ofxUISortableList.h; sourceTree = SOURCE_ROOT; };
@@ -1257,6 +1262,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E7F0711519CD0E3C006D8806 /* ofxNearestNeighbour */,
 				E76681F719CC9DE00062604F /* ofxPtf */,
 				FD0BF79919C9A4D800E060F7 /* ofxGui */,
 				A0B90D3B0ADB9C1716816714 /* ofxOpenCv */,
@@ -1704,6 +1710,51 @@
 				E766820F19CC9DE10062604F /* ofxPtf.h */,
 				E766821119CC9DE10062604F /* ParallelTransportFrames.h */,
 				E766821019CC9DE10062604F /* ParallelTransportFrames.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E7F0711519CD0E3C006D8806 /* ofxNearestNeighbour */ = {
+			isa = PBXGroup;
+			children = (
+				E7F0713319CD0E3D006D8806 /* libs */,
+				E7F0713719CD0E3D006D8806 /* readme.md */,
+				E7F0713819CD0E3D006D8806 /* src */,
+			);
+			name = ofxNearestNeighbour;
+			path = ../../../addons/ofxNearestNeighbour;
+			sourceTree = "<group>";
+		};
+		E7F0713319CD0E3D006D8806 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				E7F0713419CD0E3D006D8806 /* nanoflann */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		E7F0713419CD0E3D006D8806 /* nanoflann */ = {
+			isa = PBXGroup;
+			children = (
+				E7F0713519CD0E3D006D8806 /* include */,
+			);
+			path = nanoflann;
+			sourceTree = "<group>";
+		};
+		E7F0713519CD0E3D006D8806 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				E7F0713619CD0E3D006D8806 /* nanoflann.hpp */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		E7F0713819CD0E3D006D8806 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E7F0713919CD0E3D006D8806 /* NearestNeighbour.h */,
+				E7F0713A19CD0E3D006D8806 /* ofxNearestNeighbour.h */,
+				E7F0713B19CD0E3D006D8806 /* PointCloud.h */,
 			);
 			path = src;
 			sourceTree = "<group>";

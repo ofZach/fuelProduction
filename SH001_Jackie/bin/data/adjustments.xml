@@ -1,17 +1,23 @@
 <panel>
-	<adjustments>-1.53061, 40.8163, -4.08163</adjustments>
-	<showWireframe>1</showWireframe>
-<panel/>
+<adjustments>-1.53061, 40.8163, -4.08163</adjustments>
+<showWireframe>0</showWireframe>
 <showFilled>0</showFilled>
-	<scaleFac>1.1925</scaleFac>
+<scaleFac>1.1925</scaleFac>
 <playback>0</playback>
-	<playbackAudio>0</playbackAudio>
-	<draw_face_box>0</draw_face_box>
+<playbackAudio>0</playbackAudio>
+<draw_face_box>0</draw_face_box>
 <start_x>-78</start_x>
-	<start_y>0</start_y>
-	<start_z>-1007.5</start_z>
-	<extrude>200</extrude>
-	<arc_radius>288</arc_radius>
-	<arc_angle>720</arc_angle>
-<rotation_amount>2903.4</rotation_amount>
+<start_y>0</start_y>
+<start_z>-1155</start_z>
+<extrude>356</extrude>
+<arc_radius>340</arc_radius>
+<arc_angle>374.4</arc_angle>
+<rotation_amount>4320</rotation_amount>
+<resample_count>257.45</resample_count>
+<chase_damp>0.0435</chase_damp>
+<max_new>45</max_new>
+<a_radius>91</a_radius>
+<b_radius>30</b_radius>
+<panel/>
+<attach_points>33.25</attach_points>
 </panel>
