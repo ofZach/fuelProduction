@@ -1,7 +1,9 @@
 <panel>
-	<adjustments>-1.53061, 50, -4.08163</adjustments>
-	<showWireframe>1</showWireframe>
+	<adjustments>-8.16327, 34.6939, 14.2857</adjustments>
+	<showWireframe>0</showWireframe>
 <panel/>
-<showFilled>0</showFilled>
-	<scaleFac>1.1925</scaleFac>
+<showFilled>1</showFilled>
+	<scaleFac>1.43</scaleFac>
+<playback>0</playback>
+	<playbackAudio>0</playbackAudio>
 </panel>
