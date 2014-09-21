@@ -33,14 +33,6 @@ void LineManager::update(int cf){
 		int curIndex = ofClamp(curFrame,0,meshes.size()-1);
 		curMesh = meshes[curIndex];
 		curHooks = hooksPerFrame[curIndex];
-		
-//		cout << "Hooks this frame " << curHooks.size() << endl;
-		
-//		for(int i = 0; i < hooks.size(); i++){
-//			if(hooks[i].startFrame < curFrame){
-//				hooks[i].pos = curMesh.getVertices()[hooks[i].percentOnCurve * (curMesh.getNumVertices()-1) ];
-//			}
-//		}
 	}
 }
 
@@ -160,6 +152,8 @@ void LineManager::generateLine(int numF){
 		m.addVertices(linePoints);
 		meshes.push_back(m);
 		
+		
+		//create attachment points for the little tools
 		//calculate KDTree of this line
 		ofxNearestNeighbour3D nn;
 		nn.buildIndex(linePoints);
@@ -175,6 +169,7 @@ void LineManager::generateLine(int numF){
 					hooks[h].firstHook = false;
 				}
 				else{
+					//STICKY POINTS woohoo!!!
 					//otherise move it to the closest point on the resampled line
 					vector<size_t> closestIndeces;
 					vector<float> distances;
@@ -183,13 +178,12 @@ void LineManager::generateLine(int numF){
 					ofVec3f x0 = hooks[h].pos;
 					ofVec3f x1 = linePoints[closestIndeces[0]];
 					ofVec3f x2 = linePoints[closestIndeces[1]];
-					
+					//formulate for the distnce from a point to a line segment
 //					d   =   (|(x_2-x_1)x(x_1-x_0)|)/(|x_2-x_1|)
 					float d = (x2-x1).getCrossed(x1-hooks[h].pos).length() / (x2-x1).length();
-					//find the distance along x1 towards x2 based on pythag
+					//solve the pythag formula to get the distance along the line from x1 towards x2
 					float xn = sqrt((float)(x0 - x1).lengthSquared() - d*d);
 					//that leg of the triangle goes from x1 to x2
-					//STICKY POINTS woohoo!!!
 					hooks[h].pos = x1 + (x2-x1).normalize() * xn;
 					
 				}
