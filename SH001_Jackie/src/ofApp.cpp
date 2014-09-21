@@ -57,7 +57,9 @@ void ofApp::setup() {
     bSaving = false;
     
 //	shotManager.footageBasePath = "/Volumes/CHOPPER/_ToyotaXpopTech_/GOLD_Footage/";
-	shotManager.footageBasePath =  "/Volumes/Nebula_helper/_ToyotaXpopTech_/GOLD_Footage/";
+//	shotManager.footageBasePath =  "/Volumes/Nebula_helper/_ToyotaXpopTech_/GOLD_Footage/";
+    shotManager.footageBasePath =  "/Users/zachlieberman/Desktop/GOLD_Footage";
+
     
 	shotManager.setup();
 

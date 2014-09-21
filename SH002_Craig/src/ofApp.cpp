@@ -71,8 +71,20 @@ void ofApp::setup() {
     int ppHeight = ofNextPow2(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height);
     
     
-    targetFbo.allocate(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().width,
-                       CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height,GL_RGBA32F);
+//    ofFbo::Settings settings;
+//    settings.width = 1920;
+//    settings.height = 1080;
+//    settings.textureTarget = GL_RGBA;
+//    settings.textureTarget = GL_TEXTURE_RECTANGLE_NV;
+//    settings.depthStencilAsTexture = true;
+//    settings.depthStencilInternalFormat = GL_DEPTH_COMPONENT32;
+//    settings.useDepth = true;
+//    targetFbo.allocate(settings);
+    
+
+    
+//    targetFbo.allocate(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().width,
+//                       CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height,GL_RGBA32F);
 
    
     
@@ -458,9 +470,9 @@ void ofApp::draw(){
     abc.setTime(t);
 #endif
     
-	//DEM.startDraw();
+	DEM.startDraw();
     
-    targetFbo.begin();
+    //targetFbo.begin();
     
     ofViewport(ofRectangle(0,0,1920, 1080));
 	ofClear(0,0,0,0);
@@ -476,12 +488,11 @@ void ofApp::draw(){
     
     
     if (!exporting){
+        cout << frame.mask.getWidth() << endl;
+        
         CM.drawCameraInternals(frame.img, frame.mask, backgroundPlate);
     }
-   
-    
-    
-    
+
     ofPolyline curve;
     
 #ifndef NO_ALEMBIC
@@ -614,29 +625,30 @@ void ofApp::draw(){
     CM.cameraEnd();
     
     ofEnableAlphaBlending();
-    targetFbo.end();
+    //targetFbo.end();
     
-    targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
+    //targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
+    //targetFbo.getDepthTexture().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
 
     
-//    if (exporting){
-//        
-//        int filenumber;
-//        std::ostringstream localOSS;
-//        string fileName;
-//        
-//        filenumber = 2034;
-//        
-//        localOSS << setw(4) << setfill('0') << currentFrame;
-//        
-//        fileName = localOSS.str();
-//        
-//        
-//        DEM.endDraw(true, fileName);
-//    } else {
-//        DEM.endDraw();
-//
-//    }
+    if (exporting){
+        
+        int filenumber;
+        std::ostringstream localOSS;
+        string fileName;
+        
+        filenumber = 2034;
+        
+        localOSS << setw(4) << setfill('0') << currentFrame;
+        
+        fileName = localOSS.str();
+        
+        
+        DEM.endDraw(true, fileName);
+    } else {
+        DEM.endDraw();
+
+    }
 
     gui.draw();
     
