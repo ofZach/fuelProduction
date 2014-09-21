@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\..\addons\ofxFTGL\src\ofxFTGLFont.cpp">
+      <Filter>addons\ofxFTGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxFTGL\src\ofxFTGLSimpleLayout.cpp">
+      <Filter>addons\ofxFTGL\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxBinaryMesh\src\ofxBinaryMesh.cpp">
+      <Filter>addons\ofxBinaryMesh\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ofApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\processing\transformEstimationManager.cpp">
+      <Filter>src\processing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\cameraCalibrationManager.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\depthExporterManager.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\frameDataManager.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons">
+      <UniqueIdentifier>{014ab87c-b1ee-4040-b3e5-4168bea9bf0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxFTGL">
+      <UniqueIdentifier>{f6f83f01-142d-486b-945e-d50972bd9aab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxFTGL\src">
+      <UniqueIdentifier>{0edaa6ac-2a39-450b-a158-af0ad414ec05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SharedCode">
+      <UniqueIdentifier>{e9704c11-cf1d-4bea-8e5a-be6f8eb9a822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxBinaryMesh">
+      <UniqueIdentifier>{35e588b6-0394-402b-ad01-ee1897f13deb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxBinaryMesh\src">
+      <UniqueIdentifier>{6ac85942-1b7b-4ecf-8a64-5dd301823c57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\io">
+      <UniqueIdentifier>{b6ff72b1-b359-46e6-a360-31ebb32a9424}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\processing">
+      <UniqueIdentifier>{5b49c1d4-b37f-44b9-9646-cc8ac24c8e7b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\addons\ofxFTGL\src\ofxFTGL.h">
+      <Filter>addons\ofxFTGL\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxFTGL\src\ofxFTGLFont.h">
+      <Filter>addons\ofxFTGL\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxFTGL\src\ofxFTGLSimpleLayout.h">
+      <Filter>addons\ofxFTGL\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxBinaryMesh\src\ofxBinaryMesh.h">
+      <Filter>addons\ofxBinaryMesh\src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ofApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\processing\transformEstimationManager.h">
+      <Filter>src\processing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\cameraCalibrationManager.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\depthExporterManager.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\frameDataManager.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icon.rc" />
+  </ItemGroup>
+</Project>
