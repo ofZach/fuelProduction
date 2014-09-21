@@ -67,13 +67,6 @@ void cameraManager::drawCameraInternals(ofImage &person, ofImage &mask, ofImage 
     c = baseCamera.screenToWorld( ofPoint(0,0), window);
     d = baseCamera.screenToWorld( ofPoint(1920,0), window);
     
-    
-    cout << "a "  << a << endl;
-    cout << "b "  << b << endl;
-    cout << "c "  << c << endl;
-    cout << "d "  << d << endl;
-    
-    
     ofPoint camP = baseCamera.getPosition();
     
     ofPoint aFar = camP + (a - camP).normalize() * 351*7;
@@ -88,11 +81,6 @@ void cameraManager::drawCameraInternals(ofImage &person, ofImage &mask, ofImage 
     e = camP + (e - camP).normalize() * 351*4;
     
     
-    
-    cout << "a "  << a << endl;
-    cout << "b "  << b << endl;
-    cout << "c "  << c << endl;
-    cout << "d "  << d << endl;
     
     
     
