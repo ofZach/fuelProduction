@@ -59,10 +59,20 @@ void cameraManager::drawCameraInternals(ofImage &person, ofImage &mask, ofImage 
     
     ofPoint a,b,c,d, e;
     
-    a = baseCamera.screenToWorld( ofPoint(0,1080));
-    b = baseCamera.screenToWorld( ofPoint(1920,1080));
-    c = baseCamera.screenToWorld( ofPoint(0,0));
-    d = baseCamera.screenToWorld( ofPoint(1920,0));
+    ofRectangle window;
+    window.set(0,0,1920, 1080);
+    
+    a = baseCamera.screenToWorld( ofPoint(0,1080), window);
+    b = baseCamera.screenToWorld( ofPoint(1920,1080), window);
+    c = baseCamera.screenToWorld( ofPoint(0,0), window);
+    d = baseCamera.screenToWorld( ofPoint(1920,0), window);
+    
+    
+    cout << "a "  << a << endl;
+    cout << "b "  << b << endl;
+    cout << "c "  << c << endl;
+    cout << "d "  << d << endl;
+    
     
     ofPoint camP = baseCamera.getPosition();
     
@@ -77,6 +87,12 @@ void cameraManager::drawCameraInternals(ofImage &person, ofImage &mask, ofImage 
     d = camP + (d - camP).normalize() * 351*5;
     e = camP + (e - camP).normalize() * 351*4;
     
+    
+    
+    cout << "a "  << a << endl;
+    cout << "b "  << b << endl;
+    cout << "c "  << c << endl;
+    cout << "d "  << d << endl;
     
     
     
@@ -165,7 +181,12 @@ void cameraManager::cameraStart(){
     // this helps for easy cam, bring the scene nearer to 0,0,0
     
     if (currentCamera == &easyCam){
-        ofPoint e = baseCamera.screenToWorld( ofPoint(1920,1080) / 2.0 );
+        
+        ofRectangle window;
+        window.set(0,0,1920, 1080);
+        
+        
+        ofPoint e = baseCamera.screenToWorld( ofPoint(1920,1080) / 2.0, window);
         ofPoint camP = baseCamera.getPosition();
         e = camP + (e - camP).normalize() * 351*4;
         ofTranslate(-e.x, -e.y, -e.z);
