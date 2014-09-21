@@ -49,7 +49,7 @@ void ofApp::setup() {
 
 //	shotManager.loadShot("SH001", FDM); //jackie portrait
 //	shotManager.loadShot("SH002", FDM); //craig portrait
-    shotManager.loadShot("SH003", FDM); //matt portrait
+    shotManager.loadShot("SH011", FDM); //matt portrait
 	//NOT ALIGNED AFTER CUT -- NO EYES AFTER CUT
 //	shotManager.loadShot("SH004", FDM); //craig scifi
 //	shotManager.loadShot("SH005", FDM); //Jackie SMOG
@@ -234,7 +234,7 @@ void ofApp::draw(){
     CM.cameraStart();
     
     
-    CM.drawCameraInternals(frame.img, frame.img, backgroundPlate);
+    CM.drawCameraInternals(frame.img, frame.mask, backgroundPlate);
 
    
     ofPushMatrix();
@@ -286,6 +286,8 @@ void ofApp::draw(){
     targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
     gui.draw();
     
+    
+    //FDM.maskStandIn.draw(mouseX, mouseY);
 }
 
 

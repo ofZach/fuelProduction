@@ -31,9 +31,8 @@ public:
     string rootDirectory;
     int numFrames;
     
-//  ofDirectory heads;
-//	ofDirectory leftEyes;
-//	ofDirectory rightEyes;
+    ofImage maskStandIn;
+    
 	
 	vector<string> heads;
 	vector<string> leftEyes;

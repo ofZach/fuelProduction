@@ -11,6 +11,11 @@
 void frameDataManager::setup( string footageDir, string obmDir ){
 	numFrames = 0;
     listDirs( footageDir,  obmDir);
+
+
+   
+    
+    
 }
 
 void frameDataManager::listDirs( string footageDir, string obmDir){
@@ -103,6 +108,9 @@ void frameDataManager::listDirs( string footageDir, vector<string> obmDir){
     cout << "num objects " << heads.size() << endl;;
 	
 	calculateBaseEyeInfo();
+    
+    maskStandIn.loadImage("../../../sharedData/maskStandIn/maskStandIn.png");
+    
 	
 }
 
@@ -153,4 +161,9 @@ void frameDataManager::loadFrame( int frameNum, frameData & fd){
 	if (frameNum < rightEyes.size()){
 		ofxBinaryMesh::load(rightEyes[frameNum], fd.rightEye);
     }
+    
+    // we need to get masks in.
+    
+    fd.mask.clone(maskStandIn);
+    
 }
