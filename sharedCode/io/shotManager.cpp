@@ -55,7 +55,7 @@ void shotManager::setup(){
 	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
 	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
 	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";
-	curshot->mattes    = footageWSlash + curshot->name + "/MATTES";
+	curshot->mattes    = footageWSlash + curshot->name + "/MATTES_360p";
 	curshot->aCam = true;
 	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH004a_Craig_003_OBM" );
 	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH004b_Craig_001_OBM" );
@@ -68,7 +68,7 @@ void shotManager::setup(){
 	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
 	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
 	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";
-	curshot->mattes    = footageWSlash + curshot->name + "/MATTES";
+	curshot->mattes    = footageWSlash + curshot->name + "/MATTES_360p";
 	curshot->aCam = true;
 	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH005a_Jackie_001_OBM" );
 	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH005b_Jackie_001_OBM" );
