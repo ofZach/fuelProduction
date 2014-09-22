@@ -61,11 +61,9 @@ void ofApp::setup() {
 //    shotManager.footageBasePath =  "/Users/zachlieberman/Desktop/GOLD_Footage";
 	shotManager.footageBasePath =  "/Users/focus/Dropbox/+PopTech_Footage/";
 
-    
 	shotManager.setup();
 
 	shotManager.loadShot("SH001", FDM); //jackie portrait
-	
 //	shotManager.loadShot("SH002", FDM); //craig portrait
 //	shotManager.loadShot("SH003", FDM); //matt portrait
 //	shotManager.loadShot("SH004", FDM); //craig scifi
@@ -181,7 +179,7 @@ void ofApp::draw(){
     
     CM.cameraStart();
     
-    CM.drawCameraInternals(frame.img, frame.img, backgroundPlate);
+    CM.drawCameraInternals(frame.img, frame.mask, backgroundPlate);
 
    
     ofPushMatrix();

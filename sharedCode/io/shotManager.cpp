@@ -19,7 +19,7 @@ void shotManager::setup(){
 	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
 	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
 	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";
-	curshot->mattes = footageWSlash + curshot->name + "/MATTES";
+	curshot->mattes = footageWSlash + curshot->name + "/MATTES_360p";
 	curshot->aCam = true;
 	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH001_Jackie_002_OBM" );
 	shots[sh001.name] = sh001;
