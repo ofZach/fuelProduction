@@ -32,12 +32,10 @@ public:
     int numFrames;
     
     ofImage maskStandIn;
-    
-	
+
 	vector<string> heads;
 	vector<string> leftEyes;
 	vector<string> rightEyes;
-	
 	vector<string> videoImages;
 //	vector<string> maskImages;
     ofDirectory maskImages;

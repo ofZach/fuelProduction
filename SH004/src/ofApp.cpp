@@ -28,12 +28,12 @@ void ofApp::setup() {
 	gui.add(drawFaceBox.set("draw face box", false));
 	
     gui.loadFromFile("adjustments.xml");
-    
+   
 
-    //sndPlayer.loadSound("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/SH002_1-2.aif");
-    //sndPlayer.setLoop(true);
-    //sndPlayer.setVolume(0);
-    //sndPlayer.play();
+    sndPlayer.loadSound("/Users/zachlieberman/Desktop/GOLD_Footage/SH004/SH004_1-2.aif");
+    sndPlayer.setLoop(true);
+    sndPlayer.setVolume(0);
+    sndPlayer.play();
     
 
     bSaving = false;
@@ -41,7 +41,7 @@ void ofApp::setup() {
     
 #ifdef JAMES
 	shotManager.footageBasePath = "/Volumes/CHOPPER/_ToyotaXpopTech_/GOLD_Footage/";
-#else 
+#else
     shotManager.footageBasePath = "/Users/zachlieberman/Desktop/GOLD_Footage/";
 #endif 
     
@@ -49,9 +49,9 @@ void ofApp::setup() {
 
 //	shotManager.loadShot("SH001", FDM); //jackie portrait
 //	shotManager.loadShot("SH002", FDM); //craig portrait
-    shotManager.loadShot("SH011", FDM); //matt portrait
+//shotManager.loadShot("SH004", FDM); //matt portrait
 	//NOT ALIGNED AFTER CUT -- NO EYES AFTER CUT
-//	shotManager.loadShot("SH004", FDM); //craig scifi
+	shotManager.loadShot("SH004", FDM); //craig scifi
 //	shotManager.loadShot("SH005", FDM); //Jackie SMOG
 //	shotManager.loadShot("SH006", FDM); //jackie "made fuel cells important to me"
 //	shotManager.loadShot("SH007", FDM); //MATT "Innovative technology"
@@ -117,7 +117,7 @@ void ofApp::setup() {
 //    
 //    
 //    writer.close();
-    
+   // /Users/zachlieberman/Dropbox/+PopTech_Footage/SH004
     
     abc.open("SH04_Spline_01c.abc");
     abc.dumpNames();
@@ -126,46 +126,8 @@ void ofApp::setup() {
     backgroundPlate.loadImage("../../../sharedData/Background Plates/A-Cam_BackgroundPlate_360p.png");
 
     
-//    ofxAlembic::Writer writer;
-//    
-//    
-//    string path = ofGetTimestampString() + ".abc";
-//    writer.open(path, 24);
-//    for (int j = 0; j < FDM.numFrames; j+=10){
-//        
-//        FDM.loadFrame(j, frame);            // load frame 0
-//        ofMatrix4x4 mm;
-//        mm.glScale(scaleFac,scaleFac,scaleFac);
-//        mm.glTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
-//
-//        ofMesh temp = frame.head;
-//        ofxAlembic::transform(temp, mm);
-//        writer.addPolyMesh("/head", temp);
-//
-//        ofNode n;
-//        FDM.getOrientation(frame, n);
-//        
-//        mm.preMult(n.getGlobalTransformMatrix());
-//        
-//        writer.addXform("/box", mm);
-//        if (j == 0){
-//            ofBoxPrimitive a;
-//            a.set(100);
-//            writer.addPolyMesh("/box/boxShape", a.getMesh());
-//        }
-//        
-//        // draw the box of orientation using new alexmbic style
-//        
-//        
-//    }
-//    
-//    writer.close();
-////
-    
-    
-    
-    
-    
+
+    SPACE.setup();
 }
 
 
@@ -189,8 +151,6 @@ void ofApp::update() {
     }
     if (lastFrame != currentFrame){
         FDM.loadFrame(currentFrame, frame);
-        
-
     }
     lastFrame = currentFrame;
     
@@ -255,13 +215,24 @@ void ofApp::draw(){
     
     ofPolyline curve;
 
-#ifndef NO_ALEMBIC
     vector<ofPolyline> curvesMe;
     abc.get("SplineSpline", curvesMe);
-#endif
+    ofPolyline copy = curvesMe[0];
+    copy.addVertex(copy.getVertices()[0]);
+    copy = copy.getResampledBySpacing(4);
+    copy = copy.getSmoothed(11);
+    copy.draw();
     
     
+    float pct = (float)currentFrame / (float)FDM.numFrames;
+    SPACE.update(copy, currentFrame);
+    SPACE.draw();
     
+    
+    // center the copy via the head position
+    // draw with the head
+    // put points moving around the copy
+    // show them animate over time
     
     
     ofSetColor(ofColor::white);

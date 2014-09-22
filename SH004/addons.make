@@ -1,0 +1,6 @@
+ofxGui
+ofxOpenCv
+ofxXmlSettings
+ofxAlembic
+ofxBinaryMesh
+ofxCv
