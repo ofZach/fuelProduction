@@ -9,6 +9,7 @@ typedef struct
 	string footage2K;
 	string footageHD;
 	string footageSD;
+	string mattes;
 	
 	bool aCam;
 	vector<string> faceData;

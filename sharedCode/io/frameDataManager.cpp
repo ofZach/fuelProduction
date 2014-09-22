@@ -11,11 +11,6 @@
 void frameDataManager::setup( string footageDir, string obmDir ){
 	numFrames = 0;
     listDirs( footageDir,  obmDir);
-
-
-   
-    
-    
 }
 
 void frameDataManager::listDirs( string footageDir, string obmDir){
@@ -23,7 +18,7 @@ void frameDataManager::listDirs( string footageDir, string obmDir){
 	listDirs(footageDir, obmDir);
 }
 
-void frameDataManager::listDirs( string footageDir, vector<string> obmDir){
+void frameDataManager::listDirs( string footageDir, vector<string> obmDir, string mattes){
     
 	
 	heads.clear();
@@ -37,7 +32,8 @@ void frameDataManager::listDirs( string footageDir, vector<string> obmDir){
 		//ignore handles except for the end
 		int startOffset = (i == 0) ? 0 : handleInFrames;
 		int endOffset   = (i == obmDir.size()-1) ? 0 : handleInFrames;
-//TEMP RETAIN HANDLES
+
+		//uncomment to RETAIN HANDLES
 //		startOffset = 0;
 //		endOffset   = 0;
 //
@@ -101,9 +97,13 @@ void frameDataManager::listDirs( string footageDir, vector<string> obmDir){
 	}
 	
 	cout << "REMOVED " << handleframesRemoved << " Handle Frames" << endl;
-    //maskImages.listDir(footageDir);
-    numFrames = videoImages.size();
+	numFrames = videoImages.size();
 	
+	if(mattes != "" && ofDirectory(mattes).exists()){
+		maskImages.listDir(mattes);
+		cout << "num masks " << maskImages.numFiles() << endl;
+	}
+
     cout << "numeFrames " << numFrames << endl;
     cout << "num objects " << heads.size() << endl;;
 	
@@ -111,7 +111,6 @@ void frameDataManager::listDirs( string footageDir, vector<string> obmDir){
     
     maskStandIn.loadImage("../../../sharedData/maskStandIn/maskStandIn.png");
     
-	
 }
 
 void frameDataManager::calculateBaseEyeInfo(){
@@ -162,8 +161,11 @@ void frameDataManager::loadFrame( int frameNum, frameData & fd){
 		ofxBinaryMesh::load(rightEyes[frameNum], fd.rightEye);
     }
     
-    // we need to get masks in.
-    
-    fd.mask.clone(maskStandIn);
+    if(frameNum < maskImages.size()){
+		fd.mask.loadImage(maskImages.getPath(frameNum));
+	}
+    else{
+		fd.mask.clone(maskStandIn);
+	}
     
 }

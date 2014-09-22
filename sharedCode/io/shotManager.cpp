@@ -19,6 +19,7 @@ void shotManager::setup(){
 	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
 	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
 	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";
+	curshot->mattes = footageWSlash + curshot->name + "/MATTES";
 	curshot->aCam = true;
 	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH001_Jackie_002_OBM" );
 	shots[sh001.name] = sh001;
@@ -30,6 +31,7 @@ void shotManager::setup(){
 	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
 	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
 	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";
+	curshot->mattes    = footageWSlash + curshot->name + "/MATTES";
 	curshot->aCam = true;
 	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH002_Craig_003_OBM" );
 	shots[sh002.name] = sh002;
@@ -41,6 +43,7 @@ void shotManager::setup(){
 	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
 	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
 	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";
+	curshot->mattes    = footageWSlash + curshot->name + "/MATTES";
 	curshot->aCam = true;
 	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH003_Matt_004_OBM" );
 	shots[sh003.name] = sh003;
@@ -52,6 +55,7 @@ void shotManager::setup(){
 	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
 	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
 	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";
+	curshot->mattes    = footageWSlash + curshot->name + "/MATTES";
 	curshot->aCam = true;
 	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH004a_Craig_003_OBM" );
 	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH004b_Craig_001_OBM" );
@@ -59,14 +63,16 @@ void shotManager::setup(){
 
 	//JACKIE SMOG
 	Shot sh005;
-	sh005.name = "SH005";
-	sh005.footage2K = footageWSlash + sh005.name + "/Footage_fullsize_proxy";
-	sh005.footageHD = footageWSlash + sh005.name + "/Footage_smallsize_proxy";
-	sh005.footageSD = footageWSlash + sh005.name + "/Footage_360p_proxy";
-	sh005.aCam = true;
-	sh005.faceData.push_back( footageWSlash + sh005.name + "/SH005a_Jackie_001_OBM" );
-	sh005.faceData.push_back( footageWSlash + sh005.name + "/SH005b_Jackie_001_OBM" );
-	sh005.faceData.push_back( footageWSlash + sh005.name + "/SH005c_Jackie_001_OBM" );
+	curshot = &sh005;
+	curshot->name = "SH005";
+	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
+	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
+	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";
+	curshot->mattes    = footageWSlash + curshot->name + "/MATTES";
+	curshot->aCam = true;
+	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH005a_Jackie_001_OBM" );
+	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH005b_Jackie_001_OBM" );
+	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH005c_Jackie_001_OBM" );
 	shots[sh005.name] = sh005;
 
 	//JACKIE FUEL CELLS ARE IMPORTANT
@@ -76,19 +82,22 @@ void shotManager::setup(){
 	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
 	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
 	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";
+	curshot->mattes = footageWSlash + curshot->name + "/MATTES";
 	curshot->aCam = false;
 	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH006_Jackie_001_OBM" );
 	shots[sh006.name] = sh006;
 	
 	//MATT INNOVATIVE TECHNOLOGY
 	Shot sh007;
-	sh007.name = "SH007";
-	sh007.footage2K = footageWSlash + sh007.name + "/Footage_fullsize_proxy";
-	sh007.footageHD = footageWSlash + sh007.name + "/Footage_smallsize_proxy";
-	sh007.footageSD = footageWSlash + sh007.name + "/Footage_smallsize_proxy";			//TODO throw in the paths to the 360 proxies here
-	sh007.aCam = true;
-	sh007.faceData.push_back( footageWSlash + sh007.name + "/SH007a_Matt_002_OBM" );
-	sh007.faceData.push_back( footageWSlash + sh007.name + "/SH007b_Matt_002_OBM" );
+	curshot = &sh007;
+	curshot->name = "SH007";
+	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
+	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
+	curshot->footageSD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
+	curshot->mattes = footageWSlash + curshot->name + "/MATTES";
+	curshot->aCam = true;
+	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH007a_Matt_002_OBM" );
+	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH007b_Matt_002_OBM" );
 	shots[sh007.name] = sh007;
 
 	//JACKIE
@@ -98,6 +107,7 @@ void shotManager::setup(){
 	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
 	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
 	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";
+	curshot->mattes = footageWSlash + curshot->name + "/MATTES";
 	curshot->aCam = false;
 	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH008_Jackie_001_OBM" );
 	shots[sh008.name] = sh008;
@@ -109,19 +119,22 @@ void shotManager::setup(){
 	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
 	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
 	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";
+	curshot->mattes = footageWSlash + curshot->name + "/MATTES";
 	curshot->aCam = true;
 	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH009_Jackie_001_OBM" );
 	shots[sh009.name] = sh009;
 	
 	//CRAIG "Mental models change"
 	Shot sh010;
-	sh010.name = "SH010";
-	sh010.footage2K = footageWSlash + sh010.name + "/Footage_fullsize_proxy";
-	sh010.footageHD = footageWSlash + sh010.name + "/Footage_smallsize_proxy";
-	sh010.footageSD = footageWSlash + sh010.name + "/Footage_360p_proxy";
-	sh010.aCam = false;
-	sh010.faceData.push_back( footageWSlash + sh010.name + "/SH010a_Craig_001_OBM" );
-	sh010.faceData.push_back( footageWSlash + sh010.name + "/SH010b_Craig_001_OBM" );
+	curshot = &sh010;
+	curshot->name = "SH010_v2";
+	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
+	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
+	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";
+	curshot->mattes = footageWSlash + curshot->name + "/MATTES";	
+	curshot->aCam = false;
+	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH010a_Craig_001_OBM" );
+	curshot->faceData.push_back( footageWSlash + curshot->name + "/SH010b_Craig_001_OBM" );
 	shots[sh010.name] = sh010;
 
 	//CRAIG "We did it"
@@ -130,7 +143,8 @@ void shotManager::setup(){
 	curshot->name = "SH011";
 	curshot->footage2K = footageWSlash + curshot->name + "/Footage_fullsize_proxy";
 	curshot->footageHD = footageWSlash + curshot->name + "/Footage_smallsize_proxy";
-	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";	//TODO throw in the paths to the 360 proxies here
+	curshot->footageSD = footageWSlash + curshot->name + "/Footage_360p_proxy";
+	curshot->mattes = footageWSlash + curshot->name + "/MATTES";	
 	curshot->aCam = true;
     curshot->faceData.push_back( footageWSlash + curshot->name + "/SH011_Craig_001_OBM" );
 	shots[sh011.name] = sh011;
@@ -148,7 +162,7 @@ void shotManager::loadShot(string name, frameDataManager& frameManager, bool low
 	
 	cout << "name is " << name << " FOOATGE IS " << footage << endl;
 	
-	frameManager.listDirs(footage, shots[name].faceData);
+	frameManager.listDirs(footage, shots[name].faceData, shots[name].mattes);
 	
 }
 

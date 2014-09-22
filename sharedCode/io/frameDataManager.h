@@ -25,7 +25,7 @@ public:
     void setup( string footageDir, string obmDir );
 //    void setup( string footageDir, vector<string> obmDir );
     void listDirs( string footageDir, string obmDir);
-    void listDirs( string footageDir, vector<string> obmDir);
+    void listDirs( string footageDir, vector<string> obmDir, string mattes = "");
 
     
     string rootDirectory;
