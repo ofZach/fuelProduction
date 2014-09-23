@@ -23,8 +23,9 @@ class LineManager {
 	void drawArc();
 
 	void paramChanged(float& param);
+	void paramChangedInt(int& param);
 	//node chase params
-	void generateArc(int numFrames);
+	void generateArc();
 
 	//arc params
 	ofParameter <float> startPointX;

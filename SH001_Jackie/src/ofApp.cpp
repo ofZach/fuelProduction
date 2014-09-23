@@ -13,7 +13,39 @@ ofxAlembic::Reader abc;
 
 void ofApp::setup() {
 	
+	
+	ofSetVerticalSync(true);
+	
+	light.enable();
+	light.setPosition(+500, +500, +500);
+
     drawFaceBox = false;
+	exporting = false;
+	
+	//  shotManager.footageBasePath =  "/Users/zachlieberman/Desktop/GOLD_Footage";
+	shotManager.footageBasePath =  "/Users/focus/Dropbox/+PopTech_Footage/";
+	
+	shotManager.setup();
+	
+	shotManager.loadShot("SH001", FDM); //jackie portrait
+	//	shotManager.loadShot("SH002", FDM); //craig portrait
+	//	shotManager.loadShot("SH003", FDM); //matt portrait
+	//	shotManager.loadShot("SH004", FDM); //craig scifi
+	//	shotManager.loadShot("SH005", FDM); //Jackie SMOG
+	//	shotManager.loadShot("SH006", FDM); //jackie "made fuel cells important to me"
+	//	shotManager.loadShot("SH007", FDM); //MATT "Innovative technology"
+	//	shotManager.loadShot("SH008", FDM); //JACKiE change the way communities
+	//	shotManager.loadShot("SH009", FDM); //JACKIE 'states, nations, the world'
+	//	shotManager.loadShot("SH010", FDM); //CRAIG mental models;
+	//	shotManager.loadShot("SH011", FDM); //CRAIG "we did it"
+	
+    FDM.loadFrame(0, frame);            // load frame 0
+    FDM.loadFrame(0, firstFrame);
+    
+    cout << FDM.numFrames << endl;
+
+    line.startFrame = 0;
+    line.endFrame = FDM.numFrames;
 	
     gui.setup("panel"); // most of the time you don't need a name but don't forget to call setup
     gui.add(adjustments.set("adjustments", ofPoint(0, 0, 0), -ofPoint(200,200,200), ofPoint(200,200,200)));
@@ -23,6 +55,9 @@ void ofApp::setup() {
     gui.add(playback.set("playback", false));
     gui.add(playbackAudio.set("playbackAudio", false));
 	gui.add(drawFaceBox.set("draw face box", false));
+
+	gui.add(line.startFrame.set("start frame", 100, 0, FDM.numFrames));
+	gui.add(line.endFrame.set("end frame", FDM.numFrames-100, 0, FDM.numFrames));
 
 	gui.add(line.startPointX.set("start x",   0, -200,  200));
 	gui.add(line.startPointY.set("start y",   0, -200,  200));
@@ -55,36 +90,6 @@ void ofApp::setup() {
     //sndPlayer.setVolume(0);
     //sndPlayer.play();
     
-	
-    exporting = false;
-	
-//  shotManager.footageBasePath =  "/Users/zachlieberman/Desktop/GOLD_Footage";
-	shotManager.footageBasePath =  "/Users/focus/Dropbox/+PopTech_Footage/";
-
-	shotManager.setup();
-
-	shotManager.loadShot("SH001", FDM); //jackie portrait
-//	shotManager.loadShot("SH002", FDM); //craig portrait
-//	shotManager.loadShot("SH003", FDM); //matt portrait
-//	shotManager.loadShot("SH004", FDM); //craig scifi
-//	shotManager.loadShot("SH005", FDM); //Jackie SMOG
-//	shotManager.loadShot("SH006", FDM); //jackie "made fuel cells important to me"
-//	shotManager.loadShot("SH007", FDM); //MATT "Innovative technology"
-//	shotManager.loadShot("SH008", FDM); //JACKiE change the way communities
-//	shotManager.loadShot("SH009", FDM); //JACKIE 'states, nations, the world'
-//	shotManager.loadShot("SH010", FDM); //CRAIG mental models;
-//	shotManager.loadShot("SH011", FDM); //CRAIG "we did it"
-
-    FDM.loadFrame(0, frame);            // load frame 0
-    FDM.loadFrame(0, firstFrame);
-    
-    cout << FDM.numFrames << endl;
-    
-	ofSetVerticalSync(true);
-	
-	light.enable();
-	light.setPosition(+500, +500, +500);
-    
 	string testSequenceFolder = dataPath + "aCam/";
     
 	CCM.loadCalibration(testSequenceFolder + "matrices/rgbCalib.yml",
@@ -103,7 +108,7 @@ void ofApp::setup() {
 	CM.setup();
     
     line.setup();
-	line.generateArc(FDM.numFrames);
+	line.generateArc();
 
 	lineRenderer.setup();
 	lineRenderer.fakeDepthAdder = 0.018;
@@ -130,7 +135,7 @@ void ofApp::update() {
         FDM.loadFrame(currentFrame, frame);
     }
 	
-	line.update(currentFrame);
+	line.update(ofMap(currentFrame,0, FDM.numFrames-1, 0, line.numFrames-1, true) );
     
 	lastFrame = currentFrame;
 
@@ -144,9 +149,6 @@ void ofApp::update() {
 			exporting = false;
 		}
 	}
-	
-
-    
 }
 
 void ofApp::startExport(){
@@ -294,7 +296,7 @@ void ofApp::keyPressed(ofKeyEventArgs& args){
     }
 	
 	if(args.key == 'l'){
-		line.generateArc(FDM.numFrames);
+		line.generateArc();
 	}
     
 	if(args.key == '\\'){

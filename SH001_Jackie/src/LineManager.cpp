@@ -3,7 +3,10 @@
 
 void LineManager::setup(){
 
-	startPointX.addListener(this, &LineManager::paramChanged);;
+	startFrame.addListener(this, &LineManager::paramChangedInt);
+	endFrame.addListener(this, &LineManager::paramChangedInt);
+	
+	startPointX.addListener(this, &LineManager::paramChanged);
 	startPointY.addListener(this, &LineManager::paramChanged);
 	startPointZ.addListener(this, &LineManager::paramChanged);
 	
@@ -28,7 +31,8 @@ void LineManager::setup(){
 
 void LineManager::update(int cf){
 	
-	curFrame = cf;
+	curFrame = ofClamp(cf,0,numFrames-1);
+	
 	
 	/*
 	if(meshes.size() > 0){
@@ -56,7 +60,7 @@ void LineManager::update(int cf){
 	vector<ofVec3f> linePoints;
 	vector<AttachPoint> hooksThisFrame;
 	float twistPoint = 0;
-	for(int i = 0; i < cf; i++){
+	for(int i = 0; i < curFrame; i++){
 		float percentAlongCurve = 1.0 * i / numFrames; //(endFrame - startFrame);
 		
 		//apply the transform to the base
@@ -189,10 +193,14 @@ void LineManager::drawArc(){
 }
 
 void LineManager::paramChanged(float& param){
-	generateArc(numFrames);
+	generateArc();
 }
 
-void LineManager::generateArc(int numF){
+void LineManager::paramChangedInt(int& param){
+	generateArc();
+}
+
+void LineManager::generateArc(){
 	
 	
 	b.setParent(a);
@@ -203,7 +211,7 @@ void LineManager::generateArc(int numF){
 	c.setOrientation(ofQuaternion());
 	c.setPosition(0, bRadius, 0);
 	
-	numFrames = numF;
+	numFrames = endFrame-startFrame;
 		
 	basePoints.clear();
 	ptf.clear();
