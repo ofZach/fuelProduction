@@ -9,6 +9,10 @@
 #include "cameraManager.h"
 #include "LineManager.h"
 
+#include <Alembic/AbcGeom/All.h>
+#include <Alembic/AbcCoreHDF5/All.h>
+#include "ofxAlembic.h"
+
 class ofApp : public ofBaseApp{
 public:
     
@@ -58,10 +62,13 @@ public:
     ofQuaternion decompRotation, decompSo;
     
     
-    bool bSaving;
-    int savingFrame;
-    
-    
+	bool exporting;
+	int exportFrame;
+	void startExport();
+	void writeFrame();
+    ofxAlembic::Writer writer;
+	
+	
     
 };
 

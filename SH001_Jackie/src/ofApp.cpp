@@ -1,8 +1,5 @@
 #include "ofApp.h"
 #include "ofxBinaryMesh.h"
-#include <Alembic/AbcGeom/All.h>
-#include <Alembic/AbcCoreHDF5/All.h>
-#include "ofxAlembic.h"
 
 using namespace Alembic::AbcGeom;
 
@@ -44,6 +41,7 @@ void ofApp::setup() {
 	gui.add(line.bRadius.set("b radius", 50, 0, 100));
 
 
+	gui.add(line.computeAttachmentPoints.set("generate hooks", false));
 	gui.add(line.numAttachPoints.set("attach points", 5, 0, 50));
 
 
@@ -54,8 +52,8 @@ void ofApp::setup() {
     //sndPlayer.setVolume(0);
     //sndPlayer.play();
     
-    bSaving = false;
-    
+    exporting = false;
+	
 //  shotManager.footageBasePath =  "/Users/zachlieberman/Desktop/GOLD_Footage";
 	shotManager.footageBasePath =  "/Users/focus/Dropbox/+PopTech_Footage/";
 
@@ -97,13 +95,8 @@ void ofApp::setup() {
     targetFbo.allocate(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().width,
                        CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height,GL_RGBA32F);
 
-   
-
     CM.CCM = CCM;
 	CM.setup();
-    
-//    abc.open("SH04_Spline_01c.abc");
-//    abc.dumpNames();
     
     line.setup();
 	line.generateArc(FDM.numFrames);
@@ -116,49 +109,75 @@ void ofApp::setup() {
 void ofApp::update() {
     
 
-    currentFrame = ofGetFrameNum() % FDM.getNumFrames();
-	
-//    if (!playback){
-//        currentFrame = mouseX;
-//    } else {
-    
-//        float time = sndPlayer.getPositionMS() / 1000.0;
-//        if (playbackAudio){
-//            sndPlayer.setVolume(1);
-//        } else {
-//            sndPlayer.setVolume(0);
-//        }
-//        
-//        currentFrame = (int)(time * 24.0);
-    
-//    }
-
+	if(playback){
+		currentFrame = ofGetFrameNum() % FDM.getNumFrames();
+	}
+	else if(exporting){
+		currentFrame = exportFrame;
+	}
+	else{
+		currentFrame = ofClamp(mouseX, 0, FDM.numFrames-1);
+	}
+		
     if (lastFrame != currentFrame){
         FDM.loadFrame(currentFrame, frame);
-        
+		line.update(currentFrame);
+
         // do the transform estimation:
-        vector<ofVec3f> from;
-        vector<ofVec3f> to;
-        for (int i = 0; i < frame.head.getIndices().size(); i+= 1){
-            to.push_back(frame.head.getVertices()[frame.head.getIndices()[i]]);
-            from.push_back(firstFrame.head.getVertices()[firstFrame.head.getIndices()[i]]);
-        }
-        ofMatrix4x4 rigidEstimate = ofxCv::estimateAffine3D(from, to);
-        XformSample samp;
-        XformOp matop( kMatrixOperation, kMatrixHint );
-        rigidEstimate.decompose(decompTranslation, decompRotation, decompScale, decompSo);
-        //cout << " ? ? " << decompScale << endl;
+//        vector<ofVec3f> from;
+//        vector<ofVec3f> to;
+//        for (int i = 0; i < frame.head.getIndices().size(); i+= 1){
+//            to.push_back(frame.head.getVertices()[frame.head.getIndices()[i]]);
+//            from.push_back(firstFrame.head.getVertices()[firstFrame.head.getIndices()[i]]);
+//        }
+//        ofMatrix4x4 rigidEstimate = ofxCv::estimateAffine3D(from, to);
+//        XformSample samp;
+//        XformOp matop( kMatrixOperation, kMatrixHint );
+//        rigidEstimate.decompose(decompTranslation, decompRotation, decompScale, decompSo);
+//
+//        //cout << " ? ? " << decompScale << endl;
     }
 	
     lastFrame = currentFrame;
-
-	line.update(currentFrame);
-
+	if(exporting){
+		
+		writeFrame();
+		
+		exportFrame++;
+		if(exportFrame == FDM.numFrames){
+			writer.close();
+			exporting = false;
+		}
+	}
+	
 
     CM.update();
     
 }
 
+void ofApp::startExport(){
+	exporting = true;
+	exportFrame = 0;
+	
+	string path = "JACKIE_001_" + ofGetTimestampString() + ".abc";
+    writer.open(path, 24);
+}
+
+void ofApp::writeFrame(){
+
+	writer.setTime(exportFrame / 23.976);
+	
+	ofxAlembic::Curves curve;
+	curve.curves.push_back(line.curCurve);
+	writer.addCurves("/curve", curve);
+	
+	ofxAlembic::Points points;
+	for(int i = 0; i < line.curHooks.size(); i++){
+		points.points.push_back(line.curHooks[i].pos);
+	}
+	writer.addPoints("/hooks", points);
+	    
+}
 
 void ofApp::draw(){
     
@@ -269,6 +288,9 @@ void ofApp::keyPressed(ofKeyEventArgs& args){
 		line.generateArc(FDM.numFrames);
 	}
     
+	if(args.key == ' '){
+		startExport();
+	}
     CM.keyPressed(args.key);
     
 }
