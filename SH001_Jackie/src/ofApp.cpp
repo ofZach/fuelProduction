@@ -13,7 +13,40 @@ ofxAlembic::Reader abc;
 
 void ofApp::setup() {
 	
+	
+	ofSetVerticalSync(true);
+	
+	light.enable();
+	light.setPosition(+500, +500, +500);
+
     drawFaceBox = false;
+	exporting = false;
+	
+	//  shotManager.footageBasePath =  "/Users/zachlieberman/Desktop/GOLD_Footage";
+	shotManager.footageBasePath =  "/Users/focus/Dropbox/+PopTech_Footage/";
+	
+	shotManager.setup();
+	
+	shotManager.loadShot("SH001", FDM); //jackie portrait
+	//	shotManager.loadShot("SH002", FDM); //craig portrait
+	//	shotManager.loadShot("SH003", FDM); //matt portrait
+	//	shotManager.loadShot("SH004", FDM); //craig scifi
+	//	shotManager.loadShot("SH005", FDM); //Jackie SMOG
+	//	shotManager.loadShot("SH006", FDM); //jackie "made fuel cells important to me"
+	//	shotManager.loadShot("SH007", FDM); //MATT "Innovative technology"
+	//	shotManager.loadShot("SH008", FDM); //JACKiE change the way communities
+	//	shotManager.loadShot("SH009", FDM); //JACKIE 'states, nations, the world'
+	//	shotManager.loadShot("SH010", FDM); //CRAIG mental models;
+	//	shotManager.loadShot("SH011", FDM); //CRAIG "we did it"
+	
+    FDM.loadFrame(0, frame);            // load frame 0
+    FDM.loadFrame(0, firstFrame);
+	FDM.getOrientation(frame, line.baseHeadNode);
+
+    cout << FDM.numFrames << endl;
+
+    line.startFrame = 0;
+    line.endFrame = FDM.numFrames;
 	
     gui.setup("panel"); // most of the time you don't need a name but don't forget to call setup
     gui.add(adjustments.set("adjustments", ofPoint(0, 0, 0), -ofPoint(200,200,200), ofPoint(200,200,200)));
@@ -23,6 +56,10 @@ void ofApp::setup() {
     gui.add(playback.set("playback", false));
     gui.add(playbackAudio.set("playbackAudio", false));
 	gui.add(drawFaceBox.set("draw face box", false));
+	gui.add(drawLineDebug.set("draw line debug", false));
+
+	gui.add(line.startFrame.set("start frame", 100, 0, FDM.numFrames));
+	gui.add(line.endFrame.set("end frame", FDM.numFrames-100, 0, FDM.numFrames));
 
 	gui.add(line.startPointX.set("start x",   0, -200,  200));
 	gui.add(line.startPointY.set("start y",   0, -200,  200));
@@ -34,7 +71,7 @@ void ofApp::setup() {
 	gui.add(line.twistDampen.set("twist damp", 50, 1, 200));
 	gui.add(line.yParamGradient.set("param gradient", 200, -200, 200));
 	
-	gui.add(line.rotationAmount.set("rotation amount", 360, 0, 360*25));
+//	gui.add(line.rotationAmount.set("rotation amount", 360, 0, 360*25));
 	gui.add(line.resampleAmount.set("resample count", 100, 10, 1000));
 	
 	gui.add(line.chaseDampen.set("chase damp", .01, 0, .3));
@@ -43,10 +80,11 @@ void ofApp::setup() {
 	gui.add(line.aRadius.set("a radius", 50, 0, 100));
 	gui.add(line.bRadius.set("b radius", 50, 0, 100));
 
-
+	gui.add(line.finalSmoothAmount.set("final smooth", 2, 0, 100));
+	gui.add(line.finalResampleCount.set("final resample", 300, 100, 2000));
+	
 	gui.add(line.computeAttachmentPoints.set("generate hooks", false));
 	gui.add(line.numAttachPoints.set("attach points", 5, 0, 50));
-
 
     gui.loadFromFile("adjustments.xml");
     
@@ -54,36 +92,6 @@ void ofApp::setup() {
     //sndPlayer.setLoop(true);
     //sndPlayer.setVolume(0);
     //sndPlayer.play();
-    
-	
-    exporting = false;
-	
-//  shotManager.footageBasePath =  "/Users/zachlieberman/Desktop/GOLD_Footage";
-	shotManager.footageBasePath =  "/Users/focus/Dropbox/+PopTech_Footage/";
-
-	shotManager.setup();
-
-	shotManager.loadShot("SH001", FDM); //jackie portrait
-//	shotManager.loadShot("SH002", FDM); //craig portrait
-//	shotManager.loadShot("SH003", FDM); //matt portrait
-//	shotManager.loadShot("SH004", FDM); //craig scifi
-//	shotManager.loadShot("SH005", FDM); //Jackie SMOG
-//	shotManager.loadShot("SH006", FDM); //jackie "made fuel cells important to me"
-//	shotManager.loadShot("SH007", FDM); //MATT "Innovative technology"
-//	shotManager.loadShot("SH008", FDM); //JACKiE change the way communities
-//	shotManager.loadShot("SH009", FDM); //JACKIE 'states, nations, the world'
-//	shotManager.loadShot("SH010", FDM); //CRAIG mental models;
-//	shotManager.loadShot("SH011", FDM); //CRAIG "we did it"
-
-    FDM.loadFrame(0, frame);            // load frame 0
-    FDM.loadFrame(0, firstFrame);
-    
-    cout << FDM.numFrames << endl;
-    
-	ofSetVerticalSync(true);
-	
-	light.enable();
-	light.setPosition(+500, +500, +500);
     
 	string testSequenceFolder = dataPath + "aCam/";
     
@@ -103,7 +111,7 @@ void ofApp::setup() {
 	CM.setup();
     
     line.setup();
-	line.generateArc(FDM.numFrames);
+	line.generateArc();
 
 	lineRenderer.setup();
 	lineRenderer.fakeDepthAdder = 0.018;
@@ -128,9 +136,10 @@ void ofApp::update() {
 		
     if (lastFrame != currentFrame){
         FDM.loadFrame(currentFrame, frame);
+		FDM.getOrientation(frame, line.currentHeadNode);
     }
 	
-	line.update(currentFrame);
+	line.update(ofMap(currentFrame,0, FDM.numFrames-1, 0, line.numFrames-1, true) );
     
 	lastFrame = currentFrame;
 
@@ -144,9 +153,6 @@ void ofApp::update() {
 			exporting = false;
 		}
 	}
-	
-
-    
 }
 
 void ofApp::startExport(){
@@ -179,7 +185,6 @@ void ofApp::writeFrame(){
 			writer.addPolyMesh(pathName + "/shape", p);
 		}
 	}
-	   
 }
 
 void ofApp::draw(){
@@ -192,19 +197,22 @@ void ofApp::draw(){
 
 	//BACKGROUND
     ofDisableDepthTest();
-//    backgroundPlate.draw(0,0,1920,1080);
+    backgroundPlate.draw(0,0,1920,1080);
     ofEnableDepthTest();
 	
 	//LINE DEBUG
-//	CM.cameraStart();
-//    line.draw();
-//	CM.cameraEnd();
-
+	if(drawLineDebug){
+		CM.cameraStart();
+		line.draw();
+		CM.cameraEnd();
+	}
+	
 	// rhonda draw
 	ofPolyline p;
-	for(int i = line.curCurve.getVertices().size()-1; i >= 0; i-- ){
-		p.addVertex(line.curCurve.getVertices()[i]);
-	}
+	p = line.curCurve;
+//	for(int i = line.curCurve.getVertices().size()-1; i >= 0; i-- ){
+//		p.addVertex(line.curCurve.getVertices()[i]);
+//	}
 	
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 	ofEnableDepthTest();
@@ -294,7 +302,7 @@ void ofApp::keyPressed(ofKeyEventArgs& args){
     }
 	
 	if(args.key == 'l'){
-		line.generateArc(FDM.numFrames);
+		line.generateArc();
 	}
     
 	if(args.key == '\\'){

@@ -3,7 +3,10 @@
 
 void LineManager::setup(){
 
-	startPointX.addListener(this, &LineManager::paramChanged);;
+	startFrame.addListener(this, &LineManager::paramChangedInt);
+	endFrame.addListener(this, &LineManager::paramChangedInt);
+	
+	startPointX.addListener(this, &LineManager::paramChanged);
 	startPointY.addListener(this, &LineManager::paramChanged);
 	startPointZ.addListener(this, &LineManager::paramChanged);
 	
@@ -11,7 +14,7 @@ void LineManager::setup(){
 	arcRadius.addListener(this, &LineManager::paramChanged);
 	arcAngle.addListener(this, &LineManager::paramChanged);
 
-	rotationAmount.addListener(this, &LineManager::paramChanged);
+//	rotationAmount.addListener(this, &LineManager::paramChanged);
 	resampleAmount.addListener(this, &LineManager::paramChanged);
 	
 	chaseDampen.addListener(this, &LineManager::paramChanged);
@@ -21,14 +24,13 @@ void LineManager::setup(){
 	bRadius.addListener(this, &LineManager::paramChanged);
 	
 	numAttachPoints.addListener(this, &LineManager::paramChanged);;
-
-	reattachHooks = false;
 	
 }
 
 void LineManager::update(int cf){
 	
-	curFrame = cf;
+	curFrame = ofClamp(cf,0,numFrames-1);
+	
 	
 	/*
 	if(meshes.size() > 0){
@@ -56,7 +58,7 @@ void LineManager::update(int cf){
 	vector<ofVec3f> linePoints;
 	vector<AttachPoint> hooksThisFrame;
 	float twistPoint = 0;
-	for(int i = 0; i < cf; i++){
+	for(int i = 0; i < curFrame; i++){
 		float percentAlongCurve = 1.0 * i / numFrames; //(endFrame - startFrame);
 		
 		//apply the transform to the base
@@ -155,8 +157,24 @@ void LineManager::update(int cf){
 		}
 	}
 	
+	ofVec3f offset = currentHeadNode.getPosition() - baseHeadNode.getPosition();
+	ofQuaternion q;
+	q.makeRotate(baseHeadNode.getLookAtDir(), currentHeadNode.getLookAtDir());
+	
+	ofMatrix4x4 headTransform;
+	headTransform.setTranslation(offset);
+	headTransform.setRotate(q);
+	
 	curCurve.clear();
 	curCurve.addVertices(linePoints);
+	curCurve = curCurve.getResampledByCount(finalResampleCount);
+	curCurve = curCurve.getSmoothed(finalSmoothAmount);
+
+	ofPolyline temp;
+	//apply all these
+	for (int i = 0; i < curCurve.getVertices().size(); i++) {
+		temp.addVertex(headTransform * curCurve.getVertices()[i]);
+	}
 	
 	curHooks = hooksThisFrame;
 
@@ -168,7 +186,7 @@ void LineManager::update(int cf){
 	
 	//create attachment points for the little tools
 	//calculate KDTree of this line
-//		hooksPerFrame.push_back(hooksThisFrame);
+//	hooksPerFrame.push_back(hooksThisFrame);
 	
 }
 
@@ -189,10 +207,14 @@ void LineManager::drawArc(){
 }
 
 void LineManager::paramChanged(float& param){
-	generateArc(numFrames);
+	generateArc();
 }
 
-void LineManager::generateArc(int numF){
+void LineManager::paramChangedInt(int& param){
+	generateArc();
+}
+
+void LineManager::generateArc(){
 	
 	
 	b.setParent(a);
@@ -203,7 +225,7 @@ void LineManager::generateArc(int numF){
 	c.setOrientation(ofQuaternion());
 	c.setPosition(0, bRadius, 0);
 	
-	numFrames = numF;
+	numFrames = endFrame-startFrame;
 		
 	basePoints.clear();
 	ptf.clear();
