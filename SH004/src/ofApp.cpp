@@ -27,6 +27,7 @@ void ofApp::setup() {
     gui.add(playbackAudio.set("playbackAudio", false));
     
     gui.add(playbackSpeed.set("playbackSpeed", 1, 0.1, 2.0));
+    gui.add(exporting.set("exporting", false));
     
 	gui.add(drawFaceBox.set("draw face box", false));
 	
@@ -107,31 +108,9 @@ void ofApp::setup() {
 	CM.setup();
     
     
+    DEM.setup();
+    
 
-//    // save head and tranform
-//    
-//    //CCM.extrinsics
-//    
-////    ofxAlembic::Writer writer;
-////    string path = "cam.abc";
-////    writer.open(path, 24);
-////
-////    writer.addXform("/box", CCM.extrinsics);
-////    //if (j == 0){
-////        ofBoxPrimitive box;
-////        box.set(40);
-////        writer.addPolyMesh("/box/boxShape", box.getMesh());
-////    //}
-////
-////        // draw the box of orientation using new alexmbic style
-////        
-////        
-////    //}
-//    
-//    
-//    
-//    writer.close();
-   // /Users/zachlieberman/Dropbox/+PopTech_Footage/SH004
     
     abc.open("SH04_Spline_01c.abc");
     abc.dumpNames();
@@ -146,34 +125,75 @@ void ofApp::setup() {
 
 
 
+bool bExportingLastFrame = false;
+int exportingFrameCount = 0;
 void ofApp::update() {
     
     
     SPACE.RLR.fakeDepthAdder = depthOffsetForLines;
     
-    if (!playback){
-        currentFrame = mouseX;
-    } else {
+    if (exporting){
         
-        float time = sndPlayer.getPositionMS() / 1000.0;
-        if (playbackAudio){
-            sndPlayer.setVolume(1);
+        if (bExportingLastFrame == false){
+            exportingFrameCount = 0;
+            
+            //string path = "outputTest.abc";
+            //outputWriter.open(path);
+            
+            ////    string path = "cam.abc";
+            ////    writer.open(path, 24);
+            
         } else {
-            sndPlayer.setVolume(0);
+            
+            exportingFrameCount++;
         }
-        sndPlayer.setSpeed(playbackSpeed);
         
-        currentFrame = (int)(time * 24.0);
+        if (currentFrame > FDM.numFrames){
+            exporting = false;
+        }
         
+        
+        currentFrame = exportingFrameCount;
+        if (lastFrame != currentFrame){
+            FDM.loadFrame(currentFrame, frame);
+            
+        }
     }
-    if (lastFrame != currentFrame){
-        FDM.loadFrame(currentFrame, frame);
+    
+    
+    if (!exporting){
+    
+        if (bExportingLastFrame){
+            //outputWriter.close();
+        }
+
+        if (!playback){
+            currentFrame = mouseX;
+        } else {
+            
+            float time = sndPlayer.getPositionMS() / 1000.0;
+            if (playbackAudio){
+                sndPlayer.setVolume(1);
+            } else {
+                sndPlayer.setVolume(0);
+            }
+            sndPlayer.setSpeed(playbackSpeed);
+            
+            currentFrame = (int)(time * 24.0);
+            
+        }
+        if (lastFrame != currentFrame){
+            FDM.loadFrame(currentFrame, frame);
+        }
     }
     lastFrame = currentFrame;
     
     // TODO: here
     
     CM.update();
+    
+    bExportingLastFrame = exporting;
+    
     
 }
 
@@ -192,14 +212,18 @@ void ofApp::draw(){
     abc.setTime(t);
 #endif
     
-	targetFbo.begin();
-    ofViewport(ofRectangle(0,0,1920, 1080));
-
-	ofClear(100,100,100,0);
+	DEM.startDraw();
+    
+    
+	ofClear(0,0,0,0);
     glClear(GL_DEPTH);
 
+    
+    ofViewport(ofRectangle(0,0,1920, 1080));
+
+    
     ofDisableDepthTest();
-    backgroundPlate.draw(0,0,1920,1080);
+    //backgroundPlate.draw(0,0,1920,1080);
     ofEnableDepthTest();
     
     CM.cameraStart();
@@ -220,7 +244,7 @@ void ofApp::draw(){
         ofNoFill();
         ofNode n;
         FDM.getOrientation(frame, n);
-        n.draw();
+        //n.draw();
         ofSetColor(255);
         ofMatrix4x4 mat = n.getGlobalTransformMatrix();
         ofMultMatrix(mat);
@@ -277,7 +301,7 @@ void ofApp::draw(){
     for (int i = 0; i < copy.size(); i++){
         copy[i] =  (((copy[i] - midPt + transformCurve)*rot.getInverse()) * scaleCurve + n.getPosition());
     }
-    copy.draw();
+    //copy.draw();
 //
 ////    
     float pct = (float)currentFrame / (float)FDM.numFrames;
@@ -316,26 +340,57 @@ void ofApp::draw(){
     
     
     CM.cameraStart();
-    CM.drawCameraInternals(frame.img, frame.mask, backgroundPlate);
+    
+    
+    //glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    if (!exporting){
+        CM.drawCameraInternals(frame.img, frame.mask, backgroundPlate);
+    }
+    //glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    
+    
     CM.cameraEnd();
     
     ofEnableAlphaBlending();
-	targetFbo.end();
+	
+    
+    if (exporting){
+        
+        int filenumber;
+        std::ostringstream localOSS;
+        string fileName;
+        
+        filenumber = 2034;
+        
+        localOSS << setw(4) << setfill('0') << currentFrame;
+        
+        fileName = localOSS.str();
+        
+        
+        DEM.endDraw(true, fileName);
+    } else {
+        DEM.endDraw();
+        
+    }
+    
+    
+    //DEM.endDraw(false, "");
+    
+    //ofDisableAlphaBlending();
+    //targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
+    
     ofDisableAlphaBlending();
-    targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
-    
-    
     ofDisableDepthTest();
+    
+    
+    
+    
     
     gui.draw();
     
     
     
-    if (currentFrame < 100 ||  (FDM.numFrames - currentFrame) < 100){
-        ofSetColor(ofColor::orangeRed);
-        ofTriangle(0,0, 100,0, 0, 100);
-    }
-    ofSetColor(255);
+    
     
     
     

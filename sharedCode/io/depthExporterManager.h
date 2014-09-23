@@ -70,7 +70,7 @@ public:
     void startDraw(){
         
         targetFbo.begin();
-        ofClear(0,0,0, 0);
+        ofClear(255,255,255, 0);
         glClear(GL_DEPTH_BITS);
         
         
