@@ -85,6 +85,9 @@ void cameraManager::drawCameraInternals(ofImage &person, ofImage &mask, ofImage 
     
     // draw the backplate:
     
+     ofMesh mesh;
+    /*
+    // I want to draw the backplay flat with no depth b/c of how the line renderer needs to fuck with depth.
     backplate.bind();
     ofMesh mesh;
     mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
@@ -98,7 +101,7 @@ void cameraManager::drawCameraInternals(ofImage &person, ofImage &mask, ofImage 
     mesh.addTexCoord(   ofPoint(backplate.getWidth(), 0));
     mesh.draw();
     backplate.unbind();
-    
+    */
     // figure out a Z distance.
     
     shader.begin();
