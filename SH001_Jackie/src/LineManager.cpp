@@ -55,8 +55,9 @@ void LineManager::update(int cf){
 	
 	vector<ofVec3f> linePoints;
 	vector<AttachPoint> hooksThisFrame;
-	for(int i = 0; i < cf; i++){
-		float percentAlongCurve = 1.0 * i / numFrames;
+	float twistPoint = 0;
+	for(int i = startFrame; i < cf; i++){
+		float percentAlongCurve = 1.0 * i / numFrames; //(endFrame - startFrame);
 		
 		//apply the transform to the base
 		int index = percentAlongCurve * (numFrames-2);
@@ -68,7 +69,10 @@ void LineManager::update(int cf){
 		ofVec3f lookDir = next.getPosition() - a.getPosition();
 		
 		//rotate it around a consistent angle
-		a.rotate(rotationAmount*percentAlongCurve, lookDir);
+		//a.rotate(rotationAmount*percentAlongCurve * ofSignedNoise(i/50.0), lookDir);
+		float thisTwistDampen = ofMap(a.getPosition().y, yParamGradient-10, yParamGradient+10, twistDampen*20, twistDampen, true);
+		twistPoint += 1.0 / thisTwistDampen;
+		a.rotate(360 * ofSignedNoise(twistPoint), lookDir);
 		
 		ofQuaternion angleBtoC, angleAdjust;
 		ofVec3f curLook = b.getSideDir();
@@ -80,7 +84,8 @@ void LineManager::update(int cf){
 		//angleBtoC.makeRotate(curLook, targetLook);
 		//angleAdjust.slerp(chaseDampen, b.getOrientationQuat()*angleBtoC, b.getOrientationQuat());
 		//b.setOrientation(b.getOrientationQuat() * angleAdjust);
-		if(angleBetween < 5){
+//		if(angleBetween < 5){
+		if(i == 0){
 //			c.rotateAround(ofQuaternion(ofRandom(-maxNewAngle,maxNewAngle), ofVec3f(0,0,1)), b.getPosition());
 			c.rotateAround(ofQuaternion(maxNewAngle, ofVec3f(0,0,1)), b.getPosition());
 		}

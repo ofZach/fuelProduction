@@ -24,13 +24,16 @@ void ofApp::setup() {
     gui.add(playbackAudio.set("playbackAudio", false));
 	gui.add(drawFaceBox.set("draw face box", false));
 
-	gui.add(line.startPointX.set("start x",  0, -200,  200));
-	gui.add(line.startPointY.set("start y",  0, -200,  200));
-	gui.add(line.startPointZ.set("start z",-900, -700, -1200));
+	gui.add(line.startPointX.set("start x",   0, -200,  200));
+	gui.add(line.startPointY.set("start y",   0, -200,  200));
+	gui.add(line.startPointZ.set("start z",-900, -700, -2000));
 
-	gui.add(line.extrudeAmount.set("extrude", 200, 0, 400));
+	gui.add(line.extrudeAmount.set("extrude", 200, 0, 1000));
 	gui.add(line.arcRadius.set("arc radius", 200, 0, 400));
 	gui.add(line.arcAngle.set("arc angle", 360, 180, 720));
+	gui.add(line.twistDampen.set("twist damp", 50, 1, 200));
+	gui.add(line.yParamGradient.set("param gradient", 200, -200, 200));
+	
 	gui.add(line.rotationAmount.set("rotation amount", 360, 0, 360*25));
 	gui.add(line.resampleAmount.set("resample count", 100, 10, 1000));
 	
@@ -88,7 +91,7 @@ void ofApp::setup() {
                         testSequenceFolder + "matrices/rotationDepthToRGB.yml",
                         testSequenceFolder + "matrices/translationDepthToRGB.yml");
 	
-    int ppWidth = ofNextPow2(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().width);
+    int ppWidth  = ofNextPow2(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().width);
     int ppHeight = ofNextPow2(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height);
     
     
@@ -108,6 +111,7 @@ void ofApp::setup() {
 
 void ofApp::update() {
     
+    CM.update();
 
 	if(playback){
 		currentFrame = ofGetFrameNum() % FDM.getNumFrames();
@@ -121,26 +125,13 @@ void ofApp::update() {
 		
     if (lastFrame != currentFrame){
         FDM.loadFrame(currentFrame, frame);
-		line.update(currentFrame);
-
-        // do the transform estimation:
-//        vector<ofVec3f> from;
-//        vector<ofVec3f> to;
-//        for (int i = 0; i < frame.head.getIndices().size(); i+= 1){
-//            to.push_back(frame.head.getVertices()[frame.head.getIndices()[i]]);
-//            from.push_back(firstFrame.head.getVertices()[firstFrame.head.getIndices()[i]]);
-//        }
-//        ofMatrix4x4 rigidEstimate = ofxCv::estimateAffine3D(from, to);
-//        XformSample samp;
-//        XformOp matop( kMatrixOperation, kMatrixHint );
-//        rigidEstimate.decompose(decompTranslation, decompRotation, decompScale, decompSo);
-//
-//        //cout << " ? ? " << decompScale << endl;
     }
 	
-    lastFrame = currentFrame;
+	line.update(currentFrame);
+    
+	lastFrame = currentFrame;
+
 	if(exporting){
-		
 		writeFrame();
 		exportFrame++;
 		cout << "WRITING FRAME " << exportFrame << "/" << FDM.numFrames << endl;
@@ -152,7 +143,6 @@ void ofApp::update() {
 	}
 	
 
-    CM.update();
     
 }
 
@@ -298,7 +288,7 @@ void ofApp::keyPressed(ofKeyEventArgs& args){
 		line.generateArc(FDM.numFrames);
 	}
     
-	if(args.key == ' '){
+	if(args.key == '\\'){
 		startExport();
 	}
     CM.keyPressed(args.key);
