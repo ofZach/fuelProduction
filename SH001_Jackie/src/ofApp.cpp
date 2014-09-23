@@ -27,7 +27,7 @@ void ofApp::setup() {
 	
 	shotManager.setup();
 	
-	shotManager.loadShot("SH001", FDM); //jackie portrait
+		shotManager.loadShot("SH001", FDM); //jackie portrait
 	//	shotManager.loadShot("SH002", FDM); //craig portrait
 	//	shotManager.loadShot("SH003", FDM); //matt portrait
 	//	shotManager.loadShot("SH004", FDM); //craig scifi
@@ -139,7 +139,7 @@ void ofApp::update() {
 		FDM.getOrientation(frame, line.currentHeadNode);
     }
 	
-	line.update(ofMap(currentFrame,0, FDM.numFrames-1, 0, line.numFrames-1, true) );
+	line.update( ofClamp(currentFrame-line.startFrame,0,line.endFrame) );
     
 	lastFrame = currentFrame;
 

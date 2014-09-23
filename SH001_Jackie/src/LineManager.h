@@ -27,7 +27,7 @@ class LineManager {
 	//node chase params
 	void generateArc();
 
-	ofNode baseHeadNode;
+	ofNode baseHeadNode; //first frame
 	ofNode currentHeadNode;
 	
 	//arc params

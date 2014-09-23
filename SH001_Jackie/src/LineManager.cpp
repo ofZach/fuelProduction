@@ -159,29 +159,38 @@ void LineManager::update(int cf){
 	
 	ofVec3f offset = currentHeadNode.getPosition() - baseHeadNode.getPosition();
 	ofQuaternion q;
-	q.makeRotate(baseHeadNode.getLookAtDir(), currentHeadNode.getLookAtDir());
+	q.makeRotate(currentHeadNode.getLookAtDir(), baseHeadNode.getLookAtDir());
 	
 	ofMatrix4x4 headTransform;
-	headTransform.setTranslation(offset);
-	headTransform.setRotate(q);
+//	headTransform.makeTranslationMatrix(offset);
+	headTransform.makeIdentityMatrix();
+	headTransform.translate(-currentHeadNode.getPosition());
+	headTransform.rotate(q);
+	headTransform.translate( currentHeadNode.getPosition());
+	headTransform.translate( -offset );
+	cout << "head offset is " << offset << endl;
 	
 	curCurve.clear();
 	curCurve.addVertices(linePoints);
 	curCurve = curCurve.getResampledByCount(finalResampleCount);
 	curCurve = curCurve.getSmoothed(finalSmoothAmount);
 
-	ofPolyline temp;
-	//apply all these
-	for (int i = 0; i < curCurve.getVertices().size(); i++) {
-		temp.addVertex(headTransform * curCurve.getVertices()[i]);
-	}
-	
-	curHooks = hooksThisFrame;
+//	ofPolyline temp;
+//	//apply all these
+//	for (int i = 0; i < curCurve.getVertices().size(); i++) {
+//		temp.addVertex(headTransform.preMult(curCurve.getVertices()[i]) );
+//	}
+//	curCurve = temp;
+//	
+//	for(int h = 0; h < hooksThisFrame.size(); h++){
+//		hooksThisFrame[h].xform.setTransformMatrix(headTransform * hooksThisFrame[h].xform.getGlobalTransformMatrix());
+//	}
+//	curHooks = hooksThisFrame;
 
 	//store the mesh
 	ofMesh m;
 	m.setMode(OF_PRIMITIVE_LINE_STRIP);
-	m.addVertices(linePoints);
+	m.addVertices(curCurve.getVertices());
 	curMesh = m;
 	
 	//create attachment points for the little tools

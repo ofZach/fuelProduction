@@ -135,6 +135,7 @@ void frameDataManager::calculateBaseEyeInfo(){
 }
 
 void frameDataManager::getOrientation(const frameData& fd, ofNode& n ){
+
 	ofVec3f translation = fd.leftEye.getCentroid().getInterpolated(fd.rightEye.getCentroid(), .5);
 	ofVec3f right = (fd.rightEye.getCentroid() - fd.leftEye.getCentroid()).getNormalized();
 	ofVec3f forward = right.getCrossed(ofVec3f(0,1,0)).getNormalized();
@@ -142,6 +143,8 @@ void frameDataManager::getOrientation(const frameData& fd, ofNode& n ){
 	n.setPosition(ofVec3f(0,0,0));
 	n.lookAt(forward,up);
 	n.setPosition(translation);
+
+
 }
 
 void frameDataManager::loadFrame( int frameNum, frameData & fd){
