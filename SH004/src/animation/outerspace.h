@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "particle.h"
 #include "spring.h"
+#include "rhondaLineRenderer.h"
 
 
 class particlePlayer :  public particle{
@@ -91,6 +92,9 @@ public:
     
     
     vector < outerspacePlayer * > players;
+    rhondaLineRenderer RLR;
+    ofCamera * cam;
+    
     void setup(){
         
         for (int i = 0; i < 30; i++){
@@ -98,13 +102,17 @@ public:
             p = new outerspacePlayer();
             p->setup();
             players.push_back(p);
-            players[players.size()-1]->PP.pctSpeed = ofRandom(0.01, 0.02);
+            players[players.size()-1]->PP.pctSpeed = ofRandom(0.01, 0.018);
             players[players.size()-1]->PP.pctThrough = ofRandom(0, 2.0);
             
             
             //players[players.size()-1].P.damping = ofRandom(0.05, 0.13);
             //players[players.size()-1].s.distance = ofRandom(20,150);
         }
+        
+        
+        RLR.setup();
+        
     }
     
     
@@ -125,9 +133,42 @@ public:
         }
     }
     void draw(){
+        
+        
+        ofMatrix4x4 mat = ofGetCurrentMatrix(OF_MATRIX_MODELVIEW);
+        
+        
+        //cam.setupPerspective();
+        //cam.setTransformMatrix(mat.getInverse());
+        
+        
+        // draw depth on these pixels
+        glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+        ofEnableDepthTest();
         for (int i = 0; i < 30; i++){
-            players[i]->draw();
+            //players[i]->LL.draw();
+            RLR.draw(players[i]->LL, *cam);
         }
+        
+        
+        glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+        
+        ofEnableAlphaBlending();
+        ofDisableDepthTest();
+        glEnable(GL_BLEND);
+        glBlendEquation(GL_MIN_EXT);
+        glBlendFunc(GL_ONE_MINUS_DST_COLOR,GL_ONE_MINUS_CONSTANT_COLOR);
+        
+        //ofSetColor(ofGetMouseX());
+        for (int i = 0; i < 30; i++){
+            players[i]->LL.draw();
+            RLR.draw(players[i]->LL, *cam);
+        }
+        
+        ofEnableDepthTest();
+        ofEnableAlphaBlending();
+        
+        
     }
  
    

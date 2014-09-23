@@ -42,7 +42,7 @@ void ofApp::setup() {
 #ifdef JAMES
 	shotManager.footageBasePath = "/Volumes/CHOPPER/_ToyotaXpopTech_/GOLD_Footage/";
 #else
-    shotManager.footageBasePath = "/Users/zachlieberman/Desktop/GOLD_Footage/";
+    shotManager.footageBasePath = "/Users/zachlieberman/Desktop/GOLD_Footage";
 #endif 
     
 	shotManager.setup();
@@ -164,6 +164,7 @@ void ofApp::update() {
 void ofApp::draw(){
     
     
+    
 #ifndef NO_ALEMBIC
     float t = currentFrame / 24.0;
     if (t > abc.getMaxTime()){
@@ -176,16 +177,20 @@ void ofApp::draw(){
     ofViewport(ofRectangle(0,0,1920, 1080));
     
     
-	ofClear(0,0,0,0);
+	ofClear(100,100,100,0);
     glClear(GL_DEPTH);
     
+    
+    ofDisableDepthTest();
+    backgroundPlate.draw(0,0,1920,1080);
+    ofEnableDepthTest();
     
     CM.cameraStart();
     
     
-    CM.drawCameraInternals(frame.img, frame.mask, backgroundPlate);
-
+    
    
+    ofMatrix4x4 inside;
     ofPushMatrix();
         ofScale(-scaleFac,scaleFac,scaleFac);
         ofTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
@@ -204,12 +209,19 @@ void ofApp::draw(){
         ofSetColor(255);
         ofMatrix4x4 mat = n.getGlobalTransformMatrix();
         ofMultMatrix(mat);
+    
+        inside = ofGetCurrentMatrix(OF_MATRIX_MODELVIEW);
+    
 		if(drawFaceBox){
 			ofBoxPrimitive(100, 100, 100).draw();
 		}
 
         
         ofPopStyle();
+    
+    
+    
+    
 	ofPopMatrix();
 
     
@@ -234,11 +246,28 @@ void ofApp::draw(){
     copy = copy.getResampledBySpacing(4);
     //copy.draw();
     
+    ofPoint midPt;
+    for (int i = 0; i < copy.size(); i++){
+        midPt += copy[i];
+    }
+    midPt /= (float)copy.size();
+//
+//    
+    ofMatrix4x4 rot;
+    n.getOrientationQuat().get(rot);
+    rot.rotate(190,0,1,0);
     
+    for (int i = 0; i < copy.size(); i++){
+        copy[i] =  (((copy[i] - midPt + ofVec3f(-100,0,0))*rot.getInverse()) * ofVec3f(0.8, 1.1, 1.1) + n.getPosition());
+    }
+    copy.draw();
+//
+////    
     float pct = (float)currentFrame / (float)FDM.numFrames;
     SPACE.update(copy, currentFrame);
-    SPACE.draw();
-    
+    SPACE.cam = &CM.baseCamera;
+////
+//    
     
     // center the copy via the head position
     // draw with the head
@@ -251,9 +280,23 @@ void ofApp::draw(){
     
 	ofDisableDepthTest();
     CM.cameraEnd();
+    
+    
+    SPACE.draw();
+    
+    
+    CM.cameraStart();
+    CM.drawCameraInternals(frame.img, frame.mask, backgroundPlate);
+    CM.cameraEnd();
+    
     ofEnableAlphaBlending();
 	targetFbo.end();
+    ofDisableAlphaBlending();
     targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
+    
+    
+    ofDisableDepthTest();
+    
     gui.draw();
     
     //FDM.maskStandIn.draw(mouseX, mouseY);
