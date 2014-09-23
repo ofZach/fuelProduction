@@ -42,20 +42,19 @@ class LineManager {
 	ofParameter <float> aRadius;
 	ofParameter <float> bRadius;
 	
+	ofParameter <bool> computeAttachmentPoints;
 	ofParameter <float> numAttachPoints;
 	
 	vector<ofVec3f> basePoints;
-//	vector<ofVec3f> linePoints;
 	
 	ofxPtf ptf;
 	int numFrames;
 	int curFrame;
 	vector<AttachPoint> hooks; //distributed as we go;
-	vector<ofMesh> meshes;
-	vector< vector<AttachPoint> > hooksPerFrame;
 	ofMesh curMesh;
+	ofPolyline curCurve;
 	vector<AttachPoint> curHooks;
-	
+	bool reattachHooks; //when the params change
 	ofNode a;
 	ofNode b;
     ofNode c;
