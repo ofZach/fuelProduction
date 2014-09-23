@@ -55,6 +55,7 @@ void ofApp::setup() {
     //sndPlayer.setVolume(0);
     //sndPlayer.play();
     
+	
     exporting = false;
 	
 //  shotManager.footageBasePath =  "/Users/zachlieberman/Desktop/GOLD_Footage";
@@ -104,6 +105,8 @@ void ofApp::setup() {
     line.setup();
 	line.generateArc(FDM.numFrames);
 
+	lineRenderer.setup();
+	lineRenderer.fakeDepthAdder = 0.018;
 	
     backgroundPlate.loadImage(dataPath + "Background Plates/A-Cam_BackgroundPlate_360p.png");
     
@@ -181,67 +184,73 @@ void ofApp::writeFrame(){
 
 void ofApp::draw(){
     
-    
-#ifndef NO_ALEMBIC
-    float t = currentFrame / 24.0;
-    if (t > abc.getMaxTime()){
-        t = abc.getMaxTime();
-    }
-    abc.setTime(t);
-#endif
-    
 	targetFbo.begin();
     ofViewport(ofRectangle(0,0,1920, 1080));
-    
-    
-	ofClear(0,0,0,0);
+	
+	ofClear(100,100,100,0);
     glClear(GL_DEPTH);
-    
-    
+
+	//BACKGROUND
+    ofDisableDepthTest();
+    //backgroundPlate.draw(0,0,1920,1080);
+    ofEnableDepthTest();
+	
+	//LINE DEBUG
+//	CM.cameraStart();
+//    line.draw();
+//	CM.cameraEnd();
+
+	// rhonda draw
+	ofPolyline p;
+	for(int i = line.curCurve.getVertices().size()-1; i >= 0; i-- ){
+		p.addVertex(line.curCurve.getVertices()[i]);
+	}
+	
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	ofEnableDepthTest();
+	lineRenderer.draw(p, CM.baseCamera);
+	
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	ofEnableAlphaBlending();
+	ofDisableDepthTest();
+	
+	glEnable(GL_BLEND);
+	glBlendEquation(GL_MIN_EXT);
+	glBlendFunc(GL_ONE_MINUS_DST_COLOR,GL_ONE_MINUS_CONSTANT_COLOR);
+	
+	lineRenderer.draw(p, CM.baseCamera);
+	
+	ofEnableDepthTest();
+	ofEnableAlphaBlending();
+	
     CM.cameraStart();
     
     CM.drawCameraInternals(frame.img, frame.mask, backgroundPlate);
 
-   
     ofPushMatrix();
-        ofScale(-scaleFac,scaleFac,scaleFac);
-        ofTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
-        
-        drawMesh(frame.head, ofColor::darkGoldenRod);
-        drawMesh(frame.rightEye, ofColor::red);
-        drawMesh(frame.leftEye, ofColor::blue);
-        
-        ofPushStyle();
-    
-        ofNoFill();
-        ofNode n;
-        FDM.getOrientation(frame, n);
-        n.draw();
-        ofSetColor(255);
-        ofMatrix4x4 mat = n.getGlobalTransformMatrix();
-        ofMultMatrix(mat);
-		if(drawFaceBox){
-			ofBoxPrimitive(100, 100, 100).draw();
-		}
-    
-        
-        ofPopStyle();
-	ofPopMatrix();
+	ofScale(-scaleFac,scaleFac,scaleFac);
+	ofTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
 	
-	//line.drawArc();
-    line.draw();
-    
-    ofPolyline curve;
+	drawMesh(frame.head, ofColor::darkGoldenRod);
+	drawMesh(frame.rightEye, ofColor::red);
+	drawMesh(frame.leftEye, ofColor::blue);
+	
+	ofPushStyle();
 
-#ifndef NO_ALEMBIC
-    vector<ofPolyline> curvesMe;
-    abc.get("SplineSpline", curvesMe);
-#endif
-    
-    
-    
-    
-    
+	ofNoFill();
+	ofNode n;
+	FDM.getOrientation(frame, n);
+	n.draw();
+	ofSetColor(255);
+	ofMatrix4x4 mat = n.getGlobalTransformMatrix();
+	ofMultMatrix(mat);
+	if(drawFaceBox){
+		ofBoxPrimitive(100, 100, 100).draw();
+	}
+
+	ofPopStyle();
+	ofPopMatrix();
+	   
     ofSetColor(ofColor::white);
 
 	////////////////

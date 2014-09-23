@@ -12,6 +12,7 @@
 #include <Alembic/AbcGeom/All.h>
 #include <Alembic/AbcCoreHDF5/All.h>
 #include "ofxAlembic.h"
+#include "rhondaLineRenderer.h"
 
 class ofApp : public ofBaseApp{
 public:
@@ -27,7 +28,8 @@ public:
     shotManager shotManager;
     frameData frame;
     frameData firstFrame;
-    
+	
+    rhondaLineRenderer lineRenderer;
 	LineManager line;
 	cameraManager CM;
     

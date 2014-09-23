@@ -56,7 +56,7 @@ void LineManager::update(int cf){
 	vector<ofVec3f> linePoints;
 	vector<AttachPoint> hooksThisFrame;
 	float twistPoint = 0;
-	for(int i = startFrame; i < cf; i++){
+	for(int i = 0; i < cf; i++){
 		float percentAlongCurve = 1.0 * i / numFrames; //(endFrame - startFrame);
 		
 		//apply the transform to the base

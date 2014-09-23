@@ -92,6 +92,7 @@
 		E766821519CC9DE10062604F /* ParallelTransportFrames.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E766821019CC9DE10062604F /* ParallelTransportFrames.cpp */; };
 		E7E077E515D3B63C0020DFD4 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */; };
 		E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E715D3B6510020DFD4 /* QTKit.framework */; };
+		E7E84CA919D1E6C90036B69B /* rhondaLineRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7E84CA719D1E6C90036B69B /* rhondaLineRenderer.cpp */; };
 		E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F985F515E0DE99003869B5 /* Accelerate.framework */; };
 		EBCDE831EFAE08274E799C97 /* Calibration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 402C8F4015542356D362AC88 /* Calibration.cpp */; };
 		F1E8DE8734BA6F69A5112FA8 /* ofxUIBaseDraws.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28155024C27152A66926B553 /* ofxUIBaseDraws.cpp */; };
@@ -620,6 +621,8 @@
 		E7DDB716B5AE0DEA82DFFEDA /* autotuned_index.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = autotuned_index.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/autotuned_index.h; sourceTree = SOURCE_ROOT; };
 		E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		E7E077E715D3B6510020DFD4 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
+		E7E84CA719D1E6C90036B69B /* rhondaLineRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rhondaLineRenderer.cpp; sourceTree = "<group>"; };
+		E7E84CA819D1E6C90036B69B /* rhondaLineRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rhondaLineRenderer.h; sourceTree = "<group>"; };
 		E7F0713619CD0E3D006D8806 /* nanoflann.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = nanoflann.hpp; sourceTree = "<group>"; };
 		E7F0713719CD0E3D006D8806 /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.md; sourceTree = "<group>"; };
 		E7F0713919CD0E3D006D8806 /* NearestNeighbour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NearestNeighbour.h; sourceTree = "<group>"; };
@@ -1659,6 +1662,7 @@
 		E705E7B019CB6DBA0083A103 /* sharedCode */ = {
 			isa = PBXGroup;
 			children = (
+				E7E84CA619D1E6C90036B69B /* line */,
 				E705E7B119CB6DBA0083A103 /* .gitkeep */,
 				E705E7B219CB6DBA0083A103 /* cameraManager.cpp */,
 				E705E7B319CB6DBA0083A103 /* cameraManager.h */,
@@ -1712,6 +1716,15 @@
 				E766821019CC9DE10062604F /* ParallelTransportFrames.cpp */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		E7E84CA619D1E6C90036B69B /* line */ = {
+			isa = PBXGroup;
+			children = (
+				E7E84CA719D1E6C90036B69B /* rhondaLineRenderer.cpp */,
+				E7E84CA819D1E6C90036B69B /* rhondaLineRenderer.h */,
+			);
+			path = line;
 			sourceTree = "<group>";
 		};
 		E7F0711519CD0E3C006D8806 /* ofxNearestNeighbour */ = {
@@ -2048,6 +2061,7 @@
 				E705E7C119CB6DBA0083A103 /* cameraCalibrationManager.cpp in Sources */,
 				04C82720B149CE576B8CBB06 /* ofxUIToggle.cpp in Sources */,
 				E766821519CC9DE10062604F /* ParallelTransportFrames.cpp in Sources */,
+				E7E84CA919D1E6C90036B69B /* rhondaLineRenderer.cpp in Sources */,
 				E3A1109F67D711D6C256031E /* ofxUIToggleMatrix.cpp in Sources */,
 				60012C723B05938A3D388335 /* ofxUIValuePlotter.cpp in Sources */,
 				AE281BEBF3A00F1FC37F3DA0 /* ofxUIWaveform.cpp in Sources */,

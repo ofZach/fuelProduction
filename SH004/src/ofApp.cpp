@@ -66,7 +66,6 @@ void ofApp::setup() {
 //	shotManager.loadShot("SH001", FDM); //jackie portrait
 //	shotManager.loadShot("SH002", FDM); //craig portrait
 //shotManager.loadShot("SH004", FDM); //matt portrait
-	//NOT ALIGNED AFTER CUT -- NO EYES AFTER CUT
 	shotManager.loadShot("SH004", FDM); //craig scifi
 //	shotManager.loadShot("SH005", FDM); //Jackie SMOG
 //	shotManager.loadShot("SH006", FDM); //jackie "made fuel cells important to me"
