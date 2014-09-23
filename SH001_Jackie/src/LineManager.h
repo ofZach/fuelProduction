@@ -36,6 +36,8 @@ class LineManager {
 	ofParameter <float> arcAngle; //total angle
 	ofParameter <float> rotationAmount; //total angle
 	ofParameter <float> resampleAmount; //uncurling
+	ofParameter <float> twistDampen; //scribbiliness
+	ofParameter <float> yParamGradient; //make the top crazier
 
 	ofParameter <float> chaseDampen;
 	ofParameter <float> maxNewAngle;
@@ -45,7 +47,10 @@ class LineManager {
 	
 	ofParameter <bool> computeAttachmentPoints;
 	ofParameter <float> numAttachPoints;
-	
+
+	ofParameter <int> startFrame;
+	ofParameter <int> endFrame;
+
 	vector<ofVec3f> basePoints;
 	
 	ofxPtf ptf;
