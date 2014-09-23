@@ -8,6 +8,7 @@
 #include "ofxGui.h"
 #include "cameraManager.h"
 #include "outerspace.h"
+#include "depthExporterManager.h"
 
 class ofApp : public ofBaseApp{
 public:
@@ -49,7 +50,7 @@ public:
     ofParameter <ofVec3f> transformCurve;
     ofParameter <ofVec3f> scaleCurve;
     ofParameter <ofVec3f> rotateCurve;
-    
+    ofParameter <bool> exporting;
     
     ofxPanel gui;
 
@@ -61,7 +62,7 @@ public:
 	cameraManager CM;
     
 
-
+    
     cameraCalibrationManager CCM;
     
     
@@ -74,6 +75,7 @@ public:
     bool bSaving;
     int savingFrame;
     
+    depthExporterManager DEM;
     
     outerspace SPACE;
     

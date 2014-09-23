@@ -178,7 +178,7 @@ public:
         
         
         ofMatrix4x4 mat = ofGetCurrentMatrix(OF_MATRIX_MODELVIEW);
-        
+
         
         //cam.setupPerspective();
         //cam.setTransformMatrix(mat.getInverse());
@@ -195,13 +195,14 @@ public:
         
         ofEnableAlphaBlending();
         ofDisableDepthTest();
-        glEnable(GL_BLEND);
-        glBlendEquation(GL_MIN_EXT);
-        glBlendFunc(GL_ONE_MINUS_DST_COLOR,GL_ONE_MINUS_CONSTANT_COLOR);
+        //glEnable(GL_BLEND);
+        //glBlendEquation(GL_MIN_EXT);
+        //glBlendFunc(GL_ONE_MINUS_DST_COLOR,GL_ONE_MINUS_CONSTANT_COLOR);
         
+        ofSetColor(255);
         //ofSetColor(ofGetMouseX());
         for (int i = 0; i < 30; i++){
-            players[i]->LL.draw();
+            //players[i]->LL.draw();
             RLR.draw(players[i]->LL, *cam);
         }
         

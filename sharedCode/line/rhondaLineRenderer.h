@@ -34,7 +34,9 @@ class rhondaLineRenderer {
         
         //ofEnableDepthTest();
         
-        
+      
+        ofRectangle viewport;
+        viewport.set(0,0,1920, 1080);
       
         //how can we pass gl_FragDepth ??????
         
@@ -46,6 +48,12 @@ class rhondaLineRenderer {
         shader.setUniform1f("fakeDepthAdder", fakeDepthAdder);        // this is a kludge the helps get things depth testing OK against z=0....
         shader.setUniformTexture("ink", ink.getTextureReference(), 1);
         
+        
+        
+        float scaleX = ofNextPow2(1920) / (float)1920;
+        float scaleY = ofNextPow2(1080) / (float)1080;
+        
+        ofPoint scale2d(scaleX, scaleY, 1.0);
         
         float dist = 0;
         
@@ -60,8 +68,8 @@ class rhondaLineRenderer {
             
             float pct =  sin( dist * 0.01) * 0.5 + 0.5;
             
-            ofPoint onScreenA = cam.worldToScreen(line[i_m_1]);
-            ofPoint onScreenB = cam.worldToScreen(line[i_p_1]);
+            ofPoint onScreenA = cam.worldToScreen(line[i_m_1], viewport) * scale2d;
+            ofPoint onScreenB = cam.worldToScreen(line[i_p_1], viewport) * scale2d;
             
             //cout << onScreenA << " " << onScreenB << endl;
             dist += (line[i] - line[i_m_1]).length();
@@ -72,8 +80,11 @@ class rhondaLineRenderer {
             dif.normalize();
             ofPoint difCross = dif.cross(ofPoint(0,0,1));
             
-            ofPoint a = cam.worldToScreen(line[i]) + (6 + 5 * sin( dist * 0.01)) * difCross;
-            ofPoint b = cam.worldToScreen(line[i]) - (6 + 5 * sin( dist * 0.01)) * difCross;
+            ofPoint a = cam.worldToScreen(line[i], viewport) + (6 + 5 * sin( dist * 0.01)) * difCross;
+            ofPoint b = cam.worldToScreen(line[i], viewport) - (6 + 5 * sin( dist * 0.01)) * difCross;
+            
+            a *= scale2d;
+            b *= scale2d;
             
             //a.y = 1080  - a.y;
             //b.y = 1080  - b.y;

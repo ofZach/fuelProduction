@@ -135,7 +135,8 @@ void cameraManager::drawCameraInternals(ofImage &person, ofImage &mask, ofImage 
 void cameraManager::cameraStart(){
     
     if(useSideCamera){
-		currentCamera->begin();
+		currentCamera->begin( ofRectangle(0,0,1920, 1080));
+        
 		ofPushStyle();
 		ofPushMatrix();
 		ofNoFill();
