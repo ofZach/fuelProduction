@@ -42,7 +42,15 @@ public:
     ofParameter <bool> playback;
     ofParameter <bool> playbackAudio;
 	ofParameter <bool> drawFaceBox;
+	ofParameter <float> playbackSpeed;
 	
+    
+    ofParameter <float> depthOffsetForLines;
+    ofParameter <ofVec3f> transformCurve;
+    ofParameter <ofVec3f> scaleCurve;
+    ofParameter <ofVec3f> rotateCurve;
+    
+    
     ofxPanel gui;
 
     ofSoundPlayer sndPlayer;
