@@ -116,7 +116,7 @@ void LineManager::update(int cf){
 				if(hooks[h].startFrame < i){
 					//first time we have seen this point lock it to the line
 					if(hooks[h].firstHook){
-						hooks[h].pos = linePoints.back();
+						hooks[h].xform = n;
 						hooks[h].firstHook = false;
 					}
 					else{
@@ -124,22 +124,28 @@ void LineManager::update(int cf){
 						//otherise move it to the closest point on the resampled line
 						vector<size_t> closestIndeces;
 						vector<float> distances;
-						nn.findNClosestPoints(hooks[h].pos, 2, closestIndeces, distances);
+						nn.findNClosestPoints(hooks[h].xform.getPosition(), 2, closestIndeces, distances);
 						
-						ofVec3f x0 = hooks[h].pos;
+						ofVec3f x0 = hooks[h].xform.getPosition();
 						ofVec3f x1 = linePoints[closestIndeces[0]];
 						ofVec3f x2 = linePoints[closestIndeces[1]];
 						//formulate for the distnce from a point to a line segment
 						//					d   =   (|(x_2-x_1)x(x_1-x_0)|)/(|x_2-x_1|)
-						float d = (x2-x1).getCrossed(x1-hooks[h].pos).length() / (x2-x1).length();
+						float d = (x2-x1).getCrossed(x1-hooks[h].xform.getPosition()).length() / (x2-x1).length();
 						//solve the pythag formula to get the distance along the line from x1 towards x2
 						float xn = sqrt((float)(x0 - x1).lengthSquared() - d*d);
 						//that leg of the triangle goes from x1 to x2
-						hooks[h].pos = x1 + (x2-x1).normalize() * xn;
+//						hooks[h].xform.getPosition() = ;
+						hooks[h].xform.setPosition(x1 + (x2-x1).normalize() * xn);
+						hooks[h].xform.lookAt(x2);
 					}
-					
-					hooksThisFrame.push_back(hooks[h]);
 				}
+				else{
+					hooks[h].xform = ofNode(); //hide off screen
+				}
+				
+				hooksThisFrame.push_back(hooks[h]);
+	
 			}
 		}
 	}
@@ -164,7 +170,7 @@ void LineManager::update(int cf){
 void LineManager::draw(){
 	curMesh.draw();
 	for(int i = 0; i < curHooks.size(); i++){
-		ofDrawSphere(curHooks[i].pos, 10);
+		ofDrawSphere(curHooks[i].xform.getPosition(), 10);
 	}
 }
 

@@ -142,9 +142,10 @@ void ofApp::update() {
 	if(exporting){
 		
 		writeFrame();
-		
 		exportFrame++;
+		cout << "WRITING FRAME " << exportFrame << "/" << FDM.numFrames << endl;
 		if(exportFrame == FDM.numFrames){
+			cout << "DONE EXPORTING" << endl;
 			writer.close();
 			exporting = false;
 		}
@@ -165,7 +166,7 @@ void ofApp::startExport(){
 
 void ofApp::writeFrame(){
 
-	writer.setTime(exportFrame / 23.976);
+	//writer.setTime(exportFrame / 23.976);
 	
 	ofxAlembic::Curves curve;
 	curve.curves.push_back(line.curCurve);
@@ -173,10 +174,19 @@ void ofApp::writeFrame(){
 	
 	ofxAlembic::Points points;
 	for(int i = 0; i < line.curHooks.size(); i++){
-		points.points.push_back(line.curHooks[i].pos);
+
+		string pathName = "/hooks_" + ofToString(i);
+		ofxAlembic::XForm xform(line.curHooks[i].xform.getGlobalTransformMatrix());
+		writer.addXform(pathName, xform);
+		
+		if(exportFrame == 0){
+			ofBoxPrimitive b;
+			b.setTransformMatrix(line.curHooks[i].xform.getGlobalTransformMatrix());
+			ofxAlembic::PolyMesh p(b.getMesh());
+			writer.addPolyMesh(pathName + "/shape", p);
+		}
 	}
-	writer.addPoints("/hooks", points);
-	    
+	   
 }
 
 void ofApp::draw(){

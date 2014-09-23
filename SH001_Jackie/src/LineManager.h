@@ -7,7 +7,8 @@
 //sample arc around path
 #include "ofxPtf.h"
 typedef struct{
-	ofVec3f pos;
+	//ofVec3f pos;
+	ofNode xform;
 	float percentOnCurve;
 	int startFrame;
 	bool firstHook;
