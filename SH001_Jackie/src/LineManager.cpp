@@ -144,7 +144,7 @@ void LineManager::update(int cf){
 						//that leg of the triangle goes from x1 to x2
 //						hooks[h].xform.getPosition() = ;
 						hooks[h].xform.setPosition(x1 + (x2-x1).normalize() * xn);
-						hooks[h].xform.lookAt(x2);
+//						hooks[h].xform.lookAt(x2);
 					}
 				}
 				else{
