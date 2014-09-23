@@ -97,7 +97,7 @@ void ofApp::setup() {
     
     
     targetFbo.allocate(CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().width,
-                       CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height,GL_RGBA32F);
+                       CCM.rgbCalibration.getDistortedIntrinsics().getImageSize().height,GL_RGB32F);
 
     CM.CCM = CCM;
 	CM.setup();
@@ -187,12 +187,12 @@ void ofApp::draw(){
 	targetFbo.begin();
     ofViewport(ofRectangle(0,0,1920, 1080));
 	
-	ofClear(100,100,100,0);
+	ofClear(100,100,100,255);
     glClear(GL_DEPTH);
 
 	//BACKGROUND
     ofDisableDepthTest();
-    //backgroundPlate.draw(0,0,1920,1080);
+//    backgroundPlate.draw(0,0,1920,1080);
     ofEnableDepthTest();
 	
 	//LINE DEBUG
