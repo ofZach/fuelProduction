@@ -13,6 +13,7 @@ class rhondaLineRenderer {
     
     ofShader shader;
     ofImage ink;
+    float fakeDepthAdder;       // this helps me "hit" around the matte framing, etc.    I am doing depth super weird and funky and weird
     
     
     void setup(){
@@ -42,7 +43,7 @@ class rhondaLineRenderer {
         
         
         shader.begin();
-        shader.setUniform1f("fakeDepthAdder", ofMap(ofGetMouseX(), 0, ofGetWidth(), 0, 0.5));        // this is a kludge the helps get things depth testing OK against z=0....
+        shader.setUniform1f("fakeDepthAdder", fakeDepthAdder);        // this is a kludge the helps get things depth testing OK against z=0....
         shader.setUniformTexture("ink", ink.getTextureReference(), 1);
         
         

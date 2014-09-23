@@ -13,10 +13,15 @@ public:
     float pctThrough;
     float pctSpeed;
     
+    float offset;
+    
     void updatePlay( int nFrames) {
-        pctThrough = pctSpeed * (nFrames);
-        if (pctThrough > 1.0){
+        pctThrough = offset + pctSpeed * (nFrames - 100);
+        while (pctThrough > 1.0){
             pctThrough -= 1.0;
+        }
+        while (pctThrough < 0){
+            pctThrough += 1.0;
         }
     }
     
@@ -32,22 +37,34 @@ public:
     particle P;
     spring s;
     ofPolyline LL;
-    
     int lengthToRecord;
+    float lengthToRecordSmooth;
+    
+    float springLengthTarget;
+    
+    
+    void reset(){
+        s.distance = 0;
+        lengthToRecordSmooth = 0;
+        PP.pctThrough = ofRandom(0.0,1.0);
+    }
     
     void setup(){
-        PP.pctThrough = ofRandom(0,0.1);
+        PP.pctThrough = ofRandom(0.8,0.84);
         PP.pctSpeed = ofRandom(0.1, 0.2);
         PP.bFixed = true;
         P.setInitialCondition(500, 500, 0, 0);
         s.particleA = &PP;
         s.particleB = &P;
-        s.distance = ofRandom(20,200);
+        springLengthTarget = ofRandom(20,200);;
+        s.distance = 0;
         s.springiness = ofRandom(0.04, 0.07);
         lengthToRecord = powf(ofRandom(0,1), 3) * 80;
         if (lengthToRecord < 4) lengthToRecord  = 4;
+        lengthToRecordSmooth = 0;
 
     }
+    
     
     void update( ofPolyline line, int currFrame){
         
@@ -68,9 +85,12 @@ public:
         LL.addVertex(ofPoint(P.pos.x, P.pos.y, P.pos.z));
         //cout << ofPoint(P.pos.x, P.pos.y, P.pos.z) << endl;
         
-        if (LL.getVertices().size() > lengthToRecord){
+        while (LL.getVertices().size() > (int)lengthToRecordSmooth){
             LL.getVertices().erase(LL.getVertices().begin());
         }
+        
+        s.distance = 0.95f * s.distance  + 0.05 * springLengthTarget;
+        lengthToRecordSmooth =  0.995f * lengthToRecordSmooth  + 0.005 * lengthToRecord;
         
     }
     
@@ -95,6 +115,14 @@ public:
     rhondaLineRenderer RLR;
     ofCamera * cam;
     
+    
+    void setOffset(float offset){
+        
+        for (int i = 0; i < 30; i++){
+            players[i]->PP.offset = offset;
+        }
+    }
+    
     void setup(){
         
         for (int i = 0; i < 30; i++){
@@ -110,26 +138,40 @@ public:
             //players[players.size()-1].s.distance = ofRandom(20,150);
         }
         
+        setOffset(0.5);
         
         RLR.setup();
         
     }
     
     
+    void reset(){
+        for (int i = 0; i < 30; i++){
+        players[i]->reset();
+        players[i]->P.pos = players[i]->PP.pos;
+        players[i]->LL.clear();
+        }
+    }
+    
     
     void update( ofPolyline line, int currFrame){
         
         if (currFrame == 0){
             for (int i = 0; i < 30; i++){
-                players[i]->PP.pctThrough = 0;
+                //players[i]->PP.pctThrough = 0;
                 players[i]->update(line, currFrame);
-                players[i]->P.pos = players[i]->PP.pos;
-                players[i]->LL.clear();
+                
+                reset();
             }
         } else {
             for (int i = 0; i < 30; i++){
                 players[i]->update(line, currFrame);
             }
+        }
+        
+        for (int i = 0; i < 30; i++){
+            //cout << players[players.size()-1]->PP.pctThrough << endl;
+            
         }
     }
     void draw(){
@@ -141,7 +183,6 @@ public:
         //cam.setupPerspective();
         //cam.setTransformMatrix(mat.getInverse());
         
-        
         // draw depth on these pixels
         glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
         ofEnableDepthTest();
@@ -149,7 +190,6 @@ public:
             //players[i]->LL.draw();
             RLR.draw(players[i]->LL, *cam);
         }
-        
         
         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
         

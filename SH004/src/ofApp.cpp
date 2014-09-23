@@ -25,8 +25,22 @@ void ofApp::setup() {
     gui.add(scaleFac.set("scaleFac", 1, 0.1, 2.0));
     gui.add(playback.set("playback", false));
     gui.add(playbackAudio.set("playbackAudio", false));
+    
+    gui.add(playbackSpeed.set("playbackSpeed", 1, 0.1, 2.0));
+    
 	gui.add(drawFaceBox.set("draw face box", false));
 	
+    
+    gui.add(depthOffsetForLines.set("depthOffsetForLines", 0.06, 0, 0.3));
+    
+    
+    
+    gui.add(transformCurve.set("transformCurve", ofPoint(0, 0, 0), -ofPoint(200,200,200), ofPoint(200,200,200)));
+    gui.add(scaleCurve.set("scaleCurve", ofPoint(1, 1, 1), ofPoint(0.3,0.3,0.3), ofPoint(2,2,2)));
+    gui.add(rotateCurve.set("rotateCurve", ofPoint(0, 0, 0), -ofPoint(180,180,180), ofPoint(180,180,180)));
+    
+  
+    
     gui.loadFromFile("adjustments.xml");
    
 
@@ -35,14 +49,16 @@ void ofApp::setup() {
     sndPlayer.setVolume(0);
     sndPlayer.play();
     
-
     bSaving = false;
+
+
+    ///Users/zachlieberman/Dropbox/+PopTech_Footage (2)
 
     
 #ifdef JAMES
 	shotManager.footageBasePath = "/Volumes/CHOPPER/_ToyotaXpopTech_/GOLD_Footage/";
 #else
-    shotManager.footageBasePath = "/Users/zachlieberman/Desktop/GOLD_Footage";
+    shotManager.footageBasePath = "/Users/zachlieberman/Dropbox/+PopTech_Footage (2)";
 #endif 
     
 	shotManager.setup();
@@ -65,7 +81,6 @@ void ofApp::setup() {
     FDM.loadFrame(0, frame);            // load frame 0
     FDM.loadFrame(0, firstFrame);
     
-    cout << FDM.numFrames << endl;
     
 	ofSetVerticalSync(true);
 	
@@ -135,6 +150,8 @@ void ofApp::setup() {
 void ofApp::update() {
     
     
+    SPACE.RLR.fakeDepthAdder = depthOffsetForLines;
+    
     if (!playback){
         currentFrame = mouseX;
     } else {
@@ -145,6 +162,7 @@ void ofApp::update() {
         } else {
             sndPlayer.setVolume(0);
         }
+        sndPlayer.setSpeed(playbackSpeed);
         
         currentFrame = (int)(time * 24.0);
         
@@ -161,6 +179,8 @@ void ofApp::update() {
 }
 
 
+int lastFrameDraw = -1;
+
 void ofApp::draw(){
     
     
@@ -175,23 +195,19 @@ void ofApp::draw(){
     
 	targetFbo.begin();
     ofViewport(ofRectangle(0,0,1920, 1080));
-    
-    
+
 	ofClear(100,100,100,0);
     glClear(GL_DEPTH);
-    
-    
+
     ofDisableDepthTest();
     backgroundPlate.draw(0,0,1920,1080);
     ofEnableDepthTest();
     
     CM.cameraStart();
-    
-    
-    
-   
+
     ofMatrix4x4 inside;
     ofPushMatrix();
+    
         ofScale(-scaleFac,scaleFac,scaleFac);
         ofTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
         
@@ -255,19 +271,35 @@ void ofApp::draw(){
 //    
     ofMatrix4x4 rot;
     n.getOrientationQuat().get(rot);
-    rot.rotate(190,0,1,0);
+    rot.rotate(rotateCurve->x,1,0,0);
+    rot.rotate(rotateCurve->y,0,1,0);
+    rot.rotate(rotateCurve->z,0,0,1);
     
     for (int i = 0; i < copy.size(); i++){
-        copy[i] =  (((copy[i] - midPt + ofVec3f(-100,0,0))*rot.getInverse()) * ofVec3f(0.8, 1.1, 1.1) + n.getPosition());
+        copy[i] =  (((copy[i] - midPt + transformCurve)*rot.getInverse()) * scaleCurve + n.getPosition());
     }
     copy.draw();
 //
 ////    
     float pct = (float)currentFrame / (float)FDM.numFrames;
-    SPACE.update(copy, currentFrame);
+    
+    
+    if (lastFrameDraw != currentFrame){
+        //cout << lastFrameDraw << " " << currentFrame << endl;
+        
+        for (int i = lastFrameDraw; i < currentFrame; i++){
+            SPACE.update(copy, i);
+            SPACE.update(copy, i);
+        }
+        
+    }
+    lastFrameDraw = currentFrame;
+    
+    if (currentFrame < 100 ){
+        SPACE.reset();
+    }
+    
     SPACE.cam = &CM.baseCamera;
-////
-//    
     
     // center the copy via the head position
     // draw with the head
@@ -280,7 +312,6 @@ void ofApp::draw(){
     
 	ofDisableDepthTest();
     CM.cameraEnd();
-    
     
     SPACE.draw();
     
@@ -299,7 +330,16 @@ void ofApp::draw(){
     
     gui.draw();
     
-    //FDM.maskStandIn.draw(mouseX, mouseY);
+    
+    
+    if (currentFrame < 100 ||  (FDM.numFrames - currentFrame) < 100){
+        ofSetColor(ofColor::orangeRed);
+        ofTriangle(0,0, 100,0, 0, 100);
+    }
+    ofSetColor(255);
+    
+    
+    
 }
 
 
@@ -326,6 +366,11 @@ void ofApp::exit(){
 }
 
 void ofApp::keyPressed(ofKeyEventArgs& args){
+    
+    if (args.key == 'x'){
+        sndPlayer.setPosition(0.1);
+    }
+    
     
     if (args.key == 's'){
         gui.saveToFile("adjustments.xml");
