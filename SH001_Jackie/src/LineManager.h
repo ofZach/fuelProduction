@@ -23,7 +23,7 @@ class LineManager {
 
 	void paramChanged(float& param);
 	//node chase params
-	void generateLine(int numFrames);
+	void generateArc(int numFrames);
 
 	//arc params
 	ofParameter <float> startPointX;
@@ -45,10 +45,7 @@ class LineManager {
 	ofParameter <float> numAttachPoints;
 	
 	vector<ofVec3f> basePoints;
-	vector<ofVec3f> linePoints;
-	
-//	float percentAlongCurve;
-//	float currentRotation;
+//	vector<ofVec3f> linePoints;
 	
 	ofxPtf ptf;
 	int numFrames;

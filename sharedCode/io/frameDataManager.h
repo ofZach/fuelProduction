@@ -40,7 +40,7 @@ public:
 //	vector<string> maskImages;
     ofDirectory maskImages;
 
-    int getNumFrames();
+    int getNumFrames(){ return numFrames; }
     void loadFrame( int frameNum, frameData & fd);
     void getOrientation(const frameData& fd, ofNode& n );
 

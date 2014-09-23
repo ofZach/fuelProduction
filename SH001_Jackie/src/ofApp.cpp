@@ -56,8 +56,6 @@ void ofApp::setup() {
     
     bSaving = false;
     
-//	shotManager.footageBasePath = "/Volumes/CHOPPER/_ToyotaXpopTech_/GOLD_Footage/";
-//	shotManager.footageBasePath =  "/Volumes/Nebula_helper/_ToyotaXpopTech_/GOLD_Footage/";
 //  shotManager.footageBasePath =  "/Users/zachlieberman/Desktop/GOLD_Footage";
 	shotManager.footageBasePath =  "/Users/focus/Dropbox/+PopTech_Footage/";
 
@@ -108,7 +106,7 @@ void ofApp::setup() {
 //    abc.dumpNames();
     
     line.setup();
-	line.generateLine(FDM.numFrames);
+	line.generateArc(FDM.numFrames);
 
 	
     backgroundPlate.loadImage(dataPath + "Background Plates/A-Cam_BackgroundPlate_360p.png");
@@ -117,21 +115,24 @@ void ofApp::setup() {
 
 void ofApp::update() {
     
+
+    currentFrame = ofGetFrameNum() % FDM.getNumFrames();
+	
+//    if (!playback){
+//        currentFrame = mouseX;
+//    } else {
     
-    if (!playback){
-        currentFrame = mouseX;
-    } else {
-        
-        float time = sndPlayer.getPositionMS() / 1000.0;
-        if (playbackAudio){
-            sndPlayer.setVolume(1);
-        } else {
-            sndPlayer.setVolume(0);
-        }
-        
-        currentFrame = (int)(time * 24.0);
-        
-    }
+//        float time = sndPlayer.getPositionMS() / 1000.0;
+//        if (playbackAudio){
+//            sndPlayer.setVolume(1);
+//        } else {
+//            sndPlayer.setVolume(0);
+//        }
+//        
+//        currentFrame = (int)(time * 24.0);
+    
+//    }
+
     if (lastFrame != currentFrame){
         FDM.loadFrame(currentFrame, frame);
         
@@ -148,11 +149,12 @@ void ofApp::update() {
         rigidEstimate.decompose(decompTranslation, decompRotation, decompScale, decompSo);
         //cout << " ? ? " << decompScale << endl;
     }
+	
     lastFrame = currentFrame;
 
 	line.update(currentFrame);
 
-    
+
     CM.update();
     
 }
@@ -264,7 +266,7 @@ void ofApp::keyPressed(ofKeyEventArgs& args){
     }
 	
 	if(args.key == 'l'){
-		line.generateLine(FDM.numFrames);
+		line.generateArc(FDM.numFrames);
 	}
     
     CM.keyPressed(args.key);
