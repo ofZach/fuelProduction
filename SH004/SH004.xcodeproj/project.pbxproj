@@ -72,7 +72,7 @@
 		FD203EA219D05092009010F9 /* outerspace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203E9C19D05092009010F9 /* outerspace.cpp */; };
 		FD203EA319D05092009010F9 /* particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203E9E19D05092009010F9 /* particle.cpp */; };
 		FD203EA419D05092009010F9 /* spring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203EA019D05092009010F9 /* spring.cpp */; };
-		FD464E3119D177C500A0A67A /* rhondaLineRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD464E2F19D177C500A0A67A /* rhondaLineRenderer.cpp */; };
+		FD464E3B19D1E59900A0A67A /* rhondaLineRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD464E3919D1E59900A0A67A /* rhondaLineRenderer.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -545,10 +545,10 @@
 		FD203E9F19D05092009010F9 /* particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particle.h; sourceTree = "<group>"; };
 		FD203EA019D05092009010F9 /* spring.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spring.cpp; sourceTree = "<group>"; };
 		FD203EA119D05092009010F9 /* spring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spring.h; sourceTree = "<group>"; };
-		FD464E2F19D177C500A0A67A /* rhondaLineRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rhondaLineRenderer.cpp; sourceTree = "<group>"; };
-		FD464E3019D177C500A0A67A /* rhondaLineRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rhondaLineRenderer.h; sourceTree = "<group>"; };
-		FD464E3219D17C9D00A0A67A /* depth.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = depth.frag; path = bin/data/rhonda/depth.frag; sourceTree = "<group>"; };
-		FD464E3319D17C9D00A0A67A /* depth.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = depth.vert; path = bin/data/rhonda/depth.vert; sourceTree = "<group>"; };
+		FD464E3619D1E58D00A0A67A /* depth.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = depth.frag; path = ../sharedData/rhonda/depth.frag; sourceTree = "<group>"; };
+		FD464E3719D1E58D00A0A67A /* depth.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = depth.vert; path = ../sharedData/rhonda/depth.vert; sourceTree = "<group>"; };
+		FD464E3919D1E59900A0A67A /* rhondaLineRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rhondaLineRenderer.cpp; sourceTree = "<group>"; };
+		FD464E3A19D1E59900A0A67A /* rhondaLineRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rhondaLineRenderer.h; sourceTree = "<group>"; };
 		FD609E2EC17FCE181DFE635F /* dist.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = dist.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/dist.h; sourceTree = SOURCE_ROOT; };
 		FE15469185A3A49FEC9D2292 /* myvec.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = myvec.h; path = ../../../addons/ofxCv/libs/CLD/include/CLD/myvec.h; sourceTree = SOURCE_ROOT; };
 		FE622BCECC1E404FBF538CE5 /* ImathMatrix.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ImathMatrix.h; path = ../../../addons/ofxAlembic/libs/alembic/include/OpenEXR/ImathMatrix.h; sourceTree = SOURCE_ROOT; };
@@ -1410,8 +1410,8 @@
 			children = (
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
-				FD464E3219D17C9D00A0A67A /* depth.frag */,
-				FD464E3319D17C9D00A0A67A /* depth.vert */,
+				FD464E3619D1E58D00A0A67A /* depth.frag */,
+				FD464E3719D1E58D00A0A67A /* depth.vert */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
@@ -1425,6 +1425,7 @@
 			children = (
 				FD203E8119CF6314009010F9 /* cameraManager.cpp */,
 				FD203E8219CF6314009010F9 /* cameraManager.h */,
+				FD464E3819D1E59900A0A67A /* line */,
 				FD203E8319CF6314009010F9 /* io */,
 				FD203E8C19CF6314009010F9 /* processing */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
@@ -1560,10 +1561,18 @@
 		FD464E2E19D177C500A0A67A /* rendering */ = {
 			isa = PBXGroup;
 			children = (
-				FD464E2F19D177C500A0A67A /* rhondaLineRenderer.cpp */,
-				FD464E3019D177C500A0A67A /* rhondaLineRenderer.h */,
 			);
 			path = rendering;
+			sourceTree = "<group>";
+		};
+		FD464E3819D1E59900A0A67A /* line */ = {
+			isa = PBXGroup;
+			children = (
+				FD464E3919D1E59900A0A67A /* rhondaLineRenderer.cpp */,
+				FD464E3A19D1E59900A0A67A /* rhondaLineRenderer.h */,
+			);
+			name = line;
+			path = ../../sharedCode/line;
 			sourceTree = "<group>";
 		};
 		FEA273413D5AFD9607F56ABE /* CLD */ = {
@@ -1665,11 +1674,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
+				FD464E3B19D1E59900A0A67A /* rhondaLineRenderer.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
 				856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */,
 				5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */,
 				FD203EA319D05092009010F9 /* particle.cpp in Sources */,
-				FD464E3119D177C500A0A67A /* rhondaLineRenderer.cpp in Sources */,
 				B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */,
 				FD203E9319CF6314009010F9 /* shotManager.cpp in Sources */,
 				483908258D00B98B4BE69F07 /* ofxLabel.cpp in Sources */,

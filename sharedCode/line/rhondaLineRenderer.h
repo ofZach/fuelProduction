@@ -18,8 +18,8 @@ class rhondaLineRenderer {
     
     void setup(){
         
-        shader.load("rhonda/depth");
-        ink.loadImage("rhonda/images/inkBig2.png");
+        shader.load("../../../sharedData/rhonda/depth");
+        ink.loadImage("../../../sharedData/rhonda/images/inkBig2.png");
     }
 
     void startDraw(){
