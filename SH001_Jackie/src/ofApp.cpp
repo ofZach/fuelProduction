@@ -41,7 +41,8 @@ void ofApp::setup() {
 	
     FDM.loadFrame(0, frame);            // load frame 0
     FDM.loadFrame(0, firstFrame);
-    
+	FDM.getOrientation(frame, line.baseHeadNode);
+
     cout << FDM.numFrames << endl;
 
     line.startFrame = 0;
@@ -135,6 +136,7 @@ void ofApp::update() {
 		
     if (lastFrame != currentFrame){
         FDM.loadFrame(currentFrame, frame);
+		FDM.getOrientation(frame, line.currentHeadNode);
     }
 	
 	line.update(ofMap(currentFrame,0, FDM.numFrames-1, 0, line.numFrames-1, true) );
@@ -207,9 +209,10 @@ void ofApp::draw(){
 	
 	// rhonda draw
 	ofPolyline p;
-	for(int i = line.curCurve.getVertices().size()-1; i >= 0; i-- ){
-		p.addVertex(line.curCurve.getVertices()[i]);
-	}
+	p = line.curCurve;
+//	for(int i = line.curCurve.getVertices().size()-1; i >= 0; i-- ){
+//		p.addVertex(line.curCurve.getVertices()[i]);
+//	}
 	
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 	ofEnableDepthTest();

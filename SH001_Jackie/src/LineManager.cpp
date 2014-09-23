@@ -157,10 +157,24 @@ void LineManager::update(int cf){
 		}
 	}
 	
+	ofVec3f offset = currentHeadNode.getPosition() - baseHeadNode.getPosition();
+	ofQuaternion q;
+	q.makeRotate(baseHeadNode.getLookAtDir(), currentHeadNode.getLookAtDir());
+	
+	ofMatrix4x4 headTransform;
+	headTransform.setTranslation(offset);
+	headTransform.setRotate(q);
+	
 	curCurve.clear();
 	curCurve.addVertices(linePoints);
 	curCurve = curCurve.getResampledByCount(finalResampleCount);
 	curCurve = curCurve.getSmoothed(finalSmoothAmount);
+
+	ofPolyline temp;
+	//apply all these
+	for (int i = 0; i < curCurve.getVertices().size(); i++) {
+		temp.addVertex(headTransform * curCurve.getVertices()[i]);
+	}
 	
 	curHooks = hooksThisFrame;
 
@@ -172,7 +186,7 @@ void LineManager::update(int cf){
 	
 	//create attachment points for the little tools
 	//calculate KDTree of this line
-//		hooksPerFrame.push_back(hooksThisFrame);
+//	hooksPerFrame.push_back(hooksThisFrame);
 	
 }
 
