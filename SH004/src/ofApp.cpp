@@ -221,7 +221,18 @@ void ofApp::draw(){
     copy.addVertex(copy.getVertices()[0]);
     copy = copy.getResampledBySpacing(4);
     copy = copy.getSmoothed(11);
-    copy.draw();
+    copy.addVertex(copy.getVertices()[0]);
+    copy = copy.getResampledBySpacing(4);
+    copy = copy.getSmoothed(11);
+    copy.addVertex(copy.getVertices()[0]);
+    copy = copy.getResampledBySpacing(4);
+    copy = copy.getSmoothed(80);
+    copy.addVertex(copy.getVertices()[0]);
+    copy = copy.getResampledBySpacing(4);
+    copy = copy.getSmoothed(80);
+    copy.addVertex(copy.getVertices()[0]);
+    copy = copy.getResampledBySpacing(4);
+    //copy.draw();
     
     
     float pct = (float)currentFrame / (float)FDM.numFrames;
@@ -234,7 +245,6 @@ void ofApp::draw(){
     // put points moving around the copy
     // show them animate over time
     
-    
     ofSetColor(ofColor::white);
 
 	////////////////
@@ -245,7 +255,6 @@ void ofApp::draw(){
 	targetFbo.end();
     targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
     gui.draw();
-    
     
     //FDM.maskStandIn.draw(mouseX, mouseY);
 }
