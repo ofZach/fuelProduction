@@ -14,7 +14,7 @@ void LineManager::setup(){
 	arcRadius.addListener(this, &LineManager::paramChanged);
 	arcAngle.addListener(this, &LineManager::paramChanged);
 
-	rotationAmount.addListener(this, &LineManager::paramChanged);
+//	rotationAmount.addListener(this, &LineManager::paramChanged);
 	resampleAmount.addListener(this, &LineManager::paramChanged);
 	
 	chaseDampen.addListener(this, &LineManager::paramChanged);
@@ -24,8 +24,6 @@ void LineManager::setup(){
 	bRadius.addListener(this, &LineManager::paramChanged);
 	
 	numAttachPoints.addListener(this, &LineManager::paramChanged);;
-
-	reattachHooks = false;
 	
 }
 
@@ -161,6 +159,8 @@ void LineManager::update(int cf){
 	
 	curCurve.clear();
 	curCurve.addVertices(linePoints);
+	curCurve = curCurve.getResampledByCount(finalResampleCount);
+	curCurve = curCurve.getSmoothed(finalSmoothAmount);
 	
 	curHooks = hooksThisFrame;
 

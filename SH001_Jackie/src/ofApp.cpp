@@ -55,6 +55,7 @@ void ofApp::setup() {
     gui.add(playback.set("playback", false));
     gui.add(playbackAudio.set("playbackAudio", false));
 	gui.add(drawFaceBox.set("draw face box", false));
+	gui.add(drawLineDebug.set("draw line debug", false));
 
 	gui.add(line.startFrame.set("start frame", 100, 0, FDM.numFrames));
 	gui.add(line.endFrame.set("end frame", FDM.numFrames-100, 0, FDM.numFrames));
@@ -69,7 +70,7 @@ void ofApp::setup() {
 	gui.add(line.twistDampen.set("twist damp", 50, 1, 200));
 	gui.add(line.yParamGradient.set("param gradient", 200, -200, 200));
 	
-	gui.add(line.rotationAmount.set("rotation amount", 360, 0, 360*25));
+//	gui.add(line.rotationAmount.set("rotation amount", 360, 0, 360*25));
 	gui.add(line.resampleAmount.set("resample count", 100, 10, 1000));
 	
 	gui.add(line.chaseDampen.set("chase damp", .01, 0, .3));
@@ -78,10 +79,11 @@ void ofApp::setup() {
 	gui.add(line.aRadius.set("a radius", 50, 0, 100));
 	gui.add(line.bRadius.set("b radius", 50, 0, 100));
 
-
+	gui.add(line.finalSmoothAmount.set("final smooth", 2, 0, 100));
+	gui.add(line.finalResampleCount.set("final resample", 300, 100, 2000));
+	
 	gui.add(line.computeAttachmentPoints.set("generate hooks", false));
 	gui.add(line.numAttachPoints.set("attach points", 5, 0, 50));
-
 
     gui.loadFromFile("adjustments.xml");
     
@@ -181,7 +183,6 @@ void ofApp::writeFrame(){
 			writer.addPolyMesh(pathName + "/shape", p);
 		}
 	}
-	   
 }
 
 void ofApp::draw(){
@@ -194,14 +195,16 @@ void ofApp::draw(){
 
 	//BACKGROUND
     ofDisableDepthTest();
-//    backgroundPlate.draw(0,0,1920,1080);
+    backgroundPlate.draw(0,0,1920,1080);
     ofEnableDepthTest();
 	
 	//LINE DEBUG
-//	CM.cameraStart();
-//    line.draw();
-//	CM.cameraEnd();
-
+	if(drawLineDebug){
+		CM.cameraStart();
+		line.draw();
+		CM.cameraEnd();
+	}
+	
 	// rhonda draw
 	ofPolyline p;
 	for(int i = line.curCurve.getVertices().size()-1; i >= 0; i-- ){

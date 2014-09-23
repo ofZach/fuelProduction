@@ -52,7 +52,9 @@ public:
     ofParameter <bool> playback;
     ofParameter <bool> playbackAudio;
 	ofParameter <bool> drawFaceBox;
+	ofParameter <bool> drawLineDebug;
 
+	
 	//line pos
     ofSoundPlayer sndPlayer;
     ofImage backgroundPlate;

@@ -28,6 +28,9 @@ class LineManager {
 	void generateArc();
 
 	//arc params
+	ofParameter <int> startFrame;
+	ofParameter <int> endFrame;
+	
 	ofParameter <float> startPointX;
 	ofParameter <float> startPointY;
 	ofParameter <float> startPointZ;
@@ -45,23 +48,23 @@ class LineManager {
 
 	ofParameter <float> aRadius;
 	ofParameter <float> bRadius;
-	
+
+	ofParameter <float> finalSmoothAmount;
+	ofParameter <float> finalResampleCount;
+
 	ofParameter <bool> computeAttachmentPoints;
 	ofParameter <float> numAttachPoints;
 
-	ofParameter <int> startFrame;
-	ofParameter <int> endFrame;
-
 	vector<ofVec3f> basePoints;
-	
 	ofxPtf ptf;
 	int numFrames;
 	int curFrame;
 	vector<AttachPoint> hooks; //distributed as we go;
+
 	ofMesh curMesh;
 	ofPolyline curCurve;
 	vector<AttachPoint> curHooks;
-	bool reattachHooks; //when the params change
+	
 	ofNode a;
 	ofNode b;
     ofNode c;
