@@ -56,8 +56,14 @@ void ofApp::setup() {
     gui.add(playback.set("playback", false));
     gui.add(playbackAudio.set("playbackAudio", false));
 	gui.add(drawFaceBox.set("draw face box", false));
+	gui.add(mentalModel.seed.set("seed", 0, 0, 500));
 	gui.add(mentalModel.yPercent.set("y percent", .5, 0, 1.0));
+	gui.add(mentalModel.deleteChance.set("point delete chance", .5, 0, 1.0));
 	gui.add(mentalModel.extrusion.set("extrusion", 100, 0, 500));
+	gui.add(mentalModel.extraExtrusion.set("xtra extrusion", 0, 0, 200));
+	gui.add(mentalModel.extraExtrusionSmooth.set("xtra extrusion smooth", 50, 1.0, 100));
+	gui.add(mentalModel.maxdistance.set("max distance", 100, 0, 500));
+	
 	
 	/*
 	gui.add(drawLineDebug.set("draw line debug", false));
@@ -211,9 +217,18 @@ void ofApp::draw(){
 	
 	//LINE DEBUG
 //	if(true || drawDebug){
-		CM.cameraStart();
-		mentalModel.drawDebug();
-		CM.cameraEnd();
+	CM.cameraStart();
+	
+	ofPushMatrix();
+	ofScale(-scaleFac,scaleFac,scaleFac);
+	ofTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
+	
+	mentalModel.drawDebug();
+	
+	ofPopMatrix();
+	
+	CM.cameraEnd();
+	
 //	}
 	
 	// rhonda draw

@@ -3,7 +3,7 @@
 <showWireframe>0</showWireframe>
 <showFilled>0</showFilled>
 <scaleFac>1.1925</scaleFac>
-<playback>0</playback>
+<playback>1</playback>
 <playbackAudio>0</playbackAudio>
 <draw_face_box>0</draw_face_box>
 <start_x>-78</start_x>
@@ -28,4 +28,11 @@
 	<end_frame>417</end_frame>
 	<final_smooth>3</final_smooth>
 	<final_resample>300</final_resample>
+<y_percent>0.705</y_percent>
+	<extrusion>107.5</extrusion>
+	<max_distance>50</max_distance>
+<seed>0</seed>
+	<point_delete_chance>0.225</point_delete_chance>
+	<xtra_extrusion>110</xtra_extrusion>
+	<xtra_extrusion_smooth>14.365</xtra_extrusion_smooth>
 </panel>

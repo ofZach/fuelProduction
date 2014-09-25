@@ -7,9 +7,14 @@ MentalModeller::MentalModeller(){
 void MentalModeller::setup(ofMesh& firstMesh){
 	
 	yPercent.addListener(this, &MentalModeller::paramChanged);
-
-	baseMesh = firstMesh;
+	maxdistance.addListener(this, &MentalModeller::paramChanged);
+	extrusion.addListener(this, &MentalModeller::paramChanged);
+	extraExtrusion.addListener(this, &MentalModeller::paramChanged);
+	extraExtrusionSmooth.addListener(this, &MentalModeller::paramChanged);
+	deleteChance.addListener(this, &MentalModeller::paramChanged);
+	seed.addListener(this, &MentalModeller::paramChangedInt);
 	
+	baseMesh = firstMesh;
 	generateBaseParticles();
 }
 
@@ -18,16 +23,15 @@ void MentalModeller::paramChanged(float& param){
 }
 
 void MentalModeller::paramChangedInt(int& param){
+	generateBaseParticles();
 	
 }
 
-
 void MentalModeller::generateBaseParticles(){
+	
 	if(baseMesh.getVertices().size() == 0){
 		cout << "NO VERTS!" << endl;
 	}
-	
-	cout << "mesh has " << baseMesh.getIndices().size() << " indx and " << baseMesh.getNormals().size() << " normals " << endl;
 	
 	float minY, maxY;
 	minY = maxY = baseMesh.getVertices()[0].y;
@@ -35,26 +39,64 @@ void MentalModeller::generateBaseParticles(){
 		minY = MIN(minY, baseMesh.getVertices()[i].y);
 		maxY = MAX(maxY, baseMesh.getVertices()[i].y);
 	}
-	
-	//	yPercent = .5;
-	
 	headParticles.clear();
+	
+	srand(seed);
+
+	vector<ofVec3f> points;
 	for(int i = 0; i < baseMesh.getVertices().size(); i++){
-		if( ofMap(baseMesh.getVertices()[i].y, minY,maxY,0, 1.0) > yPercent ){
+		if( ofMap(baseMesh.getVertices()[i].y, minY, maxY, 0, 1.0) > yPercent && ofRandomuf() > deleteChance){
 			HeadParticle p;
 			p.meshIndex = i;
-			p.curPos = baseMesh.getVertices()[i] + baseMesh.getNormals()[i] * extrusion;
+			p.originalPos = baseMesh.getVertices()[i];
+			float thisExtrude = extrusion + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
+			p.extrudePos = baseMesh.getVertices()[i] + baseMesh.getNormals()[i];
+			points.push_back( p.extrudePos );
 			headParticles.push_back(p);
 		}
 	}
+	
+	//cout << "head point size is " << points.size() << endl;
 }
 
 void MentalModeller::update(ofMesh& headMesh){
 	pointDebug.clear();
 	for(int i = 0; i < headParticles.size(); i++){
-		pointDebug.addVertex( headMesh.getVertex( headParticles[i].meshIndex ) + headMesh.getNormal( headParticles[i].meshIndex ) * extrusion );
+		float thisExtrude = extrusion + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
+		ofVec3f lastPos = headParticles[i].curPos;
+		ofVec3f newPos = headMesh.getVertex( headParticles[i].meshIndex ) + headMesh.getNormal( headParticles[i].meshIndex ) * thisExtrude;
+		headParticles[i].curPos = lastPos.getInterpolated(newPos, 1.0);
+		pointDebug.addVertex(headParticles[i].curPos);
 	}
-	pointDebug.setMode(OF_PRIMITIVE_LINE_STRIP);
+
+	headParticleConnections.clear();
+	neighbors.buildIndex(pointDebug.getVertices());
+	
+	//connect closeset parts
+	for(int i = 0; i < headParticles.size(); i++){
+		vector<pair<size_t, float> > matches;
+		neighbors.findPointsWithinRadius(headParticles[i].curPos, maxdistance, matches);
+		for(int m = 0; m < matches.size(); m++){
+			pair<int,int> p		  = make_pair(i, matches[m].first);
+			pair<int,int> reverse = make_pair(matches[m].first, i);
+			if(headParticleConnections.find(reverse) == headParticleConnections.end()){
+				headParticleConnections.insert(p);
+				//cout << "inserting " << p.first << " < > " << p.second << endl;
+			}
+		}
+	}
+
+	pointDebug.setMode(OF_PRIMITIVE_POINTS);
+	
+	connectionMesh.clear();
+	set< pair<int,int> >::iterator it;
+	for(it = headParticleConnections.begin(); it != headParticleConnections.end(); it++){
+//		cout << "found particle at position " << it->first << " second " << it->second << endl;
+		connectionMesh.addVertex( headParticles[ it->first ].curPos );
+		connectionMesh.addVertex( headParticles[ it->second].curPos );
+	}
+	
+	connectionMesh.setMode(OF_PRIMITIVE_LINES);
 }
 
 void MentalModeller::draw(){
@@ -63,9 +105,8 @@ void MentalModeller::draw(){
 
 void MentalModeller::drawDebug(){
 	pointDebug.draw();
-	
+	connectionMesh.draw();
 }
-
 
 /*
 void LineManager::setup(){
