@@ -163,11 +163,53 @@ void ofApp::setup() {
 //    
 //    writer.close();
 //
+    
+    CM.update();
  
+//    ptsForAnimation.push_back(ofPoint( 323,348  ));
+//    ptsForAnimation.push_back(ofPoint( 281,249 ));
+//    ptsForAnimation.push_back(ofPoint( 611,235 ));
+//    ptsForAnimation.push_back(ofPoint( 585,389 ));
+//    ptsForAnimation.push_back(ofPoint( 454,146 ));
+//    ptsForAnimation.push_back(ofPoint( 330,144 ));
+//    ptsForAnimation.push_back(ofPoint( 124,299 ));
+//    ptsForAnimation.push_back(ofPoint( 813,285 ));
+    
+//    ptsForAnimation.push_back(ofPoint( 251,413 ));
+//    ptsForAnimation.push_back(ofPoint( 244,101 ));
+//    ptsForAnimation.push_back(ofPoint( 719,114 ));
+//    ptsForAnimation.push_back(ofPoint( 739,545 ));
+//    
+    ptsForAnimation.push_back(ofPoint(279,410));
+    ptsForAnimation.push_back(ofPoint(259,110));
+    ptsForAnimation.push_back(ofPoint(664,139));
+    ptsForAnimation.push_back(ofPoint(670,393));
+    ptsForAnimation.push_back(ofPoint(453,289));
+    ptsForAnimation.push_back(ofPoint(446,34));
+    ptsForAnimation.push_back(ofPoint(424,277));
+    ptsForAnimation.push_back(ofPoint(43,285));
     
     
+    ofPoint midPt;
+    for (int i = 0; i < ptsForAnimation.size(); i++){
+        midPt += ptsForAnimation[i];
+    }
+    midPt /= (float)ptsForAnimation.size();
+    for (int i = 0; i < ptsForAnimation.size(); i++){
+        ptsForAnimation[i] -= midPt;
+    }
     
-    
+    for (int i = 0; i < ptsForAnimation.size(); i++){
+        ptsForAnimation[i]*=0.6;
+    }
+
+    for (int i = 0; i < ptsForAnimation.size(); i++){
+        ptsForAnimation[i] *= 2.0; // get scale it into right size
+        ptsForAnimation[i].y *= -1;
+        ptsForAnimation[i].z = ofRandom(-300,300);
+        //ptsForAnimation[i] = CM.project2dPointIntoCameraWorld(ptsForAnimation[i], 000);
+    }
+ 
 }
 
 
@@ -342,6 +384,8 @@ int sideOfLine( ofPoint A, ofPoint B, ofPoint m){
 
 
 
+
+
 class circleInSpace{
 public:
     ofPoint pt;
@@ -370,54 +414,59 @@ ofPolyline lineFromCircle( vector < circleInSpace > circlesToTrack ){
 
     for (int i = 0; i < circles.size()-2; i++){
     
-
-    vector < vector<ofPoint> > pts = getTangentLines(circles[i].x,circles[i].y,sizes[i],
-                                                     circles[i+1].x,circles[i+1].y,sizes[i+1]);
-    
-    if (pts.size() == 0) continue;
-    
-    int rightOrLeft = sideOfLine(circles[i], circles[i+2], circles[i+1]);
-    
-    
-    ofPoint lineCircle = circles[i+2] - circles[i];
-    
-    lineCircle.normalize();
-    
-    vector < vector<ofPoint> > goodPts;
-    
-    for (int j = 0; j < pts.size(); j++){
+            float z0 = circles[i].z;
+            float z1 = circles[i+1].z;
+            
+        vector < vector<ofPoint> > pts = getTangentLines(circles[i].x,circles[i].y,sizes[i],
+                                                         circles[i+1].x,circles[i+1].y,sizes[i+1]);
+        
+            
+            
+            
+        if (pts.size() == 0) continue;
+        
+        int rightOrLeft = sideOfLine(circles[i], circles[i+2], circles[i+1]);
         
         
-        ofPoint a = circles[i+1] - lineCircle*1000.0;
-        ofPoint b = circles[i+1] + lineCircle*1000.0;
-        ofPoint c = pts[j][1];
-        if ( sideOfLine(a,b,c) == rightOrLeft){
+        ofPoint lineCircle = circles[i+2] - circles[i];
+        
+        lineCircle.normalize();
+        
+        vector < vector<ofPoint> > goodPts;
+        
+        for (int j = 0; j < pts.size(); j++){
             
-            // let's compare this clockwise, vs the prev clockwise
             
-            ofPoint lastLineNormalized = lastLineB - lastLineA;
-            lastLineNormalized.normalize();
-            
-            ofPoint thisLineNormalized = pts[j][1] - pts[j][0];
-            thisLineNormalized.normalize();
-            
-            if (true){
+            ofPoint a = circles[i+1] - lineCircle*1000.0;
+            ofPoint b = circles[i+1] + lineCircle*1000.0;
+            ofPoint c = pts[j][1];
+            if ( sideOfLine(a,b,c) == rightOrLeft){
                 
+                // let's compare this clockwise, vs the prev clockwise
                 
-                int  clock = clockwiseFromPt( lastLineB, lastLineB + lastLineNormalized, circles[i]) ;
-                int clock2 = clockwiseFromPt( pts[j][0], pts[j][0] + thisLineNormalized, circles[i]);
+                ofPoint lastLineNormalized = lastLineB - lastLineA;
+                lastLineNormalized.normalize();
                 
+                ofPoint thisLineNormalized = pts[j][1] - pts[j][0];
+                thisLineNormalized.normalize();
                 
-                if (clock2 == clock){
+                if (true){
                     
-                    if (pts[j][0].distance(ofPoint(0,0,0)) > 1 &&pts[j][1].distance(ofPoint(0,0,0)) > 1){
+                    
+                    int  clock = clockwiseFromPt( lastLineB, lastLineB + lastLineNormalized, circles[i]) ;
+                    int clock2 = clockwiseFromPt( pts[j][0], pts[j][0] + thisLineNormalized, circles[i]);
+                    
+                    
+                    if (clock2 == clock){
                         
-                        goodPts.push_back(pts[j]);
+                        if (pts[j][0].distance(ofPoint(0,0,0)) > 1 &&pts[j][1].distance(ofPoint(0,0,0)) > 1){
+                            
+                            goodPts.push_back(pts[j]);
+                        }
                     }
                 }
             }
         }
-    }
     
     
         
@@ -429,8 +478,13 @@ ofPolyline lineFromCircle( vector < circleInSpace > circlesToTrack ){
                 
                 
                 
-                line.addVertex(goodPts[whichOne][0]);
-                line.addVertex(goodPts[whichOne][1]);
+                //line.addVertex(goodPts[whichOne][0]);
+                //line.addVertex(goodPts[whichOne][1]);
+                
+                
+                line.addVertex(goodPts[whichOne][0].x, goodPts[whichOne][0].y, z0);
+                line.addVertex(goodPts[whichOne][1].x, goodPts[whichOne][1].y, z1);
+                
                 lastLineA = goodPts[whichOne][0];
                 lastLineB = goodPts[whichOne][1];
             }
@@ -442,14 +496,17 @@ ofPolyline lineFromCircle( vector < circleInSpace > circlesToTrack ){
                 if (pts[whichOne][0].distance(ofPoint(0,0,0)) > 1 &&
                     pts[whichOne][1].distance(ofPoint(0,0,0)) > 1){
                     
-                    line.addVertex(pts[whichOne][0]);
-                    line.addVertex(pts[whichOne][1]);
+                    line.addVertex(pts[whichOne][0].x, pts[whichOne][0].y, z0);
+                    line.addVertex(pts[whichOne][1].x, pts[whichOne][1].y, z1);
                     lastLineA = pts[whichOne][0];
                     lastLineB = pts[whichOne][1];
                 }
                 
             }
         }
+        
+        
+        
     }
     
     return line;
@@ -488,7 +545,7 @@ void ofApp::draw(){
     
     
     if (!exporting){
-        cout << frame.mask.getWidth() << endl;
+        //cout << frame.mask.getWidth() << endl;
         
         CM.drawCameraInternals(frame.img, frame.mask, backgroundPlate);
     }
@@ -516,22 +573,21 @@ void ofApp::draw(){
     //-----------------------------------------------------------------
     
     //cout << mouseY << endl;
-    ofSeedRandom(526);
+    //ofSeedRandom(526);
     
     
     float tf = currentFrame * (1.0 / 24.0);
     
+    //cout << ptsForAnimation.size() << endl;
+    
     vector < circleInSpace > circles;
-    int nCircles = ofRandom(20,40);
+    int nCircles = ptsForAnimation.size();
     for (int i = 0; i < nCircles; i++){
         circleInSpace cc;
-        
-        float pct = ofMap(i,0, nCircles, 0-PI/4,  PI + PI/4);
-        ofPoint base( -50 + 300 * cos(pct), -50 + 300 * sin(pct));
-        
-        cc.pt.set( base.x + ofRandom(-100,100), base.y + ofRandom(-100,100));
+        //cout << ptsForAnimation[i] << endl;
+        cc.pt.set(ptsForAnimation[i]);
         cc.size =  15 + sin(tf + i/2.0) * 10;
-        if (ofRandom(0,1) > 0.85) cc.size = ofRandom(20,50);
+        //if (ofRandom(0,1) > 0.85) cc.size = ofRandom(20,50);
         circles.push_back(cc);
     }
     ofPolyline line = lineFromCircle(circles);
@@ -559,11 +615,16 @@ void ofApp::draw(){
             ofSetLineWidth(4);
                     line.draw();
             ofFill();
+    
+    
             for (int i = 0; i < circles.size(); i++){
-               ofCircle(circles[i].pt, circles[i].size);
+               
+                ofPushMatrix();
+                ofCircle(circles[i].pt.x,circles[i].pt.y, circles[i].pt.z , circles[i].size);
+                ofPopMatrix();
             }
     
-    
+    cout << line.getVertices()[0] << " ------ " << circles[0].pt << endl;
    
                 //transform
                 //outputWriter.addCurves(, );
@@ -684,5 +745,10 @@ void ofApp::keyPressed(ofKeyEventArgs& args){
     }
     
     CM.keyPressed(args.key);
+    
+}
+void ofApp::mousePressed(int x, int y, int button){
+    
+    cout << x << "," << y << endl;
     
 }

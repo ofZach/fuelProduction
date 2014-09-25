@@ -20,6 +20,8 @@ public:
 	void keyPressed(ofKeyEventArgs& args);
     void listDirs();
     
+    void mousePressed(int x, int y, int button);
+    
     
     shotManager shotManager;
     
@@ -27,6 +29,8 @@ public:
     frameData frame;
     frameData firstFrame;
     
+    
+    vector < ofPoint > ptsForAnimation;
     
     
     int currentFrame;
