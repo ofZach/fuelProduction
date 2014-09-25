@@ -28,4 +28,7 @@
 	<end_frame>417</end_frame>
 	<final_smooth>3</final_smooth>
 	<final_resample>300</final_resample>
+<y_percent>0.745</y_percent>
+	<extrusion>0</extrusion>
+	<max_distance>70</max_distance>
 </panel>
