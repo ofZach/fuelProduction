@@ -69,8 +69,10 @@ void ofApp::setup() {
 	gui.add(mentalModel.rotateY.set("rotate Y", 0, -90, 90));
 	gui.add(mentalModel.rotateX.set("rotate X", 0, -90, 90));
 	
-	gui.add(mentalModel.maxdistance.set("max distance", 100, 0, 500));
-	gui.add(mentalModel.chasersPerFrame.set("chasers per frame", 0, 0, 100));
+	gui.add(mentalModel.startMaxDistance.set("start max distance", 100, 0, 500));
+	gui.add(mentalModel.endMaxDistance.set("end max distance", 100, 0, 500));
+	gui.add(mentalModel.startChasersPerFrame.set("start chasers pf", 0, 0, 100));
+	gui.add(mentalModel.endChasersPerFrame.set("end chasers pf", 0, 0, 100));
 	gui.add(mentalModel.chaserDuration.set("chase duration", 0, 0, 100));
 	gui.add(mentalModel.popOn.set("pop on", false));
 	gui.add(mentalModel.deleteImmediatly.set("delete immediatly", false));
@@ -131,13 +133,11 @@ void ofApp::update() {
     if (lastFrame != currentFrame){
         FDM.loadFrame(currentFrame, frame);
 //		FDM.getOrientation(frame, line.currentHeadNode);
-
     }
+	
 	mentalModel.adjust = adjustments;
 	mentalModel.scale  = scaleFac;
-
 	mentalModel.update(frame.head, currentFrame);
-	
 	
 	lastFrame = currentFrame;
 
@@ -200,24 +200,12 @@ void ofApp::draw(){
     backgroundPlate.draw(0,0,1920,1080);
     ofEnableDepthTest();
 	
-	//LINE DEBUG
-//	if(true || drawDebug){
-	
 	CM.cameraStart();
-	
-	ofPushMatrix();
-//	ofScale(-scaleFac,scaleFac,scaleFac);
-//	ofTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
 	if(drawDebug){
 		mentalModel.drawDebug();
 	}
 	mentalModel.draw();
-	
-//	ofPopMatrix();
-	
 	CM.cameraEnd();
-	
-//	}
 	
 	// rhonda draw
 	/*
@@ -283,8 +271,7 @@ void ofApp::drawVideoScene(){
     CM.cameraEnd();
     ofEnableAlphaBlending();
 	targetFbo.end();
-    targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);
-	
+    targetFbo.getTextureReference().drawSubsection(0, 0, 1920/2, 1080/2, 0, targetFbo.getHeight() - 1080, 1920, 1080);	
 }
 
 void ofApp::drawMesh(ofMesh& m, ofFloatColor color){

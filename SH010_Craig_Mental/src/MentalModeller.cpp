@@ -13,7 +13,6 @@ void MentalModeller::setup(ofMesh& firstMesh){
 	
 	seed.addListener(this, &MentalModeller::paramChangedInt);
 	yPercent.addListener(this, &MentalModeller::paramChanged);
-	maxdistance.addListener(this, &MentalModeller::paramChanged);
 	startExtrusion.addListener(this, &MentalModeller::paramChanged);
 	endExtrusion.addListener(this, &MentalModeller::paramChanged);
 	extraExtrusion.addListener(this, &MentalModeller::paramChanged);
@@ -86,14 +85,14 @@ void MentalModeller::update(ofMesh& headMesh, int frame){
 	ofQuaternion normRotX,normRotY, normRot;
 	normRotY.makeRotate(rotateY, 0, 1, 0);
 	normRotX.makeRotate(rotateX, 1, 0, 0);
-	normRot = normRotX * normRotY;
+	normRot = normRotY * normRotX;
 
 	float percentdone = 1.0 * frame/totalFrames;
 	pointDebug.clear();
 	for(int i = 0; i < headParticles.size(); i++){
 		
 		HeadParticle& p = headParticles[i];
-		float thisExtrude = ofMap(powf(percentdone,2.0), 0, 1.0, startExtrusion, endExtrusion) + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
+		float thisExtrude = ofMap(powf(percentdone,3.0), 0, 1.0, startExtrusion, endExtrusion) + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
 	 	ofVec3f lastPos = p.curPos;
 		p.originalPos = headMesh.getVertex( p.meshIndex ) ;
 		p.curNorm = headMesh.getNormal( p.meshIndex );
@@ -101,7 +100,7 @@ void MentalModeller::update(ofMesh& headMesh, int frame){
 		p.curPos = newPos;
 		
 		p.originalPos = posRotater.preMult(p.originalPos);
-		p.curNorm = normRot * p.curNorm;
+		//p.curNorm = normRot * p.curNorm;
 		
 		pointDebug.addVertex(p.curPos);
 	}
@@ -116,10 +115,11 @@ void MentalModeller::update(ofMesh& headMesh, int frame){
 	headParticleConnections.clear();
 	neighbors.buildIndex(pointDebug.getVertices());
 	
+	float maxDistance = ofMap(powf(percentdone,1.5), 0, 1.0, startMaxDistance, endMaxDistance);
 	//connect closeset parts
 	for(int i = 0; i < headParticles.size(); i++){
 		vector<pair<size_t, float> > matches;
-		neighbors.findPointsWithinRadius(headParticles[i].curPos, maxdistance, matches);
+		neighbors.findPointsWithinRadius(headParticles[i].curPos, maxDistance, matches);
 		for(int m = 0; m < matches.size(); m++){
 			pair<int,int> p		  = make_pair(i, matches[m].first);
 			pair<int,int> reverse = make_pair(matches[m].first, i);
@@ -169,6 +169,14 @@ void MentalModeller::update(ofMesh& headMesh, int frame){
 	///////////////
 	
 	//create new chasers
+	float chasersPerFrame = ofMap(powf(percentdone,1.5), 0, 1.0, startChasersPerFrame, endChasersPerFrame);
+	if(chasersPerFrame < 1){
+		int framesPerChaser = 1.0/chasersPerFrame;
+		if(frame % framesPerChaser == 0){
+			chasersPerFrame = 1;
+		}
+	}
+	
 	for(int i = 0; i < chasersPerFrame; i++){
 
 		LineChaser chaser;
@@ -182,8 +190,9 @@ void MentalModeller::update(ofMesh& headMesh, int frame){
 			//random end neighbor
 			int endIndex = neighorParticles[startIndex][ ofRandom(neighorParticles[startIndex].size()) ];
 			if(ofRandomuf() < powf(laserChance, 2.0)){
-				chaser.startPos = headParticles[startIndex].originalPos + headParticles[startIndex].curNorm * laserStartOffset;
-				chaser.endPos   = headParticles[endIndex].curPos + headParticles[startIndex].curNorm * laserEndOffset;
+				ofVec3f laserdDir = (headParticles[endIndex].curPos - headParticles[startIndex].originalPos).normalized();
+				chaser.startPos = headParticles[startIndex].originalPos + laserdDir * laserStartOffset;
+				chaser.endPos   = headParticles[endIndex].curPos + laserdDir * laserEndOffset;
 				chaser.endFrame += laserLifeExtend;
 			}
 			else{

@@ -48,12 +48,15 @@ class MentalModeller {
 	ofParameter <float> rotateY;
 	ofParameter <float> rotateX;
 
-	ofParameter <float> maxdistance;
+	ofParameter <float> startMaxDistance;
+	ofParameter <float> endMaxDistance;
+	
 	ofParameter <float> deleteChance;
 	ofParameter <bool> popOn;
 	ofParameter <bool> deleteImmediatly;
 
-	ofParameter <int> chasersPerFrame;
+	ofParameter <int> startChasersPerFrame;
+	ofParameter <int> endChasersPerFrame;
 	ofParameter <int> chaserDuration;
 	ofParameter <float> laserChance;
 	ofParameter <float> laserStartOffset;
