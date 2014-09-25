@@ -79,7 +79,10 @@ void MentalModeller::update(ofMesh& headMesh){
 	pointDebug.clear();
 	for(int i = 0; i < headParticles.size(); i++){
 		float thisExtrude = extrusion + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
-		pointDebug.addVertex( headMesh.getVertex( headParticles[i].meshIndex ) + headMesh.getNormal( headParticles[i].meshIndex ) * thisExtrude );
+		ofVec3f lastPos = headParticles[i].curPos;
+		ofVec3f newPos = headMesh.getVertex( headParticles[i].meshIndex ) + headMesh.getNormal( headParticles[i].meshIndex ) * thisExtrude;
+		headParticles[i].curPos = lastPos.getInterpolated(newPos, .5);
+		pointDebug.addVertex(headParticles[i].curPos);
 	}
 
 	pointDebug.setMode(OF_PRIMITIVE_POINTS);
@@ -88,12 +91,8 @@ void MentalModeller::update(ofMesh& headMesh){
 	set< pair<int,int> >::iterator it;
 	for(it = headParticleConnections.begin(); it != headParticleConnections.end(); it++){
 //		cout << "found particle at position " << it->first << " second " << it->second << endl;
-		int idxA = headParticles[ it->first ].meshIndex;
-		int idxB = headParticles[ it->second ].meshIndex;
-		float extrudeA = extrusion + ofNoise(it->first/extraExtrusionSmooth)  * extraExtrusion;
-		float extrudeB = extrusion + ofNoise(it->second/extraExtrusionSmooth) * extraExtrusion;
-		connectionMesh.addVertex( headMesh.getVertex( idxA ) + headMesh.getNormal(idxA) * extrudeA );
-		connectionMesh.addVertex( headMesh.getVertex( idxB ) + headMesh.getNormal(idxB) * extrudeB );
+		connectionMesh.addVertex( headParticles[ it->first ].curPos );
+		connectionMesh.addVertex( headParticles[ it->second].curPos );
 	}
 	
 	connectionMesh.setMode(OF_PRIMITIVE_LINES);
