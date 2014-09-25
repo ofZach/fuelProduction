@@ -57,7 +57,7 @@ public:
 	//line pos
     ofSoundPlayer sndPlayer;
     ofImage backgroundPlate;
-    
+
     // ---------------
 //    ofMesh prevFrame;
 //    ofVec3f decompTranslation, decompScale;

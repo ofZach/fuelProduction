@@ -1,5 +1,5 @@
 <panel>
-<adjustments>-1.53061, 40.8163, -4.08163</adjustments>
+<adjustments>46.9388, 40.8163, -53.0612</adjustments>
 <showWireframe>0</showWireframe>
 <showFilled>0</showFilled>
 <scaleFac>1.1925</scaleFac>
@@ -31,23 +31,27 @@
 <y_percent>0.745</y_percent>
 	<extrusion>42.5</extrusion>
 	<max_distance>145</max_distance>
-<seed>0</seed>
+<seed>90</seed>
 	<point_delete_chance>0.305</point_delete_chance>
-	<xtra_extrusion>152</xtra_extrusion>
-	<xtra_extrusion_smooth>81.19</xtra_extrusion_smooth>
+	<xtra_extrusion>111</xtra_extrusion>
+	<xtra_extrusion_smooth>38.125</xtra_extrusion_smooth>
 <draw_debug>0</draw_debug>
 	<chasers_per_frame>20</chasers_per_frame>
-	<chase_duration>8</chase_duration>
-<rotate_Y>0.0999999</rotate_Y>
-	<rotate_X>-23.4</rotate_X>
+	<chase_duration>11</chase_duration>
+<rotate_Y>69.3</rotate_Y>
+	<rotate_X>10.8</rotate_X>
 	<pop_on>1</pop_on>
 	<delete_immediatly>0</delete_immediatly>
-	<laser_chance>0.084</laser_chance>
-	<laser_start_offset>55</laser_start_offset>
-	<laser_end_offset>94</laser_end_offset>
+	<laser_chance>0.0975</laser_chance>
+	<laser_start_offset>76</laser_start_offset>
+	<laser_end_offset>107</laser_end_offset>
 <start_extrusion>15</start_extrusion>
-	<end_extrusion>275</end_extrusion>
-	<laser_life_extend>6</laser_life_extend>
-<start_chasers_pf>7</start_chasers_pf>
-	<end_chasers_pf>82</end_chasers_pf>
+	<end_extrusion>282.5</end_extrusion>
+	<laser_life_extend>5</laser_life_extend>
+<start_chasers_pf>0</start_chasers_pf>
+	<end_chasers_pf>80</end_chasers_pf>
+<start_max_distance>0</start_max_distance>
+	<end_max_distance>97.5</end_max_distance>
+<laser_start_frame>142</laser_start_frame>
+<clip_end_frame>80</clip_end_frame>
 </panel>

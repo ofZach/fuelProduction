@@ -18,6 +18,7 @@ typedef struct {
 	int endFrame;
 	ofVec3f startPos;
 	ofVec3f endPos;
+	bool islaser;
 } LineChaser;
 
 class MentalModeller {
@@ -42,7 +43,8 @@ class MentalModeller {
 	ofParameter <float> yPercent;
 	ofParameter <float> startExtrusion;
 	ofParameter <float> endExtrusion;
-	
+	ofParameter <int> clipFrames;
+
 	ofParameter <float> extraExtrusion;
 	ofParameter <float> extraExtrusionSmooth;
 	ofParameter <float> rotateY;
@@ -58,6 +60,8 @@ class MentalModeller {
 	ofParameter <int> startChasersPerFrame;
 	ofParameter <int> endChasersPerFrame;
 	ofParameter <int> chaserDuration;
+	
+	ofParameter <int> laserStartFrame;
 	ofParameter <float> laserChance;
 	ofParameter <float> laserStartOffset;
 	ofParameter <float> laserEndOffset;
@@ -66,17 +70,20 @@ class MentalModeller {
 	
 	void paramChanged(float& param);
 	void paramChangedInt(int& param);
+
 	float curRotateY;
-	
+	float minY, maxY;
+
 	vector<HeadParticle> headParticles;
 	vector<LineChaser> chasers;
-	vector<ofIndexType> targetIndices;
+
+	ofVec3f headBase;
+	ofNode currentHeadNode;
 	ofMesh baseMesh;
 	ofMesh connectionMesh;
 	ofxNearestNeighbour3D neighbors;
-	
 	set< pair<int,int> > headParticleConnections;
-	map<int,vector<int> > neighorParticles;
+	map< int,vector<int> > neighorParticles;
 	
 
 };

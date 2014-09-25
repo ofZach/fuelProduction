@@ -19,6 +19,7 @@ void MentalModeller::setup(ofMesh& firstMesh){
 	extraExtrusionSmooth.addListener(this, &MentalModeller::paramChanged);
 	deleteChance.addListener(this, &MentalModeller::paramChanged);
 	
+	headBase = firstMesh.getCentroid();
 	baseMesh = firstMesh;
 	generateBaseParticles();
 }
@@ -38,7 +39,6 @@ void MentalModeller::generateBaseParticles(){
 		cout << "NO VERTS!" << endl;
 	}
 	
-	float minY, maxY;
 	minY = maxY = baseMesh.getVertices()[0].y;
 	for(int i = 0; i < baseMesh.getVertices().size(); i++){
 		minY = MIN(minY, baseMesh.getVertices()[i].y);
@@ -52,11 +52,12 @@ void MentalModeller::generateBaseParticles(){
 	for(int i = 0; i < baseMesh.getVertices().size(); i++){
 		if( ofMap(baseMesh.getVertices()[i].y, minY, maxY, 0, 1.0) > yPercent && ofRandomuf() > deleteChance){
 			HeadParticle p;
-			p.curNorm = baseMesh.getNormals()[i];
 			p.meshIndex = i;
-			p.originalPos = baseMesh.getVertices()[i];
-			float thisExtrude = startExtrusion + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
-			p.extrudePos = baseMesh.getVertices()[i] + baseMesh.getNormals()[i];
+			p.originalPos = baseMesh.getVertices()[i] - headBase;
+			p.curNorm = baseMesh.getNormals()[i];
+			
+			float thisExtrude = startExtrusion + ofSignedNoise(i/extraExtrusionSmooth) * extraExtrusion;
+			p.extrudePos = p.originalPos + baseMesh.getNormals()[i];
 			points.push_back( p.extrudePos );
 			headParticles.push_back(p);
 		}
@@ -74,30 +75,28 @@ void MentalModeller::update(ofMesh& headMesh, int frame){
 	curRotateY += rotateY;
 	ofMatrix4x4 posRotater;
 	posRotater.makeIdentityMatrix();
-
-	posRotater.translate(-headMesh.getCentroid());
+//	posRotater.translate(-headMesh.getCentroid());
 	posRotater.rotate(rotateY, 0, 1, 0);
 	posRotater.rotate(rotateX, 1, 0, 0);
-	posRotater.translate(headMesh.getCentroid());
-	posRotater.scale(-scale,scale,scale);
-	posRotater.translate(adjust);
+//	posRotater.translate(headMesh.getCentroid());
+//	posRotater.scale(-scale,scale,scale);
+//	posRotater.translate(adjust);
 	
 	ofQuaternion normRotX,normRotY, normRot;
 	normRotY.makeRotate(rotateY, 0, 1, 0);
 	normRotX.makeRotate(rotateX, 1, 0, 0);
 	normRot = normRotY * normRotX;
 
-	float percentdone = 1.0 * frame/totalFrames;
+	float percentdone = ofClamp(1.0 * frame/(totalFrames-clipFrames), 0,1.0);
 	pointDebug.clear();
 	for(int i = 0; i < headParticles.size(); i++){
 		
 		HeadParticle& p = headParticles[i];
-		float thisExtrude = ofMap(powf(percentdone,3.0), 0, 1.0, startExtrusion, endExtrusion) + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
+		float thisExtrude = ofMap(powf(percentdone,3.0), 0, 1.0, startExtrusion, endExtrusion) + ofSignedNoise(i/extraExtrusionSmooth) * extraExtrusion;
 	 	ofVec3f lastPos = p.curPos;
-		p.originalPos = headMesh.getVertex( p.meshIndex ) ;
+		p.originalPos = headMesh.getVertex( p.meshIndex ) - headBase;
 		p.curNorm = headMesh.getNormal( p.meshIndex );
-		ofVec3f newPos = posRotater.preMult( p.originalPos + p.curNorm * thisExtrude );
-		p.curPos = newPos;
+		p.curPos = posRotater.preMult( p.originalPos + p.curNorm * thisExtrude );
 		
 		p.originalPos = posRotater.preMult(p.originalPos);
 		//p.curNorm = normRot * p.curNorm;
@@ -119,7 +118,9 @@ void MentalModeller::update(ofMesh& headMesh, int frame){
 	//connect closeset parts
 	for(int i = 0; i < headParticles.size(); i++){
 		vector<pair<size_t, float> > matches;
-		neighbors.findPointsWithinRadius(headParticles[i].curPos, maxDistance, matches);
+		ofVec3f pos = headParticles[i].curPos;
+		float taperedMaxDistance = ofMap(pos.y, minY + (maxY-minY)*.5, maxY, 0, maxDistance, true);
+		neighbors.findPointsWithinRadius(pos, taperedMaxDistance, matches);
 		for(int m = 0; m < matches.size(); m++){
 			pair<int,int> p		  = make_pair(i, matches[m].first);
 			pair<int,int> reverse = make_pair(matches[m].first, i);
@@ -151,7 +152,7 @@ void MentalModeller::update(ofMesh& headMesh, int frame){
 	for(int i = chasers.size()-1; i >= 0; i--){
 		LineChaser& chaser = chasers[i];
 		if(chaser.startFrame > frame || chaser.endFrame < frame || chaser.startFrame == chaser.endFrame){
-			if(deleteImmediatly || chaser.chase.getVertices().size() == 0){
+			if( deleteImmediatly || chaser.chase.getVertices().size() == 0){
 				chasers.erase(chasers.begin()+i);
 			}
 			else{
@@ -189,26 +190,30 @@ void MentalModeller::update(ofMesh& headMesh, int frame){
 		if( neighorParticles[startIndex].size() != 0){
 			//random end neighbor
 			int endIndex = neighorParticles[startIndex][ ofRandom(neighorParticles[startIndex].size()) ];
-			if(ofRandomuf() < powf(laserChance, 2.0)){
+			if(frame > laserStartFrame && ofRandomuf() < powf(laserChance, 2.0)){
 				ofVec3f laserdDir = (headParticles[endIndex].curPos - headParticles[startIndex].originalPos).normalized();
 				chaser.startPos = headParticles[startIndex].originalPos + laserdDir * laserStartOffset;
 				chaser.endPos   = headParticles[endIndex].curPos + laserdDir * laserEndOffset;
 				chaser.endFrame += laserLifeExtend;
+				chaser.islaser = true;
+				
 			}
 			else{
 				chaser.startPos = headParticles[startIndex].curPos;
 				chaser.endPos   = headParticles[endIndex].curPos;
+				chaser.islaser = false;
+				if(popOn){
+					for(int frame = chaser.startFrame; frame < chaser.endFrame; frame++){
+						float chasePercent = ofMap(frame, chaser.startFrame, chaser.endFrame, 0, 1.0, true);
+						chaser.chase.addVertex( chaser.startPos.getInterpolated(chaser.endPos, chasePercent) );
+					}
+					int numFrames = chaser.endFrame - chaser.startFrame;
+					chaser.startFrame -= numFrames;
+					chaser.endFrame   -= numFrames;
+				}
+				
 			}
 
-			if(popOn){
-				for(int frame = chaser.startFrame; frame < chaser.endFrame; frame++){
-					float chasePercent = ofMap(frame, chaser.startFrame, chaser.endFrame, 0, 1.0, true);
-					chaser.chase.addVertex( chaser.startPos.getInterpolated(chaser.endPos, chasePercent) );
-				}
-				int numFrames = chaser.endFrame - chaser.startFrame;
-				chaser.startFrame -= numFrames;
-				chaser.endFrame   -= numFrames;
-			}
 			
 			chasers.push_back(chaser);
 		}
@@ -221,13 +226,40 @@ void MentalModeller::draw(){
 	ofPushStyle();
 	ofSetLineWidth(5);
 	ofSetColor(0);
+	ofPushMatrix();
+	
+	ofMatrix4x4 headRot;
+	headRot = currentHeadNode.getGlobalTransformMatrix();
+	headRot.scale(-scale,scale,scale);
+	headRot.translate(adjust);
+
+//	headRot.translate(-currentHeadNode.getPosition());
+//	headRot.rotate(currentHeadNode.getOrientationQuat());
+//	headRot.translate(currentHeadNode.getPosition());
+//	headRot.translate(connectionMesh.getCentroid());
+
+	ofMultMatrix(headRot);
+	
 	for(int i = 0; i < chasers.size(); i++){
 		chasers[i].chase.draw();
 	}
+	
+	ofPopMatrix();
 	ofPopStyle();
 }
 
 void MentalModeller::drawDebug(){
+	ofPushMatrix();
+	
+	ofMatrix4x4 headRot;
+	headRot = currentHeadNode.getGlobalTransformMatrix();
+	headRot.scale(-scale,scale,scale);
+	headRot.translate(adjust);
+	ofMultMatrix(headRot);
+	
 	pointDebug.draw();
 	connectionMesh.draw();
+	
+	ofPopMatrix();
+	
 }

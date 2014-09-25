@@ -57,7 +57,8 @@ void ofApp::setup() {
     gui.add(playbackAudio.set("playbackAudio", false));
 	gui.add(drawFaceBox.set("draw face box", false));
 	gui.add(drawDebug.set("draw debug", false));
-	
+
+	gui.add(mentalModel.clipFrames.set("clip end frame", 0, 0, 200));
 	gui.add(mentalModel.seed.set("seed", 0, 0, 500));
 	gui.add(mentalModel.yPercent.set("y percent", .5, 0, 1.0));
 	gui.add(mentalModel.deleteChance.set("point delete chance", .5, 0, 1.0));
@@ -77,6 +78,7 @@ void ofApp::setup() {
 	gui.add(mentalModel.popOn.set("pop on", false));
 	gui.add(mentalModel.deleteImmediatly.set("delete immediatly", false));
 	
+	gui.add(mentalModel.laserStartFrame.set("laser start frame", 0, 0, FDM.numFrames));
 	gui.add(mentalModel.laserChance.set("laser chance", .05, 0.0, .3));
 	gui.add(mentalModel.laserStartOffset.set("laser start offset", 50, 0, 200));
 	gui.add(mentalModel.laserEndOffset.set("laser end offset", 50, 0, 200));
@@ -132,7 +134,7 @@ void ofApp::update() {
 		
     if (lastFrame != currentFrame){
         FDM.loadFrame(currentFrame, frame);
-//		FDM.getOrientation(frame, line.currentHeadNode);
+		FDM.getOrientation(frame, mentalModel.currentHeadNode);
     }
 	
 	mentalModel.adjust = adjustments;
