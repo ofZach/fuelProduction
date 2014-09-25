@@ -11,13 +11,14 @@ MentalModeller::MentalModeller(){
 void MentalModeller::setup(ofMesh& firstMesh){
 	curRotateY = 0;
 	
+	seed.addListener(this, &MentalModeller::paramChangedInt);
 	yPercent.addListener(this, &MentalModeller::paramChanged);
 	maxdistance.addListener(this, &MentalModeller::paramChanged);
-	extrusion.addListener(this, &MentalModeller::paramChanged);
+	startExtrusion.addListener(this, &MentalModeller::paramChanged);
+	endExtrusion.addListener(this, &MentalModeller::paramChanged);
 	extraExtrusion.addListener(this, &MentalModeller::paramChanged);
 	extraExtrusionSmooth.addListener(this, &MentalModeller::paramChanged);
 	deleteChance.addListener(this, &MentalModeller::paramChanged);
-	seed.addListener(this, &MentalModeller::paramChangedInt);
 	
 	baseMesh = firstMesh;
 	generateBaseParticles();
@@ -55,7 +56,7 @@ void MentalModeller::generateBaseParticles(){
 			p.curNorm = baseMesh.getNormals()[i];
 			p.meshIndex = i;
 			p.originalPos = baseMesh.getVertices()[i];
-			float thisExtrude = extrusion + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
+			float thisExtrude = startExtrusion + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
 			p.extrudePos = baseMesh.getVertices()[i] + baseMesh.getNormals()[i];
 			points.push_back( p.extrudePos );
 			headParticles.push_back(p);
@@ -82,19 +83,17 @@ void MentalModeller::update(ofMesh& headMesh, int frame){
 	posRotater.scale(-scale,scale,scale);
 	posRotater.translate(adjust);
 	
-	//	ofScale(-scaleFac,scaleFac,scaleFac);
-	//	ofTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
-
 	ofQuaternion normRotX,normRotY, normRot;
 	normRotY.makeRotate(rotateY, 0, 1, 0);
 	normRotX.makeRotate(rotateX, 1, 0, 0);
 	normRot = normRotX * normRotY;
 
+	float percentdone = 1.0 * frame/totalFrames;
 	pointDebug.clear();
 	for(int i = 0; i < headParticles.size(); i++){
 		
 		HeadParticle& p = headParticles[i];
-		float thisExtrude = extrusion + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
+		float thisExtrude = ofMap(powf(percentdone,2.0), 0, 1.0, startExtrusion, endExtrusion) + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
 	 	ofVec3f lastPos = p.curPos;
 		p.originalPos = headMesh.getVertex( p.meshIndex ) ;
 		p.curNorm = headMesh.getNormal( p.meshIndex );
@@ -182,9 +181,10 @@ void MentalModeller::update(ofMesh& headMesh, int frame){
 		if( neighorParticles[startIndex].size() != 0){
 			//random end neighbor
 			int endIndex = neighorParticles[startIndex][ ofRandom(neighorParticles[startIndex].size()) ];
-			if(ofRandomuf() < powf(outboundLaserChance, 2.0)){
-				chaser.startPos = headParticles[startIndex].originalPos + headParticles[startIndex].curNorm * outboundLaserStartOffset;
-				chaser.endPos   = headParticles[endIndex].curPos + headParticles[startIndex].curNorm * outboundLaserEndOffset;
+			if(ofRandomuf() < powf(laserChance, 2.0)){
+				chaser.startPos = headParticles[startIndex].originalPos + headParticles[startIndex].curNorm * laserStartOffset;
+				chaser.endPos   = headParticles[endIndex].curPos + headParticles[startIndex].curNorm * laserEndOffset;
+				chaser.endFrame += laserLifeExtend;
 			}
 			else{
 				chaser.startPos = headParticles[startIndex].curPos;

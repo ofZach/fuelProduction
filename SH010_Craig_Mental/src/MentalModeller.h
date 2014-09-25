@@ -24,7 +24,8 @@ class MentalModeller {
   public:
 	
 	MentalModeller();
-	
+
+	int totalFrames;
 	void setup(ofMesh& firstMesh);
 	void update(ofMesh& headMesh, int frame);
 	void draw();
@@ -39,7 +40,9 @@ class MentalModeller {
 
 	ofParameter <int> seed;
 	ofParameter <float> yPercent;
-	ofParameter <float> extrusion;
+	ofParameter <float> startExtrusion;
+	ofParameter <float> endExtrusion;
+	
 	ofParameter <float> extraExtrusion;
 	ofParameter <float> extraExtrusionSmooth;
 	ofParameter <float> rotateY;
@@ -52,9 +55,10 @@ class MentalModeller {
 
 	ofParameter <int> chasersPerFrame;
 	ofParameter <int> chaserDuration;
-	ofParameter <float> outboundLaserChance;
-	ofParameter <float> outboundLaserStartOffset;
-	ofParameter <float> outboundLaserEndOffset;
+	ofParameter <float> laserChance;
+	ofParameter <float> laserStartOffset;
+	ofParameter <float> laserEndOffset;
+	ofParameter <int> laserLifeExtend;
 	
 	
 	void paramChanged(float& param);

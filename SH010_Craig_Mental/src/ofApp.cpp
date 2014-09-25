@@ -61,7 +61,9 @@ void ofApp::setup() {
 	gui.add(mentalModel.seed.set("seed", 0, 0, 500));
 	gui.add(mentalModel.yPercent.set("y percent", .5, 0, 1.0));
 	gui.add(mentalModel.deleteChance.set("point delete chance", .5, 0, 1.0));
-	gui.add(mentalModel.extrusion.set("extrusion", 100, 0, 500));
+	gui.add(mentalModel.startExtrusion.set("start extrusion", 100, 0, 500));
+	gui.add(mentalModel.endExtrusion.set("end extrusion", 100, 0, 500));
+	
 	gui.add(mentalModel.extraExtrusion.set("xtra extrusion", 0, 0, 200));
 	gui.add(mentalModel.extraExtrusionSmooth.set("xtra extrusion smooth", 50, 1.0, 100));
 	gui.add(mentalModel.rotateY.set("rotate Y", 0, -90, 90));
@@ -73,9 +75,10 @@ void ofApp::setup() {
 	gui.add(mentalModel.popOn.set("pop on", false));
 	gui.add(mentalModel.deleteImmediatly.set("delete immediatly", false));
 	
-	gui.add(mentalModel.outboundLaserChance.set("laser chance", .05, 0.0, .3));
-	gui.add(mentalModel.outboundLaserStartOffset.set("laser start offset", 50, 0, 100));
-	gui.add(mentalModel.outboundLaserEndOffset.set("laser end offset", 50, 0, 100));
+	gui.add(mentalModel.laserChance.set("laser chance", .05, 0.0, .3));
+	gui.add(mentalModel.laserStartOffset.set("laser start offset", 50, 0, 200));
+	gui.add(mentalModel.laserEndOffset.set("laser end offset", 50, 0, 200));
+	gui.add(mentalModel.laserLifeExtend.set("laser life extend", 0, 0, 30));
 
     gui.loadFromFile("adjustments.xml");
     
@@ -101,8 +104,9 @@ void ofApp::setup() {
     CM.CCM = CCM;
 	CM.setup();
 
+	mentalModel.totalFrames = FDM.numFrames;
     mentalModel.setup(frame.head);
-	
+
 	lineRenderer.setup();
 	lineRenderer.fakeDepthAdder = 0.018;
 	
@@ -134,7 +138,6 @@ void ofApp::update() {
 
 	mentalModel.update(frame.head, currentFrame);
 	
-//	line.update( ofClamp(currentFrame-line.startFrame,0,line.endFrame) );
 	
 	lastFrame = currentFrame;
 
