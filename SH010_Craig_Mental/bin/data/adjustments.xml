@@ -28,11 +28,14 @@
 	<end_frame>417</end_frame>
 	<final_smooth>3</final_smooth>
 	<final_resample>300</final_resample>
-<y_percent>0.705</y_percent>
-	<extrusion>107.5</extrusion>
-	<max_distance>50</max_distance>
+<y_percent>0.71</y_percent>
+	<extrusion>92.5</extrusion>
+	<max_distance>115</max_distance>
 <seed>0</seed>
-	<point_delete_chance>0.225</point_delete_chance>
-	<xtra_extrusion>110</xtra_extrusion>
-	<xtra_extrusion_smooth>14.365</xtra_extrusion_smooth>
+	<point_delete_chance>0.75</point_delete_chance>
+	<xtra_extrusion>173</xtra_extrusion>
+	<xtra_extrusion_smooth>84.16</xtra_extrusion_smooth>
+<draw_debug>0</draw_debug>
+	<chasers_per_frame>54</chasers_per_frame>
+	<chase_duration>6</chase_duration>
 </panel>
