@@ -185,7 +185,7 @@ void LineManager::update(int cf){
 //	for(int h = 0; h < hooksThisFrame.size(); h++){
 //		hooksThisFrame[h].xform.setTransformMatrix(headTransform * hooksThisFrame[h].xform.getGlobalTransformMatrix());
 //	}
-//	curHooks = hooksThisFrame;
+	curHooks = hooksThisFrame;
 
 	//store the mesh
 	ofMesh m;

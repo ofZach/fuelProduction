@@ -104,13 +104,12 @@
 		FD0BF7B119C9A4D800E060F7 /* ofxSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD0BF7A619C9A4D800E060F7 /* ofxSlider.cpp */; };
 		FD0BF7B219C9A4D800E060F7 /* ofxSliderGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD0BF7A819C9A4D800E060F7 /* ofxSliderGroup.cpp */; };
 		FD0BF7B319C9A4D800E060F7 /* ofxToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD0BF7AA19C9A4D800E060F7 /* ofxToggle.cpp */; };
-		FD464E5819D2FA9000A0A67A /* cameraManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD464E4719D2FA9000A0A67A /* cameraManager.cpp */; };
-		FD464E5919D2FA9000A0A67A /* cameraCalibrationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD464E4A19D2FA9000A0A67A /* cameraCalibrationManager.cpp */; };
-		FD464E5A19D2FA9000A0A67A /* depthExporterManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD464E4C19D2FA9000A0A67A /* depthExporterManager.cpp */; };
-		FD464E5B19D2FA9000A0A67A /* frameDataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD464E4E19D2FA9000A0A67A /* frameDataManager.cpp */; };
-		FD464E5C19D2FA9000A0A67A /* shotManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD464E5019D2FA9000A0A67A /* shotManager.cpp */; };
-		FD464E5D19D2FA9000A0A67A /* rhondaLineRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD464E5319D2FA9000A0A67A /* rhondaLineRenderer.cpp */; };
-		FD464E5E19D2FA9000A0A67A /* transformEstimationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD464E5619D2FA9000A0A67A /* transformEstimationManager.cpp */; };
+		FD203E5F19CD9BC7009010F9 /* cameraManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203E5119CD9BC7009010F9 /* cameraManager.cpp */; };
+		FD203E6019CD9BC7009010F9 /* cameraCalibrationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203E5419CD9BC7009010F9 /* cameraCalibrationManager.cpp */; };
+		FD203E6119CD9BC7009010F9 /* depthExporterManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203E5619CD9BC7009010F9 /* depthExporterManager.cpp */; };
+		FD203E6219CD9BC7009010F9 /* frameDataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203E5819CD9BC7009010F9 /* frameDataManager.cpp */; };
+		FD203E6319CD9BC7009010F9 /* shotManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203E5A19CD9BC7009010F9 /* shotManager.cpp */; };
+		FD203E6419CD9BC7009010F9 /* transformEstimationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD203E5D19CD9BC7009010F9 /* transformEstimationManager.cpp */; };
 		FE0F1DB69ACCD163E9DA2A15 /* ofxUIRotarySlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 64F3DE24F191ECED9DBE903C /* ofxUIRotarySlider.cpp */; };
 		FFD1EBFCA24DFB4E4427B4FE /* ofxUILabelButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9A4454B00CCFD7265D3CA85 /* ofxUILabelButton.cpp */; };
 /* End PBXBuildFile section */
@@ -657,21 +656,18 @@
 		FD0BF7A919C9A4D800E060F7 /* ofxSliderGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSliderGroup.h; sourceTree = "<group>"; };
 		FD0BF7AA19C9A4D800E060F7 /* ofxToggle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxToggle.cpp; sourceTree = "<group>"; };
 		FD0BF7AB19C9A4D800E060F7 /* ofxToggle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxToggle.h; sourceTree = "<group>"; };
-		FD464E4619D2FA9000A0A67A /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
-		FD464E4719D2FA9000A0A67A /* cameraManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cameraManager.cpp; sourceTree = "<group>"; };
-		FD464E4819D2FA9000A0A67A /* cameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cameraManager.h; sourceTree = "<group>"; };
-		FD464E4A19D2FA9000A0A67A /* cameraCalibrationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cameraCalibrationManager.cpp; sourceTree = "<group>"; };
-		FD464E4B19D2FA9000A0A67A /* cameraCalibrationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cameraCalibrationManager.h; sourceTree = "<group>"; };
-		FD464E4C19D2FA9000A0A67A /* depthExporterManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = depthExporterManager.cpp; sourceTree = "<group>"; };
-		FD464E4D19D2FA9000A0A67A /* depthExporterManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = depthExporterManager.h; sourceTree = "<group>"; };
-		FD464E4E19D2FA9000A0A67A /* frameDataManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = frameDataManager.cpp; sourceTree = "<group>"; };
-		FD464E4F19D2FA9000A0A67A /* frameDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = frameDataManager.h; sourceTree = "<group>"; };
-		FD464E5019D2FA9000A0A67A /* shotManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shotManager.cpp; sourceTree = "<group>"; };
-		FD464E5119D2FA9000A0A67A /* shotManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shotManager.h; sourceTree = "<group>"; };
-		FD464E5319D2FA9000A0A67A /* rhondaLineRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rhondaLineRenderer.cpp; sourceTree = "<group>"; };
-		FD464E5419D2FA9000A0A67A /* rhondaLineRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rhondaLineRenderer.h; sourceTree = "<group>"; };
-		FD464E5619D2FA9000A0A67A /* transformEstimationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = transformEstimationManager.cpp; sourceTree = "<group>"; };
-		FD464E5719D2FA9000A0A67A /* transformEstimationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = transformEstimationManager.h; sourceTree = "<group>"; };
+		FD203E5119CD9BC7009010F9 /* cameraManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cameraManager.cpp; path = ../../sharedCode/cameraManager.cpp; sourceTree = "<group>"; };
+		FD203E5219CD9BC7009010F9 /* cameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cameraManager.h; path = ../../sharedCode/cameraManager.h; sourceTree = "<group>"; };
+		FD203E5419CD9BC7009010F9 /* cameraCalibrationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cameraCalibrationManager.cpp; sourceTree = "<group>"; };
+		FD203E5519CD9BC7009010F9 /* cameraCalibrationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cameraCalibrationManager.h; sourceTree = "<group>"; };
+		FD203E5619CD9BC7009010F9 /* depthExporterManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = depthExporterManager.cpp; sourceTree = "<group>"; };
+		FD203E5719CD9BC7009010F9 /* depthExporterManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = depthExporterManager.h; sourceTree = "<group>"; };
+		FD203E5819CD9BC7009010F9 /* frameDataManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = frameDataManager.cpp; sourceTree = "<group>"; };
+		FD203E5919CD9BC7009010F9 /* frameDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = frameDataManager.h; sourceTree = "<group>"; };
+		FD203E5A19CD9BC7009010F9 /* shotManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shotManager.cpp; sourceTree = "<group>"; };
+		FD203E5B19CD9BC7009010F9 /* shotManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shotManager.h; sourceTree = "<group>"; };
+		FD203E5D19CD9BC7009010F9 /* transformEstimationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = transformEstimationManager.cpp; sourceTree = "<group>"; };
+		FD203E5E19CD9BC7009010F9 /* transformEstimationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = transformEstimationManager.h; sourceTree = "<group>"; };
 		FD609E2EC17FCE181DFE635F /* dist.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = dist.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/dist.h; sourceTree = SOURCE_ROOT; };
 		FDA2832E78CFA22BEEC74160 /* ofxUIFPS.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIFPS.h; path = ../../../addons/ofxUI/src/ofxUIFPS.h; sourceTree = SOURCE_ROOT; };
 		FE15469185A3A49FEC9D2292 /* myvec.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = myvec.h; path = ../../../addons/ofxCv/libs/CLD/include/CLD/myvec.h; sourceTree = SOURCE_ROOT; };
@@ -1624,7 +1620,10 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				FD464E4519D2FA9000A0A67A /* sharedCode */,
+				FD203E5119CD9BC7009010F9 /* cameraManager.cpp */,
+				FD203E5219CD9BC7009010F9 /* cameraManager.h */,
+				FD203E5319CD9BC7009010F9 /* io */,
+				FD203E5C19CD9BC7009010F9 /* processing */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
@@ -1747,51 +1746,30 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		FD464E4519D2FA9000A0A67A /* sharedCode */ = {
+		FD203E5319CD9BC7009010F9 /* io */ = {
 			isa = PBXGroup;
 			children = (
-				FD464E4619D2FA9000A0A67A /* .gitkeep */,
-				FD464E4719D2FA9000A0A67A /* cameraManager.cpp */,
-				FD464E4819D2FA9000A0A67A /* cameraManager.h */,
-				FD464E4919D2FA9000A0A67A /* io */,
-				FD464E5219D2FA9000A0A67A /* line */,
-				FD464E5519D2FA9000A0A67A /* processing */,
+				FD203E5419CD9BC7009010F9 /* cameraCalibrationManager.cpp */,
+				FD203E5519CD9BC7009010F9 /* cameraCalibrationManager.h */,
+				FD203E5619CD9BC7009010F9 /* depthExporterManager.cpp */,
+				FD203E5719CD9BC7009010F9 /* depthExporterManager.h */,
+				FD203E5819CD9BC7009010F9 /* frameDataManager.cpp */,
+				FD203E5919CD9BC7009010F9 /* frameDataManager.h */,
+				FD203E5A19CD9BC7009010F9 /* shotManager.cpp */,
+				FD203E5B19CD9BC7009010F9 /* shotManager.h */,
 			);
-			name = sharedCode;
-			path = ../../sharedCode;
+			name = io;
+			path = ../../sharedCode/io;
 			sourceTree = "<group>";
 		};
-		FD464E4919D2FA9000A0A67A /* io */ = {
+		FD203E5C19CD9BC7009010F9 /* processing */ = {
 			isa = PBXGroup;
 			children = (
-				FD464E4A19D2FA9000A0A67A /* cameraCalibrationManager.cpp */,
-				FD464E4B19D2FA9000A0A67A /* cameraCalibrationManager.h */,
-				FD464E4C19D2FA9000A0A67A /* depthExporterManager.cpp */,
-				FD464E4D19D2FA9000A0A67A /* depthExporterManager.h */,
-				FD464E4E19D2FA9000A0A67A /* frameDataManager.cpp */,
-				FD464E4F19D2FA9000A0A67A /* frameDataManager.h */,
-				FD464E5019D2FA9000A0A67A /* shotManager.cpp */,
-				FD464E5119D2FA9000A0A67A /* shotManager.h */,
+				FD203E5D19CD9BC7009010F9 /* transformEstimationManager.cpp */,
+				FD203E5E19CD9BC7009010F9 /* transformEstimationManager.h */,
 			);
-			path = io;
-			sourceTree = "<group>";
-		};
-		FD464E5219D2FA9000A0A67A /* line */ = {
-			isa = PBXGroup;
-			children = (
-				FD464E5319D2FA9000A0A67A /* rhondaLineRenderer.cpp */,
-				FD464E5419D2FA9000A0A67A /* rhondaLineRenderer.h */,
-			);
-			path = line;
-			sourceTree = "<group>";
-		};
-		FD464E5519D2FA9000A0A67A /* processing */ = {
-			isa = PBXGroup;
-			children = (
-				FD464E5619D2FA9000A0A67A /* transformEstimationManager.cpp */,
-				FD464E5719D2FA9000A0A67A /* transformEstimationManager.h */,
-			);
-			path = processing;
+			name = processing;
+			path = ../../sharedCode/processing;
 			sourceTree = "<group>";
 		};
 		FEA273413D5AFD9607F56ABE /* CLD */ = {
@@ -1902,8 +1880,6 @@
 				E212C821D1064B92DD953A42 /* ofxCvHaarFinder.cpp in Sources */,
 				63020F16C7E8DED980111241 /* ofxCvImage.cpp in Sources */,
 				D3301F6A0B43BB293ED97C1D /* ofxCvShortImage.cpp in Sources */,
-				FD464E5D19D2FA9000A0A67A /* rhondaLineRenderer.cpp in Sources */,
-				FD464E5E19D2FA9000A0A67A /* transformEstimationManager.cpp in Sources */,
 				63B57AC5BF4EF088491E0317 /* ofxXmlSettings.cpp in Sources */,
 				933A2227713C720CEFF80FD9 /* tinyxml.cpp in Sources */,
 				9D44DC88EF9E7991B4A09951 /* tinyxmlerror.cpp in Sources */,
@@ -1917,12 +1893,13 @@
 				B6840996567E78436F7ECFAB /* ETF.cpp in Sources */,
 				F76B4A79BD8DE4854141CB47 /* fdog.cpp in Sources */,
 				EBCDE831EFAE08274E799C97 /* Calibration.cpp in Sources */,
-				FD464E5A19D2FA9000A0A67A /* depthExporterManager.cpp in Sources */,
+				FD203E6119CD9BC7009010F9 /* depthExporterManager.cpp in Sources */,
 				6AABAB39E82AF5CFEA23A205 /* ContourFinder.cpp in Sources */,
 				45CC483A999BF1065A6B926C /* Distance.cpp in Sources */,
 				5CC34D433F5806179935B89D /* Flow.cpp in Sources */,
+				FD203E6419CD9BC7009010F9 /* transformEstimationManager.cpp in Sources */,
 				2023EF517ED2D8B397511D4B /* Helpers.cpp in Sources */,
-				FD464E5819D2FA9000A0A67A /* cameraManager.cpp in Sources */,
+				FD203E5F19CD9BC7009010F9 /* cameraManager.cpp in Sources */,
 				C602002DE761F9B52DB4400A /* ObjectFinder.cpp in Sources */,
 				7CDAD32BE4FA46701E3552C7 /* RunningBackground.cpp in Sources */,
 				FD0BF7B219C9A4D800E060F7 /* ofxSliderGroup.cpp in Sources */,
@@ -1933,7 +1910,7 @@
 				FD0BF7B319C9A4D800E060F7 /* ofxToggle.cpp in Sources */,
 				4B3ED367CA852D522E2EE996 /* ofxUI2DPad.cpp in Sources */,
 				F1E8DE8734BA6F69A5112FA8 /* ofxUIBaseDraws.cpp in Sources */,
-				FD464E5B19D2FA9000A0A67A /* frameDataManager.cpp in Sources */,
+				FD203E6219CD9BC7009010F9 /* frameDataManager.cpp in Sources */,
 				C381F2B7CFD84C0E540EB4BC /* ofxUIBiLabelSlider.cpp in Sources */,
 				7D393646FB859A930EF58917 /* ofxUIButton.cpp in Sources */,
 				7BE46522B64E24FAEDE1A25D /* ofxUICanvas.cpp in Sources */,
@@ -1947,10 +1924,10 @@
 				3D4EA8E172D3E4A30FEFA969 /* ofxUIImage.cpp in Sources */,
 				7F2CD93F681F3C1547B3BF2C /* ofxUIImageButton.cpp in Sources */,
 				FBD0CD0AFE3849C14E829CAF /* ofxUIImageSampler.cpp in Sources */,
-				FD464E5C19D2FA9000A0A67A /* shotManager.cpp in Sources */,
+				FD203E6319CD9BC7009010F9 /* shotManager.cpp in Sources */,
 				FD0BF7AE19C9A4D800E060F7 /* ofxGuiGroup.cpp in Sources */,
 				26874B150C8535AEA0F24C8C /* ofxUIImageSlider.cpp in Sources */,
-				FD464E5919D2FA9000A0A67A /* cameraCalibrationManager.cpp in Sources */,
+				FD203E6019CD9BC7009010F9 /* cameraCalibrationManager.cpp in Sources */,
 				FB8AA9FA6535767BE31806BC /* ofxUIImageToggle.cpp in Sources */,
 				7C3DC84C9BFCBD2866DB2B6C /* ofxUILabel.cpp in Sources */,
 				FFD1EBFCA24DFB4E4427B4FE /* ofxUILabelButton.cpp in Sources */,

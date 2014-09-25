@@ -16,6 +16,8 @@ public:
     void cameraStart();
     void cameraEnd();
 
+    ofPoint project2dPointIntoCameraWorld( ofPoint pt, float zDiffFromPerson);
+    
     void drawCameraInternals(ofImage &person, ofImage &mask, ofImage &backplate);
     
     bool useSideCamera;

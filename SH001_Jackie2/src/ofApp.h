@@ -4,11 +4,9 @@
 #include "ofxCv.h"
 #include "cameraCalibrationManager.h"
 #include "frameDataManager.h"
+#include "shotManager.h"
 #include "ofxGui.h"
 #include "cameraManager.h"
-#include "depthExporterManager.h"
-#include "shotManager.h"
-
 
 class ofApp : public ofBaseApp{
 public:
@@ -20,22 +18,15 @@ public:
 	void keyPressed(ofKeyEventArgs& args);
     void listDirs();
     
-    void mousePressed(int x, int y, int button);
-    
-    
-    shotManager shotManager;
-    
     frameDataManager FDM;
+    shotManager shotManager;
     frameData frame;
     frameData firstFrame;
-    
-    
-    vector < ofPoint > ptsForAnimation;
-    
+
     
     int currentFrame;
     int lastFrame;
-    
+
 
 	ofLight light;
 	
@@ -50,20 +41,23 @@ public:
     ofParameter <float> scaleFac;
     ofParameter <bool> playback;
     ofParameter <bool> playbackAudio;
-    ofParameter <bool> exporting;
+	ofParameter <bool> drawFaceBox;
+	ofParameter <bool> exporting;
+    ofParameter <ofVec3f > rotate;
+    ofParameter <ofVec3f > trans;
+    ofParameter <ofVec3f > scale;
     
     ofxPanel gui;
-    
+
     ofSoundPlayer sndPlayer;
+    
     
    
     ofImage backgroundPlate;
     
 	cameraManager CM;
     
-    depthExporterManager DEM;
-    
-    
+
 
     cameraCalibrationManager CCM;
     
@@ -77,6 +71,13 @@ public:
     bool bSaving;
     int savingFrame;
     
+    
+    ofPolyline doneLine;
+    ofPolyline smoother;
+    int lastAddPoint;
+    
+    
+    ofPoint centroid;
     
     
     
