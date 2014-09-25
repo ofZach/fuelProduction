@@ -6,26 +6,26 @@
 <playback>0</playback>
 <playbackAudio>0</playbackAudio>
 <draw_face_box>0</draw_face_box>
-<start_x>-78</start_x>
-<start_y>0</start_y>
-<start_z>-1343.5</start_z>
-<extrude>860</extrude>
-<arc_radius>218</arc_radius>
-<arc_angle>282.6</arc_angle>
+<start_x>-58</start_x>
+<start_y>-6</start_y>
+<start_z>-1174.5</start_z>
+<extrude>620</extrude>
+<arc_radius>180</arc_radius>
+<arc_angle>266.4</arc_angle>
 <rotation_amount>3870</rotation_amount>
-<resample_count>222.85</resample_count>
-<chase_damp>0.108</chase_damp>
-<max_new>29.7</max_new>
-<a_radius>12.5</a_radius>
-<b_radius>26.5</b_radius>
+<resample_count>500.05</resample_count>
+<chase_damp>0.075</chase_damp>
+<max_new>45.45</max_new>
+<a_radius>47</a_radius>
+<b_radius>0</b_radius>
 <panel/>
 <attach_points>18.25</attach_points>
 <generate_hooks>0</generate_hooks>
-<twist_damp>53.735</twist_damp>
-	<param_gradient>44</param_gradient>
+<twist_damp>40.8</twist_damp>
+	<param_gradient>-94</param_gradient>
 <draw_line_debug>1</draw_line_debug>
-	<start_frame>100</start_frame>
+	<start_frame>129</start_frame>
 	<end_frame>417</end_frame>
-	<final_smooth>3</final_smooth>
-	<final_resample>300</final_resample>
+	<final_smooth>8</final_smooth>
+	<final_resample>603.5</final_resample>
 </panel>

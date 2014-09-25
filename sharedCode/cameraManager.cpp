@@ -53,6 +53,39 @@ void cameraManager::update(){
 
 }
 
+
+ofPoint cameraManager::project2dPointIntoCameraWorld( ofPoint pt, float zDiffFromPerson){
+    
+    // zach - note a more accurate ?  way to do this would be to get the flat plane
+    // as per below then interpolate along that plan
+    
+    ofPoint a,b,c,d, e;
+    
+    ofRectangle window;
+    window.set(0,0,1920, 1080);
+    
+    a = baseCamera.screenToWorld( ofPoint(0,1080), window);
+    b = baseCamera.screenToWorld( ofPoint(1920,1080), window);
+    c = baseCamera.screenToWorld( ofPoint(0,0), window);
+    d = baseCamera.screenToWorld( ofPoint(1920,0), window);
+    
+    ofPoint camP = baseCamera.getPosition();
+    
+    a = camP + (a - camP).normalize() * (351*5 + zDiffFromPerson);
+    b = camP + (b - camP).normalize() * (351*5 + zDiffFromPerson);
+    c = camP + (c - camP).normalize() * (351*5 + zDiffFromPerson);
+    d = camP + (d - camP).normalize() * (351*5 + zDiffFromPerson);
+    
+    float xPct = ofMap( pt.x, 0, 1920, 0, 1);
+    float yPct = ofMap( pt.y, 0, 1080, 0, 1);
+    float mixX = a.x * xPct + (1-xPct) * d.x;
+    float mixY = c.y * yPct + (1-xPct) * a.y;
+    
+    return ofPoint(mixX, mixY);
+
+}
+
+
 void cameraManager::drawCameraInternals(ofImage &person, ofImage &mask, ofImage &backplate){
     
     

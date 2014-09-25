@@ -24,6 +24,7 @@ void ofApp::setup() {
 	
 	//  shotManager.footageBasePath =  "/Users/zachlieberman/Desktop/GOLD_Footage";
 	shotManager.footageBasePath =  "/Users/focus/Dropbox/+PopTech_Footage/";
+	shotManager.footageBasePath =  "/Users/zachlieberman/Dropbox/+PopTech_Footage (2)";
 	
 	shotManager.setup();
 	
@@ -116,7 +117,7 @@ void ofApp::setup() {
 	lineRenderer.setup();
 	lineRenderer.fakeDepthAdder = 0.018;
 	
-    backgroundPlate.loadImage(dataPath + "Background Plates/A-Cam_BackgroundPlate_360p.png");
+    backgroundPlate.loadImage(dataPath + "Background Plates/A-Cam_BackhgroundPlate_360p.png");
     
 }
 
@@ -139,7 +140,7 @@ void ofApp::update() {
 		FDM.getOrientation(frame, line.currentHeadNode);
     }
 	
-	line.update( ofClamp(currentFrame-line.startFrame,0,line.endFrame) );
+	line.update( ofClamp(currentFrame-line.startFrame,1,line.endFrame) );
     
 	lastFrame = currentFrame;
 
