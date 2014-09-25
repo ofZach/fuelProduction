@@ -50,15 +50,27 @@ void MentalModeller::generateBaseParticles(){
 			p.meshIndex = i;
 			p.originalPos = baseMesh.getVertices()[i];
 			float thisExtrude = extrusion + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
-			p.curPos = baseMesh.getVertices()[i] + baseMesh.getNormals()[i] * thisExtrude;
-			points.push_back( p.curPos );
+			p.extrudePos = baseMesh.getVertices()[i] + baseMesh.getNormals()[i];
+			points.push_back( p.extrudePos );
 			headParticles.push_back(p);
 		}
 	}
 	
 	//cout << "head point size is " << points.size() << endl;
+}
+
+void MentalModeller::update(ofMesh& headMesh){
+	pointDebug.clear();
+	for(int i = 0; i < headParticles.size(); i++){
+		float thisExtrude = extrusion + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
+		ofVec3f lastPos = headParticles[i].curPos;
+		ofVec3f newPos = headMesh.getVertex( headParticles[i].meshIndex ) + headMesh.getNormal( headParticles[i].meshIndex ) * thisExtrude;
+		headParticles[i].curPos = lastPos.getInterpolated(newPos, 1.0);
+		pointDebug.addVertex(headParticles[i].curPos);
+	}
+
 	headParticleConnections.clear();
-	neighbors.buildIndex(points);
+	neighbors.buildIndex(pointDebug.getVertices());
 	
 	//connect closeset parts
 	for(int i = 0; i < headParticles.size(); i++){
@@ -72,17 +84,6 @@ void MentalModeller::generateBaseParticles(){
 				//cout << "inserting " << p.first << " < > " << p.second << endl;
 			}
 		}
-	}
-}
-
-void MentalModeller::update(ofMesh& headMesh){
-	pointDebug.clear();
-	for(int i = 0; i < headParticles.size(); i++){
-		float thisExtrude = extrusion + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
-		ofVec3f lastPos = headParticles[i].curPos;
-		ofVec3f newPos = headMesh.getVertex( headParticles[i].meshIndex ) + headMesh.getNormal( headParticles[i].meshIndex ) * thisExtrude;
-		headParticles[i].curPos = lastPos.getInterpolated(newPos, .5);
-		pointDebug.addVertex(headParticles[i].curPos);
 	}
 
 	pointDebug.setMode(OF_PRIMITIVE_POINTS);

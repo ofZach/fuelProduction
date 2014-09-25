@@ -6,6 +6,8 @@
 typedef struct {
 	ofIndexType meshIndex;
 	ofVec3f curPos;
+	ofVec3f curNorm;
+	ofVec3f extrudePos;
 	ofVec3f originalPos;
 } HeadParticle;
 
