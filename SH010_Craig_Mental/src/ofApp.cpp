@@ -64,42 +64,19 @@ void ofApp::setup() {
 	gui.add(mentalModel.extrusion.set("extrusion", 100, 0, 500));
 	gui.add(mentalModel.extraExtrusion.set("xtra extrusion", 0, 0, 200));
 	gui.add(mentalModel.extraExtrusionSmooth.set("xtra extrusion smooth", 50, 1.0, 100));
+	gui.add(mentalModel.rotateY.set("rotate Y", 0, -90, 90));
+	gui.add(mentalModel.rotateX.set("rotate X", 0, -90, 90));
+	
 	gui.add(mentalModel.maxdistance.set("max distance", 100, 0, 500));
 	gui.add(mentalModel.chasersPerFrame.set("chasers per frame", 0, 0, 100));
 	gui.add(mentalModel.chaserDuration.set("chase duration", 0, 0, 100));
+	gui.add(mentalModel.popOn.set("pop on", false));
+	gui.add(mentalModel.deleteImmediatly.set("delete immediatly", false));
+	
+	gui.add(mentalModel.outboundLaserChance.set("laser chance", .05, 0.0, .3));
+	gui.add(mentalModel.outboundLaserStartOffset.set("laser start offset", 50, 0, 100));
+	gui.add(mentalModel.outboundLaserEndOffset.set("laser end offset", 50, 0, 100));
 
-	
-	/*
-	gui.add(drawLineDebug.set("draw line debug", false));
-
-	gui.add(line.startFrame.set("start frame", 100, 0, FDM.numFrames));
-	gui.add(line.endFrame.set("end frame", FDM.numFrames-100, 0, FDM.numFrames));
-
-	gui.add(line.startPointX.set("start x",   0, -200,  200));
-	gui.add(line.startPointY.set("start y",   0, -200,  200));
-	gui.add(line.startPointZ.set("start z",-900, -700, -2000));
-
-	gui.add(line.extrudeAmount.set("extrude", 200, 0, 1000));
-	gui.add(line.arcRadius.set("arc radius", 200, 0, 400));
-	gui.add(line.arcAngle.set("arc angle", 360, 180, 720));
-	gui.add(line.twistDampen.set("twist damp", 50, 1, 200));
-	gui.add(line.yParamGradient.set("param gradient", 200, -200, 200));
-	
-	gui.add(line.resampleAmount.set("resample count", 100, 10, 1000));
-	
-	gui.add(line.chaseDampen.set("chase damp", .01, 0, .3));
-	gui.add(line.maxNewAngle.set("max new", 45, 0, 90));
-	
-	gui.add(line.aRadius.set("a radius", 50, 0, 100));
-	gui.add(line.bRadius.set("b radius", 50, 0, 100));
-
-	gui.add(line.finalSmoothAmount.set("final smooth", 2, 0, 100));
-	gui.add(line.finalResampleCount.set("final resample", 300, 100, 2000));
-	
-	gui.add(line.computeAttachmentPoints.set("generate hooks", false));
-	gui.add(line.numAttachPoints.set("attach points", 5, 0, 50));
-	 */
-	
     gui.loadFromFile("adjustments.xml");
     
     //sndPlayer.loadSound("/Users/zachlieberman/Dropbox/+PopTech_Toyota_Footage/SH002_Craig_test/SH002_1-2.aif");
@@ -126,9 +103,6 @@ void ofApp::setup() {
 
     mentalModel.setup(frame.head);
 	
-//  line.setup();
-//	line.generateArc();
-
 	lineRenderer.setup();
 	lineRenderer.fakeDepthAdder = 0.018;
 	
@@ -155,6 +129,9 @@ void ofApp::update() {
 //		FDM.getOrientation(frame, line.currentHeadNode);
 
     }
+	mentalModel.adjust = adjustments;
+	mentalModel.scale  = scaleFac;
+
 	mentalModel.update(frame.head, currentFrame);
 	
 //	line.update( ofClamp(currentFrame-line.startFrame,0,line.endFrame) );
@@ -226,14 +203,14 @@ void ofApp::draw(){
 	CM.cameraStart();
 	
 	ofPushMatrix();
-	ofScale(-scaleFac,scaleFac,scaleFac);
-	ofTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
+//	ofScale(-scaleFac,scaleFac,scaleFac);
+//	ofTranslate(ofVec3f(-adjustments->x,adjustments->y,adjustments->z));
 	if(drawDebug){
 		mentalModel.drawDebug();
 	}
 	mentalModel.draw();
 	
-	ofPopMatrix();
+//	ofPopMatrix();
 	
 	CM.cameraEnd();
 	

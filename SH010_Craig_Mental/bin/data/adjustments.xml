@@ -4,7 +4,7 @@
 <showFilled>0</showFilled>
 <scaleFac>1.1925</scaleFac>
 <playback>1</playback>
-<playbackAudio>0</playbackAudio>
+<playbackAudio>1</playbackAudio>
 <draw_face_box>0</draw_face_box>
 <start_x>-78</start_x>
 <start_y>0</start_y>
@@ -28,14 +28,21 @@
 	<end_frame>417</end_frame>
 	<final_smooth>3</final_smooth>
 	<final_resample>300</final_resample>
-<y_percent>0.71</y_percent>
-	<extrusion>92.5</extrusion>
-	<max_distance>115</max_distance>
+<y_percent>0.745</y_percent>
+	<extrusion>42.5</extrusion>
+	<max_distance>97.5</max_distance>
 <seed>0</seed>
-	<point_delete_chance>0.75</point_delete_chance>
-	<xtra_extrusion>173</xtra_extrusion>
-	<xtra_extrusion_smooth>84.16</xtra_extrusion_smooth>
+	<point_delete_chance>0.305</point_delete_chance>
+	<xtra_extrusion>200</xtra_extrusion>
+	<xtra_extrusion_smooth>42.085</xtra_extrusion_smooth>
 <draw_debug>0</draw_debug>
-	<chasers_per_frame>54</chasers_per_frame>
-	<chase_duration>6</chase_duration>
+	<chasers_per_frame>20</chasers_per_frame>
+	<chase_duration>5</chase_duration>
+<rotate_Y>0.0999999</rotate_Y>
+	<rotate_X>1.8</rotate_X>
+	<pop_on>0</pop_on>
+	<delete_immediatly>0</delete_immediatly>
+	<laser_chance>0.156</laser_chance>
+	<laser_start_offset>58</laser_start_offset>
+	<laser_end_offset>84.5</laser_end_offset>
 </panel>

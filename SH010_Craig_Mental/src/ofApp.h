@@ -46,15 +46,14 @@ public:
 	ofFbo targetFbo;
 
 	ofParameter <ofVec3f> adjustments;
+    ofParameter <float> scaleFac;
 	ofParameter <bool> showWireframe;
 	ofParameter <bool> showFilled;
-    ofParameter <float> scaleFac;
     ofParameter <bool> playback;
     ofParameter <bool> playbackAudio;
 	ofParameter <bool> drawFaceBox;
 	ofParameter <bool> drawDebug;
 
-	
 	//line pos
     ofSoundPlayer sndPlayer;
     ofImage backgroundPlate;
