@@ -9,6 +9,8 @@ void MentalModeller::setup(ofMesh& firstMesh){
 	yPercent.addListener(this, &MentalModeller::paramChanged);
 	maxdistance.addListener(this, &MentalModeller::paramChanged);
 	extrusion.addListener(this, &MentalModeller::paramChanged);
+	extraExtrusion.addListener(this, &MentalModeller::paramChanged);
+	extraExtrusionSmooth.addListener(this, &MentalModeller::paramChanged);
 	deleteChance.addListener(this, &MentalModeller::paramChanged);
 	seed.addListener(this, &MentalModeller::paramChangedInt);
 	
@@ -47,7 +49,8 @@ void MentalModeller::generateBaseParticles(){
 			HeadParticle p;
 			p.meshIndex = i;
 			p.originalPos = baseMesh.getVertices()[i];
-			p.curPos = baseMesh.getVertices()[i] + baseMesh.getNormals()[i] * extrusion;
+			float thisExtrude = extrusion + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
+			p.curPos = baseMesh.getVertices()[i] + baseMesh.getNormals()[i] * thisExtrude;
 			points.push_back( p.curPos );
 			headParticles.push_back(p);
 		}
@@ -75,7 +78,8 @@ void MentalModeller::generateBaseParticles(){
 void MentalModeller::update(ofMesh& headMesh){
 	pointDebug.clear();
 	for(int i = 0; i < headParticles.size(); i++){
-		pointDebug.addVertex( headMesh.getVertex( headParticles[i].meshIndex ) + headMesh.getNormal( headParticles[i].meshIndex ) * extrusion );
+		float thisExtrude = extrusion + ofNoise(i/extraExtrusionSmooth) * extraExtrusion;
+		pointDebug.addVertex( headMesh.getVertex( headParticles[i].meshIndex ) + headMesh.getNormal( headParticles[i].meshIndex ) * thisExtrude );
 	}
 
 	pointDebug.setMode(OF_PRIMITIVE_POINTS);
@@ -86,8 +90,10 @@ void MentalModeller::update(ofMesh& headMesh){
 //		cout << "found particle at position " << it->first << " second " << it->second << endl;
 		int idxA = headParticles[ it->first ].meshIndex;
 		int idxB = headParticles[ it->second ].meshIndex;
-		connectionMesh.addVertex( headMesh.getVertex( idxA ) + headMesh.getNormal(idxA) * extrusion );
-		connectionMesh.addVertex( headMesh.getVertex( idxB ) + headMesh.getNormal(idxB) * extrusion );
+		float extrudeA = extrusion + ofNoise(it->first/extraExtrusionSmooth)  * extraExtrusion;
+		float extrudeB = extrusion + ofNoise(it->second/extraExtrusionSmooth) * extraExtrusion;
+		connectionMesh.addVertex( headMesh.getVertex( idxA ) + headMesh.getNormal(idxA) * extrudeA );
+		connectionMesh.addVertex( headMesh.getVertex( idxB ) + headMesh.getNormal(idxB) * extrudeB );
 	}
 	
 	connectionMesh.setMode(OF_PRIMITIVE_LINES);

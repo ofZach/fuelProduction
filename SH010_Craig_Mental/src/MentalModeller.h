@@ -25,6 +25,8 @@ class MentalModeller {
 	
 	ofParameter <float> yPercent;
 	ofParameter <float> extrusion;
+	ofParameter <float> extraExtrusion;
+	ofParameter <float> extraExtrusionSmooth;
 	ofParameter <float> maxdistance;
 	ofParameter <float> deleteChance;
 	ofParameter <int> seed;
@@ -39,5 +41,7 @@ class MentalModeller {
 	ofxNearestNeighbour3D neighbors;
 	
 	set< pair<int,int> > headParticleConnections;
+	
+
 };
 
