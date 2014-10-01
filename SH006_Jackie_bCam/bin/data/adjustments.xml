@@ -1,0 +1,57 @@
+<panel>
+<adjustments>61.2245, 71.4286, 330.612</adjustments>
+<showWireframe>1</showWireframe>
+<showFilled>0</showFilled>
+<scaleFac>1.1925</scaleFac>
+<playback>1</playback>
+<playbackAudio>1</playbackAudio>
+<draw_face_box>0</draw_face_box>
+<start_x>-78</start_x>
+<start_y>0</start_y>
+<start_z>-1343.5</start_z>
+<extrude>860</extrude>
+<arc_radius>218</arc_radius>
+<arc_angle>282.6</arc_angle>
+<rotation_amount>3870</rotation_amount>
+<resample_count>222.85</resample_count>
+<chase_damp>0.108</chase_damp>
+<max_new>29.7</max_new>
+<a_radius>12.5</a_radius>
+<b_radius>26.5</b_radius>
+<panel/>
+<attach_points>18.25</attach_points>
+<generate_hooks>0</generate_hooks>
+<twist_damp>53.735</twist_damp>
+	<param_gradient>44</param_gradient>
+<draw_line_debug>1</draw_line_debug>
+	<start_frame>100</start_frame>
+	<end_frame>417</end_frame>
+	<final_smooth>3</final_smooth>
+	<final_resample>300</final_resample>
+<y_percent>0.745</y_percent>
+	<extrusion>42.5</extrusion>
+	<max_distance>145</max_distance>
+<seed>90</seed>
+	<point_delete_chance>0.305</point_delete_chance>
+	<xtra_extrusion>111</xtra_extrusion>
+	<xtra_extrusion_smooth>38.125</xtra_extrusion_smooth>
+<draw_debug>0</draw_debug>
+	<chasers_per_frame>20</chasers_per_frame>
+	<chase_duration>11</chase_duration>
+<rotate_Y>69.3</rotate_Y>
+	<rotate_X>10.8</rotate_X>
+	<pop_on>1</pop_on>
+	<delete_immediatly>0</delete_immediatly>
+	<laser_chance>0.0975</laser_chance>
+	<laser_start_offset>76</laser_start_offset>
+	<laser_end_offset>107</laser_end_offset>
+<start_extrusion>15</start_extrusion>
+	<end_extrusion>282.5</end_extrusion>
+	<laser_life_extend>5</laser_life_extend>
+<start_chasers_pf>0</start_chasers_pf>
+	<end_chasers_pf>80</end_chasers_pf>
+<start_max_distance>0</start_max_distance>
+	<end_max_distance>97.5</end_max_distance>
+<laser_start_frame>142</laser_start_frame>
+<clip_end_frame>80</clip_end_frame>
+</panel>
